@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f6fa">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Мои смены">
+  <meta name="description" content="Личный календарь рабочих смен: 3 дневных, 3 ночных, 3 выходных. Доход по месяцам.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <title>Мои смены — календарь</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f6fa; --surface: #ffffff; --text: #1e2431; --muted: #747c8b;
+      --line: #e8ebf1; --blue: #2469db; --yellow: #ffdf56; --night: #3189ed;
+      --off: #e55a59; --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+    }
+    button, input { font: inherit; }
+    button { -webkit-appearance: none; appearance: none; cursor: pointer; touch-action: manipulation; }
+    button:focus-visible, input:focus-visible { outline: 3px solid #659fff; outline-offset: 3px; }
+    .shell { max-width: 540px; min-width: 280px; margin: 0 auto; padding: 22px 16px 36px; }
+    .header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; }
+    .eyebrow { color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .13em; text-transform:uppercase; margin:0 0 5px; }
+    h1 { font-size: clamp(24px, 6vw, 30px); letter-spacing: -.045em; line-height:1.1; margin:0; font-weight: 800; }
+    .icon-button { display:grid; place-items:center; width:46px; height:46px; flex:none; border:1px solid var(--line); border-radius:15px; background:var(--surface); color:var(--text); box-shadow:0 2px 7px rgba(28,42,68,.03); }
+    .icon-button:active, .arrow:active, .today-button:active { transform:scale(.96); }
+    .icon-button svg { width:22px; height:22px; }
+    .today-card { padding:22px; background:linear-gradient(128deg, #263d67 0%, #192944 100%); border-radius:var(--radius); color:#fff; box-shadow:0 12px 26px rgba(28,51,93,.14); margin-bottom:16px; }
+    .today-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .card-label { font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.095em; opacity:.68; }
+    .today-date { margin:10px 0 20px; font-size:clamp(21px,5.8vw,28px); font-weight:800; line-height:1.18; letter-spacing:-.035em; }
+    .today-bottom { display:flex; align-items:center; gap:12px; }
+    .today-symbol { display:grid; place-items:center; flex:none; width:46px; height:46px; border-radius:14px; font-size:21px; font-weight:900; background:var(--yellow); color:#24272b; }
+    .today-symbol.night { background:var(--night); color:white; }
+    .today-symbol.off { background:var(--off); color:white; }
+    .today-shift-title { font-weight:800; font-size:17px; line-height:1.3; }
+    .today-subtitle { color:#c7d3e6; font-size:13px; margin-top:2px; }
+    .dot { width:8px; height:8px; border-radius:50%; background:#6ee3b1; }
+    .surface { background:var(--surface); border:1px solid rgba(220,225,233,.75); border-radius:var(--radius); padding:18px 16px; box-shadow:0 4px 14px rgba(45,55,75,.035); }
+    .calendar-card { margin-bottom:16px; }
+    .month-nav { display:flex; justify-content:space-between; align-items:center; gap:9px; margin-bottom:18px; }
+    .month-title { font-size:20px; margin:0; font-weight:800; letter-spacing:-.035em; text-transform:capitalize; min-width:0; }
+    .month-controls { display:flex; align-items:center; gap:6px; flex:none; }
+    .arrow { border:0; background:#f1f3f8; color:#2f3b50; border-radius:12px; width:40px; height:40px; display:grid; place-items:center; font-size:25px; line-height:1; }
+    .today-button { font-size:12px; font-weight:800; min-height:40px; border-radius:12px; padding:0 10px; border:0; color:#215dbb; background:#edf3ff; }
+    .weekdays, .calendar-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); column-gap:5px; row-gap:7px; }
+    .weekdays { margin-bottom:8px; }
+    .weekday { text-align:center; padding:4px 0; font-size:11px; font-weight:750; color:#7e8797; }
+    .weekday:nth-last-child(-n+2) { color:#9c7e85; }
+    .day { border:2px solid transparent; min-width:0; width:100%; aspect-ratio: .89; border-radius:13px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:0 1px; position:relative; }
+    .day .number { font-weight:850; font-size:16px; line-height:1.1; font-variant-numeric:tabular-nums; }
+    .day .letter { font-size:11px; line-height:1.1; font-weight:800; opacity:.85; }
+    .day.daytime { background:var(--yellow); color:#342b14; }
+    .day.night { background:var(--night); color:#fff; }
+    .day.off { background:var(--off); color:#fff; }
+    .day.is-today::after { content:""; position:absolute; bottom:3px; width:5px; height:5px; background:currentColor; border-radius:50%; }
+    .day.is-today { border-color:#1b2539; }
+    .day.is-selected { outline:3px solid #1c2b4b; outline-offset:2px; z-index:1; }
+    .day.empty { background:transparent; pointer-events:none; }
+    .legend { display:flex; flex-wrap:wrap; align-items:center; gap:9px 14px; margin:17px 0 0; }
+    .legend-item { display:flex; gap:6px; align-items:center; font-size:11px; color:var(--muted); font-weight:700; }
+    .legend-square { width:12px; height:12px; border-radius:4px; }
+    .detail { margin-top:16px; border-top:1px solid var(--line); padding-top:14px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .detail-label { color:var(--muted); font-size:12px; margin-bottom:5px; }
+    .detail-date { font-size:14px; font-weight:800; }
+    .detail-shift { font-size:13px; font-weight:750; white-space:nowrap; }
+    .detail-shift.daytime { color:#8d6600; } .detail-shift.night { color:#1679dd; } .detail-shift.off { color:#da4f4f; }
+    .income-card { margin-bottom:16px; }
+    .income-head { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); font-size:13px; font-weight:700; }
+    .income { font-weight:850; font-variant-numeric:tabular-nums; font-size:clamp(28px,8vw,36px); line-height:1.2; letter-spacing:-.045em; margin:8px 0 15px; color:#208164; }
+    .stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0; border-top:1px solid var(--line); padding-top:15px; }
+    .stat { padding:0 9px; border-right:1px solid var(--line); }
+    .stat:first-child { padding-left:0; } .stat:last-child { border-right:0; padding-right:0; }
+    .stat-num { font-size:19px; font-weight:850; line-height:1.2; font-variant-numeric:tabular-nums; }
+    .stat-label { color:var(--muted); font-size:11px; margin-top:3px; line-height:1.25; }
+    .footnote { text-align:center; color:#9098a5; font-size:12px; line-height:1.5; margin:18px 10px 0; }
+    dialog { border:none; padding:0; border-radius:24px; width:min(calc(100% - 24px),460px); max-height:min(90dvh,670px); box-shadow:0 30px 80px rgba(15,25,45,.3); color:var(--text); }
+    dialog::backdrop { background:rgba(14,22,39,.55); backdrop-filter:blur(3px); }
+    .settings { padding:22px 20px; }
+    .settings-head { display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:8px; }
+    .settings-head h2 { margin:0; font-size:23px; letter-spacing:-.035em; }
+    .settings-description { margin:0 0 22px; color:var(--muted); font-size:13px; line-height:1.5; }
+    .setting-label { display:block; font-weight:780; font-size:14px; margin-bottom:8px; }
+    .setting-help { margin:6px 0 20px; font-size:12px; color:var(--muted); line-height:1.45; }
+    .settings input { display:block; width:100%; font-size:17px; padding:13px 14px; border:1px solid #d9e0ea; border-radius:13px; color:var(--text); background:#fafbfe; min-height:48px; }
+    .settings-actions { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; }
+    .primary { color:white; background:#2569dc; font-size:15px; font-weight:800; border:0; border-radius:14px; padding:13px 24px; min-height:48px; }
+    .reset { background:transparent; border:0; color:#667287; font-weight:750; padding:12px 4px; font-size:13px; }
+    @media (max-width:360px) { .shell { padding-left:12px; padding-right:12px; } .surface { padding-left:12px; padding-right:12px; } .weekdays,.calendar-grid { column-gap:4px; row-gap:6px; } .day { border-radius:10px; } .day .number { font-size:14px; } .month-title { font-size:18px; } .today-button { padding:0 8px; } }
+    @media (min-width:540px) { .shell { padding-top:28px; } .day { aspect-ratio:1.05; } }
+    @media (prefers-reduced-motion:no-preference) { .day,.arrow,.icon-button,.today-button { transition:transform .12s ease,outline-color .12s ease; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="header">
+      <div><p class="eyebrow">Личный планировщик</p><h1>Мои смены</h1></div>
+      <button class="icon-button" id="settingsOpen" type="button" aria-label="Открыть настройки" title="Настройки">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.1v1.6m0 14.6v1.6M4.3 4.3l1.1 1.1m13.2 13.2 1.1 1.1M3.1 12h1.6m14.6 0h1.6M4.3 19.7l1.1-1.1M18.6 5.4l1.1-1.1"/><circle cx="12" cy="12" r="4"/></svg>
+      </button>
+    </header>
+
+    <section class="today-card" aria-labelledby="todayHeading">
+      <div class="today-top"><span class="card-label" id="todayHeading">Сегодня</span><span class="dot" aria-hidden="true"></span></div>
+      <div class="today-date" id="todayDate">Загружаем дату…</div>
+      <div class="today-bottom">
+        <div class="today-symbol" id="todaySymbol">Д</div>
+        <div><div class="today-shift-title" id="todayShift">Дневная смена</div><div class="today-subtitle" id="todayPay">3 800 ₽ за смену</div></div>
+      </div>
+    </section>
+
+    <section class="surface calendar-card" aria-labelledby="monthTitle">
+      <div class="month-nav">
+        <h2 class="month-title" id="monthTitle">Октябрь 2026</h2>
+        <div class="month-controls">
+          <button class="today-button" id="jumpToday" type="button">Сегодня</button>
+          <button class="arrow" id="prevMonth" type="button" aria-label="Предыдущий месяц">‹</button>
+          <button class="arrow" id="nextMonth" type="button" aria-label="Следующий месяц">›</button>
+        </div>
+      </div>
+      <div class="weekdays" aria-hidden="true">
+        <span class="weekday">Пн</span><span class="weekday">Вт</span><span class="weekday">Ср</span><span class="weekday">Чт</span><span class="weekday">Пт</span><span class="weekday">Сб</span><span class="weekday">Вс</span>
+      </div>
+      <div class="calendar-grid" id="calendar" role="group" aria-label="Дни календаря"></div>
+      <div class="legend" aria-label="Обозначения смен">
+        <span class="legend-item"><span class="legend-square" style="background:var(--yellow)"></span>Дневная</span>
+        <span class="legend-item"><span class="legend-square" style="background:var(--night)"></span>Ночная</span>
+        <span class="legend-item"><span class="legend-square" style="background:var(--off)"></span>Выходной</span>
+      </div>
+      <div class="detail" aria-live="polite">
+        <div><div class="detail-label">Выбранный день</div><div class="detail-date" id="selectedDate">—</div></div>
+        <div class="detail-shift" id="selectedShift">—</div>
+      </div>
+    </section>
+
+    <section class="surface income-card" aria-labelledby="incomeTitle">
+      <div class="income-head"><span id="incomeTitle">Доход за выбранный месяц</span><span id="rateCaption">3 800 ₽ / смена</span></div>
+      <div class="income" id="income">— ₽</div>
+      <div class="stats">
+        <div class="stat"><div class="stat-num" id="allCount">—</div><div class="stat-label">Рабочих смен</div></div>
+        <div class="stat"><div class="stat-num" id="dayCount">—</div><div class="stat-label">Дневных</div></div>
+        <div class="stat"><div class="stat-num" id="nightCount">—</div><div class="stat-label">Ночных</div></div>
+      </div>
+    </section>
+    <p class="footnote">Листай календарь влево и вправо, чтобы переключать месяцы.<br>График и настройки доступны без учётной записи.</p>
+  </main>
+
+  <dialog id="settingsDialog" aria-labelledby="settingsTitle">
+    <form class="settings" id="settingsForm">
+      <div class="settings-head"><h2 id="settingsTitle">Настройки</h2><button type="button" class="icon-button" id="settingsClose" aria-label="Закрыть настройки">×</button></div>
+      <p class="settings-description">График повторяется каждые 9 дней: 3 дневные смены, 3 ночные и 3 выходных.</p>
+      <label class="setting-label" for="rateInput">Оплата за одну смену (₽)</label>
+      <input id="rateInput" name="rate" type="number" inputmode="numeric" min="0" max="100000000" step="1" required>
+      <p class="setting-help">Сумма за месяц рассчитывается по количеству рабочих смен.</p>
+      <label class="setting-label" for="baseInput">Первый день дневной смены</label>
+      <input id="baseInput" name="base" type="date" required>
+      <p class="setting-help">Исходная дата: 21 октября 2026 года. От неё рассчитывается весь график, в том числе предыдущие месяцы.</p>
+      <div class="settings-actions"><button class="reset" id="resetSettings" type="button">Сбросить</button><button class="primary" type="submit">Сохранить</button></div>
+    </form>
+  </dialog>
+
+  <script>
+    (() => {
+      'use strict';
+      const DEFAULTS = Object.freeze({ rate: 3800, base: '2026-10-21' });
+      const STORAGE_KEY = 'shift-calendar-v1';
+      const DAY_MS = 24 * 60 * 60 * 1000;
+      const $ = id => document.getElementById(id);
+      const money = value => `${new Intl.NumberFormat('ru-RU', {maximumFractionDigits:0}).format(value)} ₽`;
+      const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+      const fullDateFormat = new Intl.DateTimeFormat('ru-RU', {day:'numeric', month:'long', year:'numeric'});
+      const detailDateFormat = new Intl.DateTimeFormat('ru-RU', {day:'numeric', month:'long'});
+      const shifts = [
+        {letter:'Д', name:'Дневная смена', css:'daytime', work:true},
+        {letter:'Н', name:'Ночная смена', css:'night', work:true},
+        {letter:'В', name:'Выходной', css:'off', work:false}
+      ];
+      function parseLocalDate(value) {
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value || '');
+        if (!match) return null;
+        const [y,m,d] = match.slice(1).map(Number);
+        const result = new Date(y, m-1, d);
+        return result.getFullYear()===y && result.getMonth()===m-1 && result.getDate()===d ? result : null;
+      }
+      function isoDate(date) {
+        return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+      }
+      function dayOrdinal(date) {
+        return Math.round(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate())/DAY_MS);
+      }
+      function readSettings() {
+        try {
+          const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+          if (stored && parseLocalDate(stored.base) && Number.isInteger(stored.rate) && stored.rate>=0 && stored.rate<=100000000) return {base:stored.base,rate:stored.rate};
+        } catch (_) { /* Private browsing or disabled storage: use defaults. */ }
+        return {...DEFAULTS};
+      }
+      let settings = readSettings();
+      let now = new Date();
+      let year = now.getFullYear();
+      let month = now.getMonth();
+      let selectedDay = now.getDate();
+
+      function getShift(date) {
+        const base = parseLocalDate(settings.base);
+        // UTC ordinals avoid changing shift dates when daylight-saving time changes.
+        const diffDays = dayOrdinal(date)-dayOrdinal(base);
+        const cycle = ((diffDays % 9)+9)%9;
+        return shifts[Math.floor(cycle/3)];
+      }
+      function renderToday() {
+        now = new Date();
+        const shift = getShift(now);
+        $('todayDate').textContent = fullDateFormat.format(now);
+        $('todaySymbol').textContent = shift.letter;
+        $('todaySymbol').className = `today-symbol ${shift.css}`;
+        $('todayShift').textContent = shift.name;
+        $('todayPay').textContent = shift.work ? `${money(settings.rate)} за смену` : 'Время отдохнуть';
+      }
+      function render() {
+        renderToday();
+        const first = new Date(year,month,1);
+        const count = new Date(year,month+1,0).getDate();
+        const offset = (first.getDay()+6)%7;
+        $('monthTitle').textContent = `${monthNames[month]} ${year}`;
+        $('calendar').replaceChildren();
+        const fragment = document.createDocumentFragment();
+        for (let i=0;i<offset;i++) {
+          const placeholder=document.createElement('span');
+          placeholder.className='day empty'; placeholder.setAttribute('aria-hidden','true');
+          fragment.appendChild(placeholder);
+        }
+        let dayShifts=0, nightShifts=0;
+        for (let n=1;n<=count;n++) {
+          const date = new Date(year,month,n);
+          const shift = getShift(date);
+          if (shift.css==='daytime') dayShifts++;
+          if (shift.css==='night') nightShifts++;
+          const button = document.createElement('button');
+          button.type='button';
+          button.className=`day ${shift.css}`;
+          if (n===now.getDate() && year===now.getFullYear() && month===now.getMonth()) button.classList.add('is-today');
+          if (n===selectedDay) button.classList.add('is-selected');
+          button.setAttribute('aria-pressed',String(n===selectedDay));
+          button.setAttribute('aria-label',`${fullDateFormat.format(date)} — ${shift.name}${shift.work ? `, ${money(settings.rate)}` : ''}`);
+          const number=document.createElement('span'); number.className='number'; number.textContent=String(n);
+          const letter=document.createElement('span'); letter.className='letter'; letter.textContent=shift.letter;
+          button.append(number,letter);
+          button.addEventListener('click',() => {selectedDay=n; render();});
+          fragment.appendChild(button);
+        }
+        $('calendar').appendChild(fragment);
+        $('dayCount').textContent=String(dayShifts);
+        $('nightCount').textContent=String(nightShifts);
+        $('allCount').textContent=String(dayShifts+nightShifts);
+        $('income').textContent=money((dayShifts+nightShifts)*settings.rate);
+        $('rateCaption').textContent=`${money(settings.rate)} / смена`;
+        if (selectedDay!==null && selectedDay>=1 && selectedDay<=count) {
+          const date=new Date(year,month,selectedDay), shift=getShift(date);
+          $('selectedDate').textContent=detailDateFormat.format(date);
+          $('selectedShift').textContent=shift.name;
+          $('selectedShift').className=`detail-shift ${shift.css}`;
+        } else {
+          $('selectedDate').textContent='Выбери дату';
+          $('selectedShift').textContent='';
+        }
+      }
+      function changeMonth(delta) {
+        const moved=new Date(year,month+delta,1);
+        year=moved.getFullYear(); month=moved.getMonth();
+        const current=new Date();
+        selectedDay=(year===current.getFullYear()&&month===current.getMonth())?current.getDate():null;
+        render();
+      }
+      $('prevMonth').addEventListener('click',()=>changeMonth(-1));
+      $('nextMonth').addEventListener('click',()=>changeMonth(1));
+      $('jumpToday').addEventListener('click',()=>{
+        const today=new Date(); year=today.getFullYear(); month=today.getMonth(); selectedDay=today.getDate(); render();
+      });
+      let touchStart=null;
+      $('calendar').addEventListener('touchstart',event=>{
+        if (event.touches.length!==1) {touchStart=null;return;}
+        touchStart={x:event.touches[0].clientX,y:event.touches[0].clientY};
+      },{passive:true});
+      $('calendar').addEventListener('touchend',event=>{
+        if (!touchStart||event.changedTouches.length!==1) return;
+        const dx=event.changedTouches[0].clientX-touchStart.x;
+        const dy=event.changedTouches[0].clientY-touchStart.y;
+        touchStart=null;
+        if (Math.abs(dx)>55 && Math.abs(dx)>Math.abs(dy)*1.25) changeMonth(dx<0?1:-1);
+      },{passive:true});
+      const dialog=$('settingsDialog');
+      $('settingsOpen').addEventListener('click',()=>{
+        $('rateInput').value=String(settings.rate);
+        $('baseInput').value=settings.base;
+        dialog.showModal();
+      });
+      $('settingsClose').addEventListener('click',()=>dialog.close());
+      dialog.addEventListener('click',event=>{if (event.target===dialog) dialog.close();});
+      $('settingsForm').addEventListener('submit',event=>{
+        event.preventDefault();
+        const rate=Number($('rateInput').value);
+        const base=$('baseInput').value;
+        if (!Number.isInteger(rate)||rate<0||rate>100000000||!parseLocalDate(base)) {window.alert('Проверь оплату и дату начала цикла.'); return;}
+        settings={rate,base};
+        try {localStorage.setItem(STORAGE_KEY,JSON.stringify(settings));} catch (_) { /* Still works for this session. */ }
+        dialog.close(); render();
+      });
+      $('resetSettings').addEventListener('click',()=>{
+        settings={...DEFAULTS};
+        try {localStorage.removeItem(STORAGE_KEY);} catch (_) {}
+        $('rateInput').value=String(settings.rate); $('baseInput').value=settings.base;
+        dialog.close(); render();
+      });
+      document.addEventListener('visibilitychange',()=>{if (!document.hidden) render();});
+      window.addEventListener('pageshow',()=>render());
+      if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+        window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+      }
+      render();
+    })();
+  </script>
+</body>
+</html>
