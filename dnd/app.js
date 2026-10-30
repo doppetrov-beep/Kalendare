@@ -52,35 +52,30 @@
     url.search='?room='+encodeURIComponent(roomId)+'&key='+encodeURIComponent(inviteCode);
     return url.toString();
   }
-  function localInput(date) {
-    return [date.getFullYear(),'-',String(date.getMonth()+1).padStart(2,'0'),'-',String(date.getDate()).padStart(2,'0'),'T',String(date.getHours()).padStart(2,'0'),':',String(date.getMinutes()).padStart(2,'0')].join('');
-  }
   function localDayDate(date) { return new Date(date.getFullYear(),date.getMonth(),date.getDate()); }
   function windowLabel(start,end) {
     const a=new Date(start),b=new Date(end);
     return dateFmt.format(a)+' — '+ (a.toDateString()===b.toDateString()?timeFmt.format(b):dateFmt.format(b));
   }
-  // Changing the selected date retains the time of day the player entered.
+  // The selected day comes from the calendar strip. Time inputs contain
+  // hours and minutes only, and stay unchanged when the player picks a day.
   function setInputsForDay(day) {
     selectedQuickDay=localDayDate(day);
-    const prevStart=$('startInput').value, prevEnd=$('endInput').value;
-    const startDate=new Date(prevStart), endDate=new Date(prevEnd);
-    const validStart=!!prevStart && Number.isFinite(+startDate);
-    const validEnd=!!prevEnd && Number.isFinite(+endDate);
-    let nextDayEnd=0;
-    if (validStart && validEnd) {
-      const calendarOffset=Math.round(
-        (Date.UTC(endDate.getFullYear(),endDate.getMonth(),endDate.getDate()) -
-         Date.UTC(startDate.getFullYear(),startDate.getMonth(),startDate.getDate()))/DAY);
-      if(calendarOffset===1) nextDayEnd=1;
-    }
-    const start=new Date(day.getFullYear(),day.getMonth(),day.getDate(),
-      validStart?startDate.getHours():19,validStart?startDate.getMinutes():0);
-    const end=new Date(day.getFullYear(),day.getMonth(),day.getDate()+nextDayEnd,
-      validEnd?endDate.getHours():23,validEnd?endDate.getMinutes():0);
-    $('startInput').value=localInput(start);
-    $('endInput').value=localInput(end);
     drawDaystrip();
+  }
+  function selectedTimeRange() {
+    if (!selectedQuickDay) return null;
+    const startText=$('startInput').value, endText=$('endInput').value;
+    const clock=/^([01]\\d|2[0-3]):([0-5]\\d)$/;
+    const s=clock.exec(startText), e=clock.exec(endText);
+    if (!s || !e) return null;
+    const startMinute=Number(s[1])*60+Number(s[2]);
+    const endMinute=Number(e[1])*60+Number(e[2]);
+    if(startMinute===endMinute) return null;
+    const y=selectedQuickDay.getFullYear(),m=selectedQuickDay.getMonth(),d=selectedQuickDay.getDate();
+    const start=new Date(y,m,d,Number(s[1]),Number(s[2]));
+    const end=new Date(y,m,d+(endMinute<startMinute?1:0),Number(e[1]),Number(e[2]));
+    return {start,end};
   }
   // Use calendar dates, not adding 24h in milliseconds: keeps local hours
   // stable even if the time zone switches daylight-saving offsets.
@@ -281,8 +276,9 @@
   }
   async function addWindow() {
     if(loading) return;
-    const start=new Date($('startInput').value),end=new Date($('endInput').value);
-    if(!Number.isFinite(+start)||!Number.isFinite(+end)) {setMessage('Укажи начало и конец интервала.');return;}
+    const chosen=selectedTimeRange();
+    if(!chosen) {setMessage('Укажи разные часы начала и конца (например, 18:00–23:00).');return;}
+    const {start,end}=chosen;
     const days=Number($('repeatCount').value);
     if(![1,2,3,4,5,7].includes(days)) {setMessage('Выбери количество дней.');return;}
     const ranges=repeatIntervalsByDay(start,end,days);
