@@ -66,7 +66,7 @@
   function selectedTimeRange() {
     if (!selectedQuickDay) return null;
     const startText=$('startInput').value, endText=$('endInput').value;
-    const clock=/^([01]\\d|2[0-3]):([0-5]\\d)$/;
+    const clock=/^([01]\d|2[0-3]):([0-5]\d)$/;
     const s=clock.exec(startText), e=clock.exec(endText);
     if (!s || !e) return null;
     const startMinute=Number(s[1])*60+Number(s[2]);
