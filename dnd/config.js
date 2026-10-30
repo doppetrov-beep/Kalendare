@@ -1,6 +1,6 @@
-// Public browser settings only. Never paste service_role, secret, or database password here.
-// Set URL and publishable (or legacy anon) key after Supabase project is configured.
+// Browser-safe Supabase settings. This is a publishable key, NOT a secret.
+// Do not put service_role, sb_secret_* or database passwords in the repository.
 window.DND_SUPABASE_CONFIG = {
-  url: '',
-  publishableKey: ''
+  url: "https://yxpkmbckediniyuomvbs.supabase.co",
+  publishableKey: "sb_publishable_GZPO4FxXk_P5EDzGdX-6MQ_Z0PU819Z"
 };
