@@ -117,6 +117,27 @@
     .note-item-date { flex:0 0 54px; font-weight:800; font-size:12px; color:#2f5da7; }
     .note-item-preview { font-size:13px; line-height:1.35; min-width:0; flex:1; color:var(--text); overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; white-space:pre-wrap; overflow-wrap:anywhere; }
     [hidden] { display:none !important; }
+    .roster-summary { margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,.18); display:grid; gap:7px; }
+    .roster-summary-title { color:#c7d3e6; font-size:12px; letter-spacing:.025em; font-weight:750; margin-bottom:3px; }
+    .roster-summary-row { display:flex; align-items:center; gap:8px; font-size:13px; min-width:0; }
+    .roster-summary-role { color:#c7d3e6; width:67px; flex:none; }
+    .roster-summary-name { font-weight:800; min-width:0; overflow-wrap:anywhere; }
+    .roster-card { margin-bottom:16px; }
+    .roster-head { display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:4px; }
+    .roster-head h2 { margin:0; font-size:20px; font-weight:800; letter-spacing:-.035em; }
+    .roster-date { color:var(--muted); font-size:12px; font-weight:750; }
+    .roster-list { display:grid; gap:9px; margin-top:14px; }
+    .roster-row { display:flex; align-items:center; gap:12px; padding:11px 12px; background:#f7f9fc; border-radius:14px; min-width:0; }
+    .roster-badge { display:grid; place-items:center; width:36px; height:36px; border-radius:11px; font-size:17px; font-weight:900; color:#2f2f35; background:var(--yellow); flex:none; }
+    .roster-row.night .roster-badge { color:white; background:var(--night); }
+    .roster-row.off .roster-badge { color:white; background:var(--off); }
+    .roster-row-label { color:var(--muted); font-size:11px; font-weight:700; margin-bottom:3px; }
+    .roster-row-name { color:var(--text); font-size:15px; font-weight:800; overflow-wrap:anywhere; min-width:0; }
+    .roster-caption { margin:11px 0 0; color:var(--muted); font-size:12px; line-height:1.45; }
+    .crew-settings { margin-top:19px; padding-top:18px; border-top:1px solid var(--line); }
+    .crew-settings h3 { font-size:16px; font-weight:800; margin:0 0 8px; }
+    .crew-settings .setting-help { margin:0 0 14px; }
+    .crew-settings .setting-label { margin-top:10px; }
     @media (max-width:360px) { .shell { padding-left:12px; padding-right:12px; } .surface { padding-left:12px; padding-right:12px; } .weekdays,.calendar-grid { column-gap:4px; row-gap:6px; } .day { border-radius:10px; } .day .number { font-size:14px; } .month-title { font-size:18px; } .today-button { padding:0 8px; } }
     @media (min-width:540px) { .shell { padding-top:28px; } .day { aspect-ratio:1.05; } }
     @media (prefers-reduced-motion:no-preference) { .day,.arrow,.icon-button,.today-button { transition:transform .12s ease,outline-color .12s ease; } }
@@ -137,6 +158,12 @@
       <div class="today-bottom">
         <div class="today-symbol" id="todaySymbol">Д</div>
         <div><div class="today-shift-title" id="todayShift">Дневная смена</div><div class="today-subtitle" id="todayPay">3 800 ₽ за смену</div></div>
+      </div>
+      <div class="roster-summary" aria-label="Бригады сегодня">
+        <div class="roster-summary-title">Кто сегодня в день, ночь и на выходном</div>
+        <div class="roster-summary-row"><span class="roster-summary-role">День</span><span class="roster-summary-name" id="todayCrewDay">—</span></div>
+        <div class="roster-summary-row"><span class="roster-summary-role">Ночь</span><span class="roster-summary-name" id="todayCrewNight">—</span></div>
+        <div class="roster-summary-row"><span class="roster-summary-role">Отдыхает</span><span class="roster-summary-name" id="todayCrewOff">—</span></div>
       </div>
     </section>
 
@@ -162,6 +189,16 @@
         <div><div class="detail-label">Выбранный день</div><div class="detail-date" id="selectedDate">—</div></div>
         <div class="detail-shift" id="selectedShift">—</div>
       </div>
+    </section>
+
+    <section class="surface roster-card" aria-labelledby="rosterTitle">
+      <div class="roster-head"><h2 id="rosterTitle">Кто работает</h2><span id="rosterDate" class="roster-date">—</span></div>
+      <div id="rosterList" class="roster-list" aria-live="polite">
+        <div class="roster-row daytime"><span class="roster-badge">Д</span><div><div class="roster-row-label">Дневная смена</div><div class="roster-row-name" id="rosterDay">—</div></div></div>
+        <div class="roster-row night"><span class="roster-badge">Н</span><div><div class="roster-row-label">Ночная смена</div><div class="roster-row-name" id="rosterNight">—</div></div></div>
+        <div class="roster-row off"><span class="roster-badge">В</span><div><div class="roster-row-label">Выходной</div><div class="roster-row-name" id="rosterOff">—</div></div></div>
+      </div>
+      <p class="roster-caption">Показаны бригады на выбранную календарную дату. Имена меняются в ⚙ Настройках.</p>
     </section>
 
     <section class="surface notes-card" aria-labelledby="notesTitle">
@@ -208,7 +245,18 @@
       <label class="setting-label" for="baseInput">Первый день дневной смены</label>
       <input id="baseInput" name="base" type="date" required>
       <p class="setting-help">Исходная дата: 21 октября 2026 года. От неё рассчитывается весь график, в том числе предыдущие месяцы.</p>
-      <div class="settings-actions"><button class="reset" id="resetSettings" type="button">Сбросить</button><button class="primary" type="submit">Сохранить</button></div>
+      <div class="crew-settings">
+        <h3>Имена трёх бригад</h3>
+        <p class="setting-help">На дату начала цикла: первая бригада — день, вторая — ночь, третья — отдыхает. Вводи имя водителя или название бригады.</p>
+        <label class="setting-label" for="crewName0">Бригада 1 — сначала день</label>
+        <input id="crewName0" name="crewName0" maxlength="50" autocomplete="off" placeholder="Например: Я" required>
+        <label class="setting-label" for="crewName1">Бригада 2 — сначала ночь</label>
+        <input id="crewName1" name="crewName1" maxlength="50" autocomplete="off" placeholder="Например: Данил" required>
+        <label class="setting-label" for="crewName2">Бригада 3 — сначала выходной</label>
+        <input id="crewName2" name="crewName2" maxlength="50" autocomplete="off" placeholder="Например: Марат" required>
+        <p class="setting-help" style="margin:12px 0 8px">Имена хранятся только на этом устройстве. Смена имён не сбрасывает заметки или зарплату.</p>
+      </div>
+      <div class="settings-actions"><button class="reset" id="resetSettings" type="button">Сбросить график</button><button class="primary" type="submit">Сохранить</button></div>
     </form>
   </dialog>
 
@@ -218,6 +266,8 @@
       const DEFAULTS = Object.freeze({ rate: 3800, base: '2026-10-21' });
       const STORAGE_KEY = 'shift-calendar-v1';
       const NOTES_KEY = 'shift-calendar-notes-v1';
+      const CREWS_KEY = 'shift-calendar-crews-v1';
+      const DEFAULT_CREWS = Object.freeze(['Бригада 1', 'Бригада 2', 'Бригада 3']);
       const DAY_MS = 24 * 60 * 60 * 1000;
       const $ = id => document.getElementById(id);
       const money = value => `${new Intl.NumberFormat('ru-RU', {maximumFractionDigits:0}).format(value)} ₽`;
@@ -317,6 +367,33 @@
           button.classList.toggle('has-note',!!(notes[key] && notes[key].trim()));
         }
       }
+      function readCrews() {
+        try {
+          const data = JSON.parse(localStorage.getItem(CREWS_KEY) || 'null');
+          if (Array.isArray(data) && data.length === 3 && data.every(name => typeof name === 'string' && name.trim() && name.length <= 50))
+            return data.map(name => name.trim());
+        } catch (_) { /* Storage unavailable; default crew names. */ }
+        return [...DEFAULT_CREWS];
+      }
+      let crewNames = readCrews();
+      function getCrewAssignments(date) {
+        // For crew 1, current phase 0=day, 1=night, 2=off.
+        // Other crews are staggered by one 3-day block, so every date has
+        // exactly one day crew, one night crew, and one resting crew.
+        const diffDays = dayOrdinal(date) - dayOrdinal(parseLocalDate(settings.base));
+        const cycle = ((diffDays % 9) + 9) % 9;
+        const phase = Math.floor(cycle / 3);
+        const output = [null, null, null];
+        for (let i=0; i<3; i++) output[(phase + i) % 3] = crewNames[i];
+        return output; // [day crew, night crew, resting crew]
+      }
+      function renderRoster(date) {
+        const [day, night, off] = getCrewAssignments(date);
+        $('rosterDate').textContent = fullDateFormat.format(date);
+        $('rosterDay').textContent = day;
+        $('rosterNight').textContent = night;
+        $('rosterOff').textContent = off;
+      }
       let settings = readSettings();
       let now = new Date();
       let year = now.getFullYear();
@@ -338,6 +415,10 @@
         $('todaySymbol').className = `today-symbol ${shift.css}`;
         $('todayShift').textContent = shift.name;
         $('todayPay').textContent = shift.work ? `${money(settings.rate)} за смену` : 'Время отдохнуть';
+        const [day, night, off] = getCrewAssignments(now);
+        $('todayCrewDay').textContent = day;
+        $('todayCrewNight').textContent = night;
+        $('todayCrewOff').textContent = off;
       }
       function render() {
         renderToday();
@@ -385,9 +466,14 @@
           $('selectedDate').textContent=detailDateFormat.format(date);
           $('selectedShift').textContent=shift.name;
           $('selectedShift').className=`detail-shift ${shift.css}`;
+          renderRoster(date);
         } else {
           $('selectedDate').textContent='Выбери дату';
           $('selectedShift').textContent='';
+          $('rosterDate').textContent='Выбери день';
+          $('rosterDay').textContent='—';
+          $('rosterNight').textContent='—';
+          $('rosterOff').textContent='—';
         }
         renderNoteEditor();
       }
@@ -424,6 +510,8 @@
       });
       window.addEventListener('storage', event => {
         if (event.key === NOTES_KEY) { notes = readNotes(); render(); }
+        if (event.key === CREWS_KEY) { crewNames = readCrews(); render(); }
+        if (event.key === STORAGE_KEY) { settings = readSettings(); render(); }
       });
       $('prevMonth').addEventListener('click',()=>changeMonth(-1));
       $('nextMonth').addEventListener('click',()=>changeMonth(1));
@@ -446,6 +534,7 @@
       $('settingsOpen').addEventListener('click',()=>{
         $('rateInput').value=String(settings.rate);
         $('baseInput').value=settings.base;
+        for (let i=0;i<3;i++) $('crewName'+i).value=crewNames[i];
         dialog.showModal();
       });
       $('settingsClose').addEventListener('click',()=>dialog.close());
@@ -455,14 +544,21 @@
         const rate=Number($('rateInput').value);
         const base=$('baseInput').value;
         if (!Number.isInteger(rate)||rate<0||rate>100000000||!parseLocalDate(base)) {window.alert('Проверь оплату и дату начала цикла.'); return;}
+        const names=[0,1,2].map(i => $('crewName'+i).value.trim());
+        if (names.some(name => !name || name.length>50)) { window.alert('Заполни имена трёх бригад (до 50 символов).'); return; }
         settings={rate,base};
-        try {localStorage.setItem(STORAGE_KEY,JSON.stringify(settings));} catch (_) { /* Still works for this session. */ }
+        crewNames=names;
+        try {
+          localStorage.setItem(STORAGE_KEY,JSON.stringify(settings));
+          localStorage.setItem(CREWS_KEY,JSON.stringify(crewNames));
+        } catch (_) { window.alert('Настройки применены, но Safari не дал сохранить их на устройстве.'); }
         dialog.close(); render();
       });
       $('resetSettings').addEventListener('click',()=>{
         settings={...DEFAULTS};
         try {localStorage.removeItem(STORAGE_KEY);} catch (_) {}
         $('rateInput').value=String(settings.rate); $('baseInput').value=settings.base;
+        // Do not erase names or dated notes when resetting the shift cycle.
         dialog.close(); render();
       });
       document.addEventListener('visibilitychange',()=>{if (!document.hidden) render();});
