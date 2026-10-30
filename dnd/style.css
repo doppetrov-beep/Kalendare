@@ -10,7 +10,7 @@ button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation
 .muted,.foot{color:var(--muted)}.muted{font-size:13px;margin:7px 0 17px}.foot{font-size:12px;line-height:1.5;margin:14px 0 0}
 label{font-size:13px;font-weight:800;display:block;margin:15px 0 7px}
 input,select{border:1px solid #4c5a70;color:var(--text);background:#121c2b;border-radius:13px;min-height:48px;padding:11px 12px;min-width:0;width:100%;outline:none}
-input:focus,select:focus,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}input[type=datetime-local]{font-size:14px}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}input[type=time]{font-size:16px;min-height:50px}
 button{border:0;min-height:44px;border-radius:12px;padding:10px 14px;font-weight:800}
 .primary{color:#251e13;background:var(--gold);box-shadow:0 6px 17px #f9bc4a15}.primary:active{background:#f5d99f}
 .secondary{color:var(--text);background:#32435f}.ghost{color:var(--gold);background:#2b374b}
