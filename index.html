@@ -97,6 +97,26 @@
     .settings-actions { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; }
     .primary { color:white; background:#2569dc; font-size:15px; font-weight:800; border:0; border-radius:14px; padding:13px 24px; min-height:48px; }
     .reset { background:transparent; border:0; color:#667287; font-weight:750; padding:12px 4px; font-size:13px; }
+    .day.has-note::before { content:""; position:absolute; top:4px; right:4px; width:7px; height:7px; border-radius:50%; background:#26364e; box-shadow:0 0 0 1.5px white; }
+    .notes-card { margin-bottom:16px; }
+    .notes-head { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .notes-head h2 { font-size:20px; font-weight:800; margin:0; letter-spacing:-.035em; }
+    .notes-count { font-size:12px; font-weight:750; color:#2469db; white-space:nowrap; }
+    .notes-hint { color:var(--muted); font-size:13px; line-height:1.5; margin:9px 0 17px; }
+    .note-editor label { display:block; font-size:14px; font-weight:800; margin-bottom:9px; }
+    .note-editor textarea { display:block; width:100%; min-height:110px; padding:13px 14px; border:1px solid #d9e0ea; border-radius:14px; color:var(--text); background:#fafbfe; font:inherit; font-size:16px; line-height:1.45; resize:vertical; }
+    .note-editor textarea:focus { outline:2px solid #70a7f9; outline-offset:1px; }
+    .note-footer { margin-top:9px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .note-status { font-size:12px; line-height:1.4; color:#687789; }
+    .note-delete { font-size:12px; border:0; background:transparent; color:#cb4b52; font-weight:800; padding:8px 0; white-space:nowrap; }
+    .notes-empty { padding:14px; background:#f3f5fa; border-radius:13px; color:var(--muted); font-size:13px; line-height:1.5; }
+    .notes-list-wrap { margin-top:19px; padding-top:16px; border-top:1px solid var(--line); }
+    .notes-list-wrap h3 { font-size:14px; margin:0 0 10px; }
+    .notes-list { display:grid; gap:8px; max-height:245px; overflow-y:auto; }
+    .note-item { text-align:left; width:100%; border:1px solid var(--line); background:#f9faff; padding:10px 12px; border-radius:12px; display:flex; align-items:start; gap:12px; }
+    .note-item-date { flex:0 0 54px; font-weight:800; font-size:12px; color:#2f5da7; }
+    .note-item-preview { font-size:13px; line-height:1.35; min-width:0; flex:1; color:var(--text); overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; white-space:pre-wrap; overflow-wrap:anywhere; }
+    [hidden] { display:none !important; }
     @media (max-width:360px) { .shell { padding-left:12px; padding-right:12px; } .surface { padding-left:12px; padding-right:12px; } .weekdays,.calendar-grid { column-gap:4px; row-gap:6px; } .day { border-radius:10px; } .day .number { font-size:14px; } .month-title { font-size:18px; } .today-button { padding:0 8px; } }
     @media (min-width:540px) { .shell { padding-top:28px; } .day { aspect-ratio:1.05; } }
     @media (prefers-reduced-motion:no-preference) { .day,.arrow,.icon-button,.today-button { transition:transform .12s ease,outline-color .12s ease; } }
@@ -144,6 +164,28 @@
       </div>
     </section>
 
+    <section class="surface notes-card" aria-labelledby="notesTitle">
+      <div class="notes-head">
+        <h2 id="notesTitle">Заметки по датам</h2>
+        <span class="notes-count" id="notesCount">0 записей</span>
+      </div>
+      <p class="notes-hint">Нажми на день в календаре и запиши, что произошло. Точка в углу дня означает, что там есть заметка.</p>
+      <div class="note-editor" id="noteEditor" hidden>
+        <label for="noteInput">Заметка за <span id="noteDate">—</span></label>
+        <textarea id="noteInput" rows="3" maxlength="2000" placeholder="Например: Помыли машину, поменяли масло, пробег 120 000 км…"></textarea>
+        <div class="note-footer">
+          <span class="note-status" id="noteStatus" role="status">Сохраняется автоматически на этом устройстве</span>
+          <button class="note-delete" id="noteDelete" type="button">Удалить заметку</button>
+        </div>
+      </div>
+      <div id="notesEmpty" class="notes-empty" hidden>Выбери день в календаре, чтобы написать или прочитать заметку.</div>
+      <div class="notes-list-wrap" id="notesListWrap" hidden>
+        <h3>Записи в этом месяце</h3>
+        <div class="notes-list" id="notesList"></div>
+      </div>
+      <p class="notes-hint" style="margin:15px 0 0">Заметки хранятся в памяти приложения на этом iPhone. На другой телефон они автоматически не переносятся; при удалении приложения или его данных записи могут пропасть.</p>
+    </section>
+
     <section class="surface income-card" aria-labelledby="incomeTitle">
       <div class="income-head"><span id="incomeTitle">Доход за выбранный месяц</span><span id="rateCaption">3 800 ₽ / смена</span></div>
       <div class="income" id="income">— ₽</div>
@@ -175,6 +217,7 @@
       'use strict';
       const DEFAULTS = Object.freeze({ rate: 3800, base: '2026-10-21' });
       const STORAGE_KEY = 'shift-calendar-v1';
+      const NOTES_KEY = 'shift-calendar-notes-v1';
       const DAY_MS = 24 * 60 * 60 * 1000;
       const $ = id => document.getElementById(id);
       const money = value => `${new Intl.NumberFormat('ru-RU', {maximumFractionDigits:0}).format(value)} ₽`;
@@ -205,6 +248,74 @@
           if (stored && parseLocalDate(stored.base) && Number.isInteger(stored.rate) && stored.rate>=0 && stored.rate<=100000000) return {base:stored.base,rate:stored.rate};
         } catch (_) { /* Private browsing or disabled storage: use defaults. */ }
         return {...DEFAULTS};
+      }
+      function readNotes() {
+        try {
+          const stored = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}');
+          if (!stored || typeof stored !== 'object' || Array.isArray(stored)) return {};
+          const valid = {};
+          for (const [key, value] of Object.entries(stored)) {
+            if (parseLocalDate(key) && isoDate(parseLocalDate(key)) === key && typeof value === 'string' && value.trim()) {
+              valid[key] = value.slice(0,2000);
+            }
+          }
+          return valid;
+        } catch (_) { return {}; }
+      }
+      let notes = readNotes();
+      function saveNotes() {
+        try {
+          localStorage.setItem(NOTES_KEY,JSON.stringify(notes));
+          return true;
+        } catch (_) { return false; }
+      }
+      function noteKey() {
+        return selectedDay === null ? null : isoDate(new Date(year,month,selectedDay));
+      }
+      function renderNoteList() {
+        const prefix = String(year) + '-' + String(month+1).padStart(2,'0') + '-';
+        const entries = Object.keys(notes).filter(key => key.startsWith(prefix) && notes[key].trim()).sort();
+        $('notesCount').textContent = entries.length + (entries.length===1 ? ' запись' : entries.length>=2 && entries.length<=4 ? ' записи' : ' записей');
+        $('notesListWrap').hidden = entries.length === 0;
+        const container = $('notesList');
+        container.replaceChildren();
+        for (const key of entries) {
+          const button = document.createElement('button');
+          button.type='button';
+          button.className='note-item';
+          const date = document.createElement('span');
+          date.className='note-item-date';
+          date.textContent=String(Number(key.slice(8))) + ' ' + monthNames[month].toLowerCase();
+          const preview = document.createElement('span');
+          preview.className='note-item-preview';
+          preview.textContent=notes[key];
+          button.append(date,preview);
+          button.addEventListener('click', () => {
+            selectedDay=Number(key.slice(8));
+            render();
+            $('noteInput').scrollIntoView({behavior:'smooth',block:'center'});
+          });
+          container.appendChild(button);
+        }
+      }
+      function renderNoteEditor() {
+        const key=noteKey();
+        $('noteEditor').hidden = key === null;
+        $('notesEmpty').hidden = key !== null;
+        if (key !== null) {
+          const date = parseLocalDate(key);
+          $('noteDate').textContent = fullDateFormat.format(date);
+          $('noteInput').value = notes[key] || '';
+          $('noteStatus').textContent = 'Сохраняется автоматически на этом устройстве';
+          $('noteDelete').hidden = !notes[key];
+        }
+        renderNoteList();
+      }
+      function updateNoteMarkers() {
+        for (const button of $('calendar').querySelectorAll('.day[data-date]')) {
+          const key=button.getAttribute('data-date');
+          button.classList.toggle('has-note',!!(notes[key] && notes[key].trim()));
+        }
       }
       let settings = readSettings();
       let now = new Date();
@@ -250,14 +361,17 @@
           const button = document.createElement('button');
           button.type='button';
           button.className=`day ${shift.css}`;
+          const key = isoDate(date);
+          button.dataset.date=key;
+          if (notes[key] && notes[key].trim()) button.classList.add('has-note');
           if (n===now.getDate() && year===now.getFullYear() && month===now.getMonth()) button.classList.add('is-today');
           if (n===selectedDay) button.classList.add('is-selected');
           button.setAttribute('aria-pressed',String(n===selectedDay));
-          button.setAttribute('aria-label',`${fullDateFormat.format(date)} — ${shift.name}${shift.work ? `, ${money(settings.rate)}` : ''}`);
+          button.setAttribute('aria-label',`${fullDateFormat.format(date)} — ${shift.name}${shift.work ? `, ${money(settings.rate)}` : ''}${notes[key] ? ', есть заметка' : ''}`);
           const number=document.createElement('span'); number.className='number'; number.textContent=String(n);
           const letter=document.createElement('span'); letter.className='letter'; letter.textContent=shift.letter;
           button.append(number,letter);
-          button.addEventListener('click',() => {selectedDay=n; render();});
+          button.addEventListener('click',() => {selectedDay=n; render(); $('noteInput').scrollIntoView({behavior:'smooth',block:'nearest'});});
           fragment.appendChild(button);
         }
         $('calendar').appendChild(fragment);
@@ -275,6 +389,7 @@
           $('selectedDate').textContent='Выбери дату';
           $('selectedShift').textContent='';
         }
+        renderNoteEditor();
       }
       function changeMonth(delta) {
         const moved=new Date(year,month+delta,1);
@@ -283,6 +398,33 @@
         selectedDay=(year===current.getFullYear()&&month===current.getMonth())?current.getDate():null;
         render();
       }
+      $('noteInput').addEventListener('input', event => {
+        const key=noteKey();
+        if (!key) return;
+        const value=event.target.value;
+        if (value.trim()) notes[key]=value;
+        else delete notes[key];
+        const saved=saveNotes();
+        $('noteStatus').textContent=saved ? 'Сохранено на этом iPhone' : 'Не удалось сохранить: хранилище Safari недоступно';
+        $('noteDelete').hidden=!notes[key];
+        updateNoteMarkers();
+        renderNoteList();
+      });
+      $('noteDelete').addEventListener('click', () => {
+        const key=noteKey();
+        if (!key || !notes[key]) return;
+        if (!window.confirm('Удалить заметку за выбранный день?')) return;
+        delete notes[key];
+        $('noteInput').value='';
+        const saved=saveNotes();
+        $('noteStatus').textContent=saved ? 'Заметка удалена' : 'Не удалось сохранить удаление';
+        $('noteDelete').hidden=true;
+        updateNoteMarkers();
+        renderNoteList();
+      });
+      window.addEventListener('storage', event => {
+        if (event.key === NOTES_KEY) { notes = readNotes(); render(); }
+      });
       $('prevMonth').addEventListener('click',()=>changeMonth(-1));
       $('nextMonth').addEventListener('click',()=>changeMonth(1));
       $('jumpToday').addEventListener('click',()=>{
