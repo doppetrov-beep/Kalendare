@@ -29,7 +29,7 @@
 
 Сайт: https://doppetrov-beep.github.io/Kalendare/
 
-Для публикации используется workflow `.github/workflows/deploy.yml`.
+Публикация: **Settings → Pages → Source: Deploy from a branch → main → /(root)**. Дополнительный workflow не нужен.
 
 Откройте сайт на iPhone в Safari → Поделиться → **На экран «Домой»**.
 
