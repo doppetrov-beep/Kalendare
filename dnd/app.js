@@ -60,13 +60,39 @@
     const a=new Date(start),b=new Date(end);
     return dateFmt.format(a)+' — '+ (a.toDateString()===b.toDateString()?timeFmt.format(b):dateFmt.format(b));
   }
+  // Changing the selected date retains the time of day the player entered.
   function setInputsForDay(day) {
     selectedQuickDay=localDayDate(day);
-    const start=new Date(day.getFullYear(),day.getMonth(),day.getDate(),19,0);
-    const end=new Date(day.getFullYear(),day.getMonth(),day.getDate(),23,0);
+    const prevStart=$('startInput').value, prevEnd=$('endInput').value;
+    const startDate=new Date(prevStart), endDate=new Date(prevEnd);
+    const validStart=!!prevStart && Number.isFinite(+startDate);
+    const validEnd=!!prevEnd && Number.isFinite(+endDate);
+    let nextDayEnd=0;
+    if (validStart && validEnd) {
+      const calendarOffset=Math.round(
+        (Date.UTC(endDate.getFullYear(),endDate.getMonth(),endDate.getDate()) -
+         Date.UTC(startDate.getFullYear(),startDate.getMonth(),startDate.getDate()))/DAY);
+      if(calendarOffset===1) nextDayEnd=1;
+    }
+    const start=new Date(day.getFullYear(),day.getMonth(),day.getDate(),
+      validStart?startDate.getHours():19,validStart?startDate.getMinutes():0);
+    const end=new Date(day.getFullYear(),day.getMonth(),day.getDate()+nextDayEnd,
+      validEnd?endDate.getHours():23,validEnd?endDate.getMinutes():0);
     $('startInput').value=localInput(start);
     $('endInput').value=localInput(end);
     drawDaystrip();
+  }
+  // Use calendar dates, not adding 24h in milliseconds: keeps local hours
+  // stable even if the time zone switches daylight-saving offsets.
+  function repeatIntervalsByDay(start,end,count) {
+    const out=[];
+    for(let i=0;i<count;i++){
+      out.push({
+        start:new Date(start.getFullYear(),start.getMonth(),start.getDate()+i,start.getHours(),start.getMinutes()),
+        end:new Date(end.getFullYear(),end.getMonth(),end.getDate()+i,end.getHours(),end.getMinutes())
+      });
+    }
+    return out;
   }
   function drawDaystrip() {
     const strip=clear($('daystrip'));
@@ -257,18 +283,31 @@
     if(loading) return;
     const start=new Date($('startInput').value),end=new Date($('endInput').value);
     if(!Number.isFinite(+start)||!Number.isFinite(+end)) {setMessage('Укажи начало и конец интервала.');return;}
-    const gap=end.getTime()-start.getTime();
-    if(gap<HALF_HOUR||gap>DAY) {setMessage('Интервал должен быть от 30 минут до 24 часов.');return;}
-    if(start.getTime()<Date.now()-HALF_HOUR) {setMessage('Нельзя добавлять время в прошлом.');return;}
-    if(windows.filter(w=>w.user_id===currentUser.id).length>=100) {setMessage('Лимит: 100 интервалов на игрока.');return;}
-    busy(true);setMessage('Сохраняем…');
+    const days=Number($('repeatCount').value);
+    if(![1,2,3,4,5,7].includes(days)) {setMessage('Выбери количество дней.');return;}
+    const ranges=repeatIntervalsByDay(start,end,days);
+    if(ranges.some(r=>r.end-r.start<HALF_HOUR || r.end-r.start>DAY)) {
+      setMessage('Интервал должен быть от 30 минут до 24 часов в каждом дне.');return;
+    }
+    if(ranges.some(r=>r.start.getTime()<Date.now()-HALF_HOUR)) {
+      setMessage('Нельзя добавлять время в прошлом. Выбери другую дату.');return;
+    }
+    const mine=windows.filter(w=>w.user_id===currentUser.id);
+    const already=new Set(mine.map(w=>new Date(w.start_at).getTime()+'|'+new Date(w.end_at).getTime()));
+    const fresh=ranges.filter(r=>!already.has(r.start.getTime()+'|'+r.end.getTime()));
+    if(!fresh.length) {setMessage('✓ Это время уже добавлено для всех выбранных дней.');return;}
+    if(mine.length+fresh.length>100) {setMessage('Лимит: 100 интервалов на игрока. Уменьши число дней.');return;}
+    busy(true);setMessage('Сохраняем '+fresh.length+' интервалов…');
     try {
-      const res=await api.from('dnd_windows').insert({
-        room_id:roomId,user_id:currentUser.id,start_at:start.toISOString(),end_at:end.toISOString()
-      });
-      if(res.error) throw res.error;
+      const entries=fresh.map(r=>({
+        room_id:roomId,user_id:currentUser.id,
+        start_at:r.start.toISOString(),end_at:r.end.toISOString()
+      }));
+      const result=await api.from('dnd_windows').insert(entries);
+      if(result.error) throw result.error;
       await reload();
-      setMessage('✓ Время сохранено — другие игроки увидят его автоматически.');
+      const skipped=days-fresh.length;
+      setMessage('✓ Сохранено '+fresh.length+' интервалов.'+(skipped?' Пропущено уже существующих: '+skipped+'.':'')+' Игроки увидят их автоматически.');
     } catch(err) {setMessage('Ошибка: '+err.message);}finally{busy(false);}
   }
   async function removeWindow(id,button) {
