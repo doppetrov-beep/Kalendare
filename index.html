@@ -452,7 +452,7 @@
           const number=document.createElement('span'); number.className='number'; number.textContent=String(n);
           const letter=document.createElement('span'); letter.className='letter'; letter.textContent=shift.letter;
           button.append(number,letter);
-          button.addEventListener('click',() => {selectedDay=n; render(); $('noteInput').scrollIntoView({behavior:'smooth',block:'nearest'});});
+          button.addEventListener('click',() => {selectedDay=n; render(); $('rosterDate').scrollIntoView({behavior:'smooth',block:'nearest'});});
           fragment.appendChild(button);
         }
         $('calendar').appendChild(fragment);
