@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#111827">
 <meta name="description" content="Собери D&D-пати без долгих переписок: отмечайте свободные часы по местному времени и находите общие окна для игры.">
 <title>Сбор пати — D&D планировщик</title>
-<link rel="stylesheet" href="./style.css?v=2">
+<link rel="stylesheet" href="./style.css?v=3">
 </head>
 <body>
 <main class="app">
@@ -56,9 +56,10 @@
       <p class="muted">Добавь один или несколько интервалов — например, пятница с 19:00 до 23:00. Для разных дней можно указать разное время.</p>
       <div class="daystrip" id="daystrip" aria-label="Ближайшие дни"></div>
       <div class="time-fields">
-        <div><label for="startInput">Начало (твоё время)</label><input id="startInput" type="datetime-local" step="1800"></div>
-        <div><label for="endInput">Конец (твоё время)</label><input id="endInput" type="datetime-local" step="1800"></div>
+        <div><label for="startInput">Начало (твоё время)</label><input id="startInput" type="time" step="60" value="19:00" required></div>
+        <div><label for="endInput">Конец (твоё время)</label><input id="endInput" type="time" step="60" value="23:00" required></div>
       </div>
+      <p class="repeat-help" style="margin-top:9px">Дату выбираешь сверху. Если конец раньше начала, интервал закончится уже на следующий день (например, 22:00–02:00).</p>
       <div class="duration-row repeat-row">
         <label for="repeatCount">Одинаковые часы на несколько дней</label>
         <select id="repeatCount">
@@ -93,6 +94,6 @@
 </main>
 <script src="./config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="./app.js?v=2"></script>
+<script src="./app.js?v=3"></script>
 </body>
 </html>
