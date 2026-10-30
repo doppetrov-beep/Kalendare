@@ -1,99 +1,43 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="referrer" content="no-referrer">
-<meta name="theme-color" content="#111827">
-<meta name="description" content="Собери D&D-пати без долгих переписок: отмечайте свободные часы по местному времени и находите общие окна для игры.">
-<title>Сбор пати — D&D планировщик</title>
-<link rel="stylesheet" href="./style.css?v=3">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Сбор пати — новый адрес</title>
+  <script>
+    (() => {
+      'use strict';
+      // Preserve existing invite links: both room ID and secret invitation code.
+      // Never send the old URL as the HTTP Referer.
+      const destination = new URL('https://doppetrov-beep.github.io/-DND-Party/');
+      destination.search = window.location.search;
+      destination.hash = window.location.hash;
+      window.location.replace(destination.href);
+    })();
+  </script>
+  <style>
+    body {font:16px/1.5 system-ui,-apple-system,sans-serif;background:#111827;color:#ecf0f7;margin:0;padding:32px 20px;}
+    main {max-width:500px;margin:15vh auto;}
+    h1 {font-size:28px;}
+    a {color:#ebc67b;overflow-wrap:anywhere;}
+  </style>
 </head>
 <body>
-<main class="app">
-  <header class="topbar">
-    <a class="logo" href="./">⚔ Сбор пати <span class="mini">D&D</span></a>
-    <span class="top-badge" id="connection">Подключение…</span>
-  </header>
-  <div class="hero">
-    <div class="eyebrow">ВСТРЕЧАЕМСЯ В ОДНОМ ВРЕМЕНИ</div>
-    <h1>Когда вся пати <em>свободна?</em></h1>
-    <p>Каждый отмечает удобные часы у себя на телефоне. Мы пересчитаем часовые пояса и найдём пересечения.</p>
-  </div>
-  <section id="setupNotice" class="panel warning" hidden>
-    <h2>Нужен общий сервер</h2>
-    <p>Интерфейс готов, но база для совместной работы пока не подключена. Без неё ответы разных игроков не синхронизируются. Настройка описана в <a href="https://github.com/doppetrov-beep/Kalendare/blob/main/dnd/README.md" target="_blank" rel="noreferrer">инструкции</a>.</p>
-    <p class="muted">Сервис хранит общий график онлайн; в отличие от личного календаря смен, коллективное расписание без интернета не обновляется.</p>
-  </section>
-  <section id="errorPanel" class="panel error" role="alert" hidden><h2>Что-то пошло не так</h2><p id="errorText"></p><button id="retry" class="secondary" type="button">Повторить</button></section>
-  <section id="entryPanel" class="panel" hidden>
-    <h2 id="entryTitle">Создай встречу или присоединись</h2>
-    <p class="muted" id="entryHint">Для входа хватит ника. Пароль, почта и регистрация не нужны.</p>
-    <label for="nicknameInput">Как тебя зовут?</label>
-    <input id="nicknameInput" maxlength="32" autocomplete="nickname" placeholder="Например, Марат" required>
-    <div id="createFields">
-      <label for="roomTitleInput">Название компании</label>
-      <input id="roomTitleInput" maxlength="70" value="Наша D&D-пати" placeholder="Название вашей пати">
-    </div>
-    <button id="entryButton" type="button" class="primary full">Создать комнату</button>
-    <p class="foot">Участники узнают о комнате только по ссылке-приглашению. Ник — не защищённая личность: с нового устройства получится новый участник.</p>
-  </section>
-  <div id="roomView" hidden>
-    <section class="panel room-card">
-      <div class="room-top">
-        <div><div class="eyebrow">ВАША КОМНАТА</div><h2 id="roomTitle">D&D-пати</h2></div>
-        <div class="pill" id="roomCount">0 игроков</div>
-      </div>
-      <div class="identity"><span>Ты: <b id="myName">—</b></span><span>Твой пояс: <b id="myTimezone">—</b></span></div>
-      <div class="row gap" style="margin-top:14px">
-        <button class="secondary" type="button" id="copyInvite">Скопировать приглашение</button>
-        <button class="ghost" type="button" id="editNickname">Изменить ник</button>
-      </div>
-      <p class="foot">Ссылку отправь друзьям. Часы показываются по местному времени каждого, независимо от разницы между городами.</p>
-    </section>
-    <section class="panel">
-      <div class="section-head"><div><div class="eyebrow">ШАГ 1</div><h2>Отметь, когда можешь</h2></div><span class="tag" id="personalCount">0 интервалов</span></div>
-      <p class="muted">Добавь один или несколько интервалов — например, пятница с 19:00 до 23:00. Для разных дней можно указать разное время.</p>
-      <div class="daystrip" id="daystrip" aria-label="Ближайшие дни"></div>
-      <div class="time-fields">
-        <div><label for="startInput">Начало (твоё время)</label><input id="startInput" type="time" step="60" value="19:00" required></div>
-        <div><label for="endInput">Конец (твоё время)</label><input id="endInput" type="time" step="60" value="23:00" required></div>
-      </div>
-      <p class="repeat-help" style="margin-top:9px">Дату выбираешь сверху. Если конец раньше начала, интервал закончится уже на следующий день (например, 22:00–02:00).</p>
-      <div class="duration-row repeat-row">
-        <label for="repeatCount">Одинаковые часы на несколько дней</label>
-        <select id="repeatCount">
-          <option value="1">1 день</option>
-          <option value="2">2 дня подряд</option>
-          <option value="3">3 дня подряд</option>
-          <option value="4">4 дня подряд</option>
-          <option value="5">5 дней подряд</option>
-          <option value="7">7 дней подряд</option>
-        </select>
-      </div>
-      <p class="repeat-help">Например: выбери понедельник, время 18:00–22:00 и «3 дня подряд» — сайт добавит понедельник, вторник и среду. При смене даты выбранные часы сохраняются.</p>
-      <button type="button" id="addWindow" class="primary full">+ Добавить свободное время</button>
-      <p id="inputMessage" class="message" role="status"></p>
-      <h3>Мои свободные интервалы</h3>
-      <div class="window-list" id="myWindows"><p class="muted">Ты ещё не указал свободное время.</p></div>
-    </section>
-    <section class="panel">
-      <div class="section-head"><div><div class="eyebrow">ШАГ 2</div><h2>Когда могут все?</h2></div><button id="refresh" class="ghost" type="button">↻ Обновить</button></div>
-      <div class="duration-row"><span>Продолжительность игры</span><select id="duration"><option value="120">2 часа</option><option value="180">3 часа</option><option value="240">4 часа</option></select></div>
-      <p class="muted">Ниже — лучшие окна на ближайшие 21 день. Первые совпадения на 100% выделены отдельно. Если полного совпадения нет, показываем ближайшие варианты.</p>
-      <div id="results" class="results"><div class="empty">Пока ждём отметки игроков…</div></div>
-      <p class="foot">Все даты и часы здесь показаны в <strong>твоём местном часовом поясе</strong>.</p>
-    </section>
-    <section class="panel">
-      <div class="section-head"><div><div class="eyebrow">КОМПАНИЯ</div><h2>Кто уже ответил</h2></div><span class="tag" id="memberCount">0 / 12</span></div>
-      <div id="people" class="people"><p class="muted">Пока никого нет.</p></div>
-      <p class="foot">Список обновляется автоматически примерно раз в 20 секунд; можно нажать «Обновить» выше. Веб-сервису нужен интернет для синхронизации.</p>
-    </section>
-  </div>
-  <footer><span>Сбор пати · календарь для всех игроков</span></footer>
-</main>
-<script src="./config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="./app.js?v=3"></script>
+  <main>
+    <h1>⚔ Сбор пати переехал</h1>
+    <p>Теперь наш D&D-календарь работает на отдельном сайте. Перенаправляем туда автоматически.</p>
+    <p><a id="newSite" href="https://doppetrov-beep.github.io/-DND-Party/" referrerpolicy="no-referrer">Открыть новый D&D-календарь</a></p>
+    <noscript><p>Для автоматического сохранения параметров приглашения включи JavaScript.</p></noscript>
+  </main>
+  <script>
+    (() => {
+      const destination = new URL('https://doppetrov-beep.github.io/-DND-Party/');
+      destination.search = window.location.search;
+      destination.hash = window.location.hash;
+      document.getElementById('newSite').href = destination.href;
+    })();
+  </script>
 </body>
 </html>
