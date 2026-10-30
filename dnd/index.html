@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#111827">
 <meta name="description" content="Собери D&D-пати без долгих переписок: отмечайте свободные часы по местному времени и находите общие окна для игры.">
 <title>Сбор пати — D&D планировщик</title>
-<link rel="stylesheet" href="./style.css?v=1">
+<link rel="stylesheet" href="./style.css?v=2">
 </head>
 <body>
 <main class="app">
@@ -59,7 +59,19 @@
         <div><label for="startInput">Начало (твоё время)</label><input id="startInput" type="datetime-local" step="1800"></div>
         <div><label for="endInput">Конец (твоё время)</label><input id="endInput" type="datetime-local" step="1800"></div>
       </div>
-      <button type="button" id="addWindow" class="primary full">+ Я могу в это время</button>
+      <div class="duration-row repeat-row">
+        <label for="repeatCount">Одинаковые часы на несколько дней</label>
+        <select id="repeatCount">
+          <option value="1">1 день</option>
+          <option value="2">2 дня подряд</option>
+          <option value="3">3 дня подряд</option>
+          <option value="4">4 дня подряд</option>
+          <option value="5">5 дней подряд</option>
+          <option value="7">7 дней подряд</option>
+        </select>
+      </div>
+      <p class="repeat-help">Например: выбери понедельник, время 18:00–22:00 и «3 дня подряд» — сайт добавит понедельник, вторник и среду. При смене даты выбранные часы сохраняются.</p>
+      <button type="button" id="addWindow" class="primary full">+ Добавить свободное время</button>
       <p id="inputMessage" class="message" role="status"></p>
       <h3>Мои свободные интервалы</h3>
       <div class="window-list" id="myWindows"><p class="muted">Ты ещё не указал свободное время.</p></div>
@@ -81,6 +93,6 @@
 </main>
 <script src="./config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="./app.js?v=1"></script>
+<script src="./app.js?v=2"></script>
 </body>
 </html>
