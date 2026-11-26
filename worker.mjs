@@ -122,13 +122,13 @@ async function diskLink(env, login, operation) {
   const response = await fetch(url, {
     headers: { Authorization: "OAuth " + env.DISK_TOKEN },
     signal: AbortSignal.timeout(6000),
-    redirect: "error"
+    redirect: "manual"
   });
   if (operation === "download" && response.status === 404) {
     const failure = await response.json();
     if (failure.error === "DiskNotFoundError") return null;
   }
-  if (!response.ok) throw new Error("disk");
+  if (!response.ok) throw new Error("disk_" + operation + "_http_" + response.status);
   const { href } = await response.json();
   if (new URL(href).protocol !== "https:") throw new Error("disk");
   return href;
@@ -144,11 +144,13 @@ export class DiskSync {
     // One coordinator per profile serializes the read/check/write sequence.
     // The persistent snapshot itself lives on Yandex Disk.
     return this.context.blockConcurrencyWhile(async () => {
+      let step = "download_link";
       try {
         const login = new URL(request.url).pathname.slice(1);
         const download = await diskLink(this.env, login, "download");
         let current = { revision: null, data: null };
         if (download) {
+          step = "download_file";
           const response = await fetch(download, { signal: AbortSignal.timeout(6000) });
           if (!response.ok) throw new Error("download");
           current = await response.json();
@@ -158,14 +160,17 @@ export class DiskSync {
         const next = await request.json();
         if (next.revision !== current.revision) return json(current, 409);
         const snapshot = { revision: crypto.randomUUID(), data: next.data };
+        step = "upload_link";
         const upload = await diskLink(this.env, login, "upload");
+        step = "upload_file";
         const response = await fetch(upload, {
           method: "PUT", body: JSON.stringify(snapshot), signal: AbortSignal.timeout(6000)
         });
         if (!response.ok) throw new Error("upload");
         return json(snapshot);
-      } catch {
-        return json({ error: "disk" }, 503);
+      } catch (error) {
+        const upstream = /^disk_(download|upload)_http_\d{3}$/.test(error?.message ?? "") ? error.message : null;
+        return json({ error: "disk", reason: upstream ?? step }, 503);
       }
     });
   }
