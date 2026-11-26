@@ -160,6 +160,8 @@
     .shift-change select, .shift-change button { min-height:44px; padding:6px 10px; font:inherit; border:1px solid #c7d1e2; border-radius:12px; background:var(--surface); color:var(--text); }
     .theme-picker { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:0 0 12px; font-size:14px; font-weight:650; }
     .theme-picker select { min-height:44px; padding:6px 10px; font:inherit; font-size:16px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--text); }
+    .backup-card summary { cursor:pointer; font-size:16px; font-weight:800; }
+    .account-footer { display:flex; justify-content:center; margin-top:12px; }
     :root[data-theme="dark"] {
       color-scheme:dark;
       --bg:#111723; --surface:#1a2333; --text:#edf2fc; --muted:#aebbd0;
@@ -189,13 +191,6 @@
 </head>
 <body>
   <section id="cloud-panel" class="shell" aria-label="Облачная синхронизация">
-    <label class="theme-picker" for="themeMode">Тема
-      <select id="themeMode">
-        <option value="system">Как на устройстве</option>
-        <option value="light">Светлая</option>
-        <option value="dark">Тёмная</option>
-      </select>
-    </label>
     <form id="cloud-login" class="surface cloud-panel">
       <h1>Мои смены</h1>
       <p>Войди с логином и паролем, которые тебе выдали.</p>
@@ -205,7 +200,6 @@
     </form>
     <p id="sync-status" role="status"></p>
     <div id="cloud-tools" class="cloud-actions" hidden>
-      <button id="cloud-logout" type="button">Выйти</button>
       <button id="sync-import" type="button" hidden>Перенести прежние записи</button>
     </div>
     <div id="sync-conflict" class="cloud-actions" hidden>
@@ -217,7 +211,7 @@
     <header class="header">
       <div><p class="eyebrow">Личный планировщик</p><h1>Мои смены</h1></div>
       <button class="icon-button" id="settingsOpen" type="button" aria-label="Открыть настройки" title="Настройки">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.1v1.6m0 14.6v1.6M4.3 4.3l1.1 1.1m13.2 13.2 1.1 1.1M3.1 12h1.6m14.6 0h1.6M4.3 19.7l1.1-1.1M18.6 5.4l1.1-1.1"/><circle cx="12" cy="12" r="4"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.08-.98l2.11-1.65a.5.5 0 0 0 .12-.64l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1a7.3 7.3 0 0 0-1.69-.98L14.5 2.42A.49.49 0 0 0 14 2h-4a.49.49 0 0 0-.49.42l-.38 2.65c-.61.24-1.17.57-1.69.98l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46a.5.5 0 0 0 .12.64l2.11 1.65a6.05 6.05 0 0 0 0 1.96l-2.11 1.65a.5.5 0 0 0-.12.64l2 3.46c.12.22.39.31.61.22l2.49-1c.52.41 1.08.74 1.69.98l.38 2.65c.04.24.24.42.49.42h4c.25 0 .45-.18.49-.42l.38-2.65c.61-.24 1.17-.57 1.69-.98l2.49 1c.22.09.49 0 .61-.22l2-3.46a.5.5 0 0 0-.12-.64zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
       </button>
     </header>
 
@@ -288,22 +282,32 @@
       <div id="notesEmpty" class="notes-empty" hidden>Выбери день в календаре, чтобы написать или прочитать заметку.</div>
       <details class="all-notes"><summary>Все заметки</summary><div class="notes-list-wrap" id="notesListWrap" hidden><div class="notes-list" id="notesList"></div></div><p id="allNotesEmpty" class="notes-hint" hidden>Заметок пока нет.</p></details>
     </section>
-    <section class="surface notes-card" aria-labelledby="backupTitle">
-        <h2 id="backupTitle">Полная резервная копия</h2>
+    <details class="surface notes-card backup-card">
+        <summary id="backupTitle">Полная резервная копия</summary>
         <p class="notes-hint">Сохрани отдельный файл с заметками, настройками графика, именами бригад и разовыми сменами. В копию входят и правки, которые ещё ждут отправки на Яндекс Диск.</p>
         <div style="display:flex;flex-wrap:wrap;gap:10px">
           <button type="button" id="backupExport" style="border:0;border-radius:12px;background:#2469db;color:white;padding:12px 16px;font-weight:700">Скачать полную копию</button>
           <label id="backupImportLabel" style="display:inline-block;border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer">Восстановить из файла<input id="backupImport" type="file" accept=".json,application/json" style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0"></label>
         </div>
       <p class="notes-hint" style="margin:15px 0 0">Храни файл отдельно, например в «Файлах» или на Диске. Восстановление полной копии заменит данные текущего профиля и отправит их на синхронизацию.</p>
-    </section>
+    </details>
 
-    <p class="footnote">Листай календарь влево и вправо, чтобы переключать месяцы.<br>График и настройки доступны без учётной записи.</p>
+    <p class="footnote">Листай календарь влево и вправо, чтобы переключать месяцы.</p>
+    <footer class="cloud-actions account-footer">
+      <button id="cloud-logout" type="button">Выйти</button>
+    </footer>
   </main>
 
   <dialog id="settingsDialog" aria-labelledby="settingsTitle">
     <form class="settings" id="settingsForm">
       <div class="settings-head"><h2 id="settingsTitle">Настройки</h2><button type="button" class="icon-button" id="settingsClose" aria-label="Закрыть настройки">×</button></div>
+      <label class="theme-picker" for="themeMode">Тема
+        <select id="themeMode">
+          <option value="system">Как на устройстве</option>
+          <option value="light">Светлая</option>
+          <option value="dark">Тёмная</option>
+        </select>
+      </label>
       <p class="settings-description">График повторяется каждые 9 дней: 3 дневные смены, 3 ночные и 3 выходных.</p>
       <label class="setting-label" for="baseInput">Первый день дневной смены</label>
       <input id="baseInput" name="base" type="date" required>
