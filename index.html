@@ -148,10 +148,12 @@
     [hidden] { display:none !important; }
     .cloud-panel { display:grid; gap:12px; margin-bottom:16px; }
     .cloud-panel h1, .cloud-panel p { margin:0; }
-    .cloud-panel input { width:100%; min-width:0; padding:10px; font:inherit; }
-    .cloud-panel label { display:grid; gap:4px; min-width:0; }
+    .cloud-panel input { width:100%; min-width:0; min-height:46px; padding:10px 12px; font:inherit; font-size:16px; border:1px solid #c7d1e2; border-radius:12px; color:var(--text); background:var(--surface); }
+    .cloud-panel label { display:grid; gap:6px; min-width:0; font-weight:650; }
     .cloud-actions { display:flex; flex-wrap:wrap; gap:8px; }
-    .cloud-panel button, .cloud-actions button { padding:8px 14px; min-height:44px; font:inherit; }
+    .cloud-panel button, .cloud-actions button { padding:8px 14px; min-height:44px; font:inherit; font-weight:700; border:1px solid var(--line); border-radius:12px; color:var(--text); background:var(--surface); }
+    .cloud-panel button[type="submit"] { color:#fff; background:var(--blue); border-color:var(--blue); }
+    .cloud-panel button:disabled { opacity:.65; cursor:wait; }
     @media (min-width:1000px) {
       .shell { max-width:1100px; }
       main.shell { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:18px; align-items:start; }
