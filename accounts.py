@@ -56,9 +56,11 @@ else:
     if not password:
         password = secrets.token_urlsafe(24)
         generated_password = password
-    accounts[login] = hmac.new(
+    verifier = hmac.new(
         values["AUTH_SECRET"].encode(), f"password:{login}:{password}".encode(), hashlib.sha256
     ).hexdigest()
+    existing = accounts.get(login)
+    accounts[login] = {**existing, "verifier": verifier} if isinstance(existing, dict) else verifier
 values["ACCOUNTS"] = json.dumps(accounts, separators=(",", ":"))
 while not values.get("DISK_TOKEN"):
     token = read_secret("Yandex Disk OAuth token (Enter to configure later)").strip()

@@ -8,10 +8,12 @@
   const loginPanel = document.querySelector("#cloud-panel");
   const syncTools = document.querySelector("#sync-tools");
   const workTools = document.querySelector("#work-tools");
+  const profileName = document.querySelector("#profile-name");
   const toolbar = document.querySelector("#cloud-tools");
   const conflictTools = document.querySelector("#sync-conflict");
   const migrate = document.querySelector("#sync-import");
   let login = null;
+  let firstCrewName = null;
   let state;
   let conflict;
   let busy = false;
@@ -42,6 +44,7 @@
 
   function leave() {
     login = null;
+    firstCrewName = null;
     conflict = null;
     state = null;
     app.hidden = toolbar.hidden = conflictTools.hidden = true;
@@ -58,7 +61,9 @@
     app.hidden = false;
   }
 
-  function enter(name) {
+  function enter({ login: name, displayName, firstCrewName: lockedName }) {
+    profileName.textContent = displayName || name;
+    firstCrewName = lockedName || null;
     let cached = null;
     try {
       const saved = JSON.parse(localStorage.getItem("kalendare-cloud:" + name) || "null");
@@ -71,10 +76,8 @@
     migrate.hidden = !keys.some(key => localStorage.getItem(key) !== null);
     toolbar.hidden = false;
     form.hidden = true;
-    if (cached) {
-      refresh();
-      showCalendar();
-    }
+    refresh();
+    if (cached) showCalendar();
     sync();
   }
 
@@ -121,6 +124,7 @@
 
   function updateAll(values) {
     if (!login || !state) throw new Error("session");
+    values = lockFirstCrew(values);
     if (Object.entries(values).every(([key, value]) => state.data[key] === value)) return;
     const data = { ...state.data, ...values };
     const upload = JSON.stringify({ revision: state.revision ?? "0".repeat(36), data });
@@ -133,10 +137,19 @@
   }
 
   window.calendarStorage = {
+    get firstCrewName() { return firstCrewName; },
     getItem: key => state?.data[key] ?? null,
     setItem: (key, value) => updateAll({ [key]: value }),
     setItems: updateAll
   };
+
+  function lockFirstCrew(data) {
+    const crews = data[keys[2]];
+    if (!firstCrewName || typeof crews !== "string") return data;
+    const names = JSON.parse(crews);
+    if (!Array.isArray(names) || names.length !== 3) return data;
+    return { ...data, [keys[2]]: JSON.stringify([firstCrewName, names[1], names[2]]) };
+  }
 
   form.addEventListener("submit", async event => {
     event.preventDefault();
@@ -146,7 +159,7 @@
       const fields = new FormData(form);
       const result = await api("login", "POST", { login: fields.get("login"), password: fields.get("password") });
       form.reset();
-      enter(result.data.login);
+      enter(result.data);
     } catch (error) {
       status.textContent = error.status === 401 ? "Не подошёл логин или пароль." :
         error.status === 429 ? "Слишком много попыток. Попробуй через минуту." : "Вход пока недоступен.";
@@ -195,14 +208,14 @@
         data[key] ??= previous;
       }
     }
-    store({ ...state, data, pending: true });
+    store({ ...state, data: lockFirstCrew(data), pending: true });
     migrate.hidden = true;
     refresh();
     sync();
   });
   document.addEventListener("visibilitychange", () => { if (!document.hidden) sync(); });
   window.addEventListener("online", sync);
-  api("session").then(result => enter(result.data.login)).catch(error => {
+  api("session").then(result => enter(result.data)).catch(error => {
     status.textContent = error.status === 401 ? "" : "Сервис входа пока недоступен.";
   });
 })();

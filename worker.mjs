@@ -51,11 +51,20 @@ function sessionCookie(value, lifetime) {
   return cookieName + "=" + value + "; Path=/; Secure; HttpOnly; SameSite=Strict; Max-Age=" + lifetime;
 }
 
+function accountVerifier(account) {
+  return typeof account === "string" ? account : account?.verifier;
+}
+
+function profile(login, account) {
+  return { login, displayName: account?.displayName || login, firstCrewName: account?.firstCrewName ?? null };
+}
+
 async function session(request, env, accounts) {
   const cookie = (request.headers.get("Cookie") ?? "").split(/;\s*/).find(value => value.startsWith(cookieName + "="));
   const [login, expires, signature] = (cookie?.slice(cookieName.length + 1) ?? "").split(".");
   if (!loginPattern.test(login) || !Object.hasOwn(accounts, login) || Number(expires) <= Date.now()) return null;
-  return await verify(env.AUTH_SECRET, ["session", login, expires, accounts[login]].join(":"), signature) ? login : null;
+  const verifier = accountVerifier(accounts[login]);
+  return verifier && await verify(env.AUTH_SECRET, ["session", login, expires, verifier].join(":"), signature) ? login : null;
 }
 
 function validSnapshot(payload) {
@@ -87,27 +96,36 @@ export default {
         const credentials = await body(request, 1024).catch(() => null);
         const login = String(credentials?.login ?? "").trim().toLowerCase();
         const password = credentials?.password;
-        const verifier = Object.hasOwn(accounts, login) ? accounts[login] : "0".repeat(64);
+        const account = Object.hasOwn(accounts, login) ? accounts[login] : null;
+        const verifier = accountVerifier(account) ?? "0".repeat(64);
         const valid = loginPattern.test(login) && typeof password === "string" && password.length <= 128 &&
           await verify(env.AUTH_SECRET, ["password", login, password].join(":"), verifier);
         if (!valid) return json({ error: "credentials" }, 401);
         const lifetime = 14 * 24 * 60 * 60;
         const expires = Date.now() + lifetime * 1000;
         const signature = await sign(env.AUTH_SECRET, ["session", login, expires, verifier].join(":"));
-        return json({ login }, 200, { "Set-Cookie": sessionCookie([login, expires, signature].join("."), lifetime) });
+        return json(profile(login, account), 200, { "Set-Cookie": sessionCookie([login, expires, signature].join("."), lifetime) });
       }
       if (url.pathname === "/api/logout" && request.method === "POST") {
         return json({}, 200, { "Set-Cookie": sessionCookie("", 0) });
       }
       const login = await session(request, env, accounts);
       if (!login) return json({ error: "session" }, 401);
-      if (url.pathname === "/api/session" && request.method === "GET") return json({ login });
+      if (url.pathname === "/api/session" && request.method === "GET") return json(profile(login, accounts[login]));
       if (url.pathname !== "/api/state" || !["GET", "PUT"].includes(request.method)) return json({ error: "route" }, 404);
       if (!(await env.SYNC_LIMIT.limit({ key: login })).success) return json({ error: "rate" }, 429);
       const object = env.SYNC.get(env.SYNC.idFromName(login));
       if (request.method === "GET") return object.fetch("https://sync.internal/" + login);
       const payload = await body(request, maxBody).catch(() => null);
       if (!validSnapshot(payload)) return json({ error: "data" }, 400);
+      const firstCrewName = accounts[login]?.firstCrewName;
+      const crews = payload.data[storageKeys[2]];
+      if (firstCrewName && crews !== null) {
+        const names = await Promise.resolve().then(() => JSON.parse(crews)).catch(() => null);
+        if (!Array.isArray(names) || names.length !== 3 || names[0] !== firstCrewName) {
+          return json({ error: "first_crew_locked" }, 403);
+        }
+      }
       return object.fetch("https://sync.internal/" + login, { method: "PUT", body: JSON.stringify(payload) });
     } catch {
       return json({ error: "unavailable" }, 503);

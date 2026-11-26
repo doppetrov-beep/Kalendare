@@ -161,7 +161,8 @@
     .theme-picker { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:0 0 12px; font-size:14px; font-weight:650; }
     .theme-picker select { min-height:44px; padding:6px 10px; font:inherit; font-size:16px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--text); }
     .backup-card summary { cursor:pointer; font-size:16px; font-weight:800; }
-    .account-footer { display:flex; justify-content:center; margin-top:12px; }
+    .account-footer { display:flex; align-items:center; justify-content:center; margin-top:12px; }
+    #profile-name { color:var(--muted); font-size:14px; }
     .work-tools { margin-bottom:16px; }
     .work-tools-link { display:block; padding:13px 15px; border-radius:14px; background:#153b3b; color:white; text-decoration:none; font-weight:750; }
     #sync-status { color:var(--muted); font-size:14px; margin:9px 0 0; }
@@ -302,6 +303,7 @@
 
     <p class="footnote">Листай календарь влево и вправо, чтобы переключать месяцы.</p>
     <footer class="cloud-actions account-footer">
+      <span id="profile-name"></span>
       <button id="cloud-logout" type="button">Выйти</button>
     </footer>
   </main>
@@ -335,7 +337,7 @@
     </form>
   </dialog>
 
-  <script src="./sync.js?v=14"></script>
+  <script src="./sync.js?v=15"></script>
   <script>
     (() => {
       'use strict';
@@ -447,12 +449,14 @@
         }
       }
       function readCrews() {
+        let names = [...DEFAULT_CREWS];
         try {
           const data = JSON.parse(window.calendarStorage.getItem(CREWS_KEY) || 'null');
           if (Array.isArray(data) && data.length === 3 && data.every(name => typeof name === 'string' && name.trim() && name.length <= 50))
-            return data.map(name => name.trim());
+            names = data.map(name => name.trim());
         } catch (_) { /* Storage unavailable; default crew names. */ }
-        return [...DEFAULT_CREWS];
+        names[0] = window.calendarStorage.firstCrewName || names[0];
+        return names;
       }
       let crewNames = readCrews();
       function getRegularPhase(date) {
@@ -693,6 +697,7 @@
       $('settingsOpen').addEventListener('click',()=>{
         $('baseInput').value=settings.base;
         for (let i=0;i<3;i++) $('crewName'+i).value=crewNames[i];
+        $('crewName0').readOnly=Boolean(window.calendarStorage.firstCrewName);
         dialog.showModal();
       });
       $('settingsClose').addEventListener('click',()=>dialog.close());
