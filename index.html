@@ -162,6 +162,11 @@
     .theme-picker select { min-height:44px; padding:6px 10px; font:inherit; font-size:16px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--text); }
     .backup-card summary { cursor:pointer; font-size:16px; font-weight:800; }
     .account-footer { display:flex; justify-content:center; margin-top:12px; }
+    .work-tools { margin-bottom:16px; }
+    .work-tools-link { display:block; padding:13px 15px; border-radius:14px; background:#153b3b; color:white; text-decoration:none; font-weight:750; }
+    #sync-status { color:var(--muted); font-size:14px; margin:9px 0 0; }
+    #sync-status:empty { display:none; }
+    #sync-conflict, #cloud-tools:has(button:not([hidden])) { margin-top:8px; }
     :root[data-theme="dark"] {
       color-scheme:dark;
       --bg:#111723; --surface:#1a2333; --text:#edf2fc; --muted:#aebbd0;
@@ -198,13 +203,15 @@
       <label>Пароль<input name="password" type="password" autocomplete="current-password" maxlength="128" required></label>
       <button type="submit">Войти</button>
     </form>
-    <p id="sync-status" role="status"></p>
-    <div id="cloud-tools" class="cloud-actions" hidden>
-      <button id="sync-import" type="button" hidden>Перенести прежние записи</button>
-    </div>
-    <div id="sync-conflict" class="cloud-actions" hidden>
-      <button type="button" data-choose="remote">Взять облачную копию</button>
-      <button type="button" data-choose="local">Отправить эту копию</button>
+    <div id="sync-tools">
+      <p id="sync-status" role="status"></p>
+      <div id="cloud-tools" class="cloud-actions" hidden>
+        <button id="sync-import" type="button" hidden>Перенести прежние записи</button>
+      </div>
+      <div id="sync-conflict" class="cloud-actions" hidden>
+        <button type="button" data-choose="remote">Взять облачную копию</button>
+        <button type="button" data-choose="local">Отправить эту копию</button>
+      </div>
     </div>
   </section>
   <main class="shell" hidden>
@@ -214,8 +221,6 @@
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.08-.98l2.11-1.65a.5.5 0 0 0 .12-.64l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1a7.3 7.3 0 0 0-1.69-.98L14.5 2.42A.49.49 0 0 0 14 2h-4a.49.49 0 0 0-.49.42l-.38 2.65c-.61.24-1.17.57-1.69.98l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46a.5.5 0 0 0 .12.64l2.11 1.65a6.05 6.05 0 0 0 0 1.96l-2.11 1.65a.5.5 0 0 0-.12.64l2 3.46c.12.22.39.31.61.22l2.49-1c.52.41 1.08.74 1.69.98l.38 2.65c.04.24.24.42.49.42h4c.25 0 .45-.18.49-.42l.38-2.65c.61-.24 1.17-.57 1.69-.98l2.49 1c.22.09.49 0 .61-.22l2-3.46a.5.5 0 0 0-.12-.64zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
       </button>
     </header>
-
-    <p style="margin:0 0 18px"><a href="./work/" style="display:block;padding:16px 20px;border-radius:18px;background:#153b3b;color:white;text-decoration:none;font-weight:700">Рабочий журнал · техника и расходники</a></p>
 
     <section class="today-card" aria-labelledby="todayHeading">
       <div class="today-top"><span class="card-label" id="todayHeading">Сегодня</span><span class="dot" aria-hidden="true"></span></div>
@@ -282,6 +287,9 @@
       <div id="notesEmpty" class="notes-empty" hidden>Выбери день в календаре, чтобы написать или прочитать заметку.</div>
       <details class="all-notes"><summary>Все заметки</summary><div class="notes-list-wrap" id="notesListWrap" hidden><div class="notes-list" id="notesList"></div></div><p id="allNotesEmpty" class="notes-hint" hidden>Заметок пока нет.</p></details>
     </section>
+    <section id="work-tools" class="surface work-tools" aria-label="Рабочий журнал и синхронизация">
+      <a class="work-tools-link" href="./work/">Рабочий журнал · техника и расходники</a>
+    </section>
     <details class="surface notes-card backup-card">
         <summary id="backupTitle">Полная резервная копия</summary>
         <p class="notes-hint">Сохрани отдельный файл с заметками, настройками графика, именами бригад и разовыми сменами. В копию входят и правки, которые ещё ждут отправки на Яндекс Диск.</p>
@@ -327,7 +335,7 @@
     </form>
   </dialog>
 
-  <script src="./sync.js?v=10"></script>
+  <script src="./sync.js?v=13"></script>
   <script>
     (() => {
       'use strict';

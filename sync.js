@@ -5,6 +5,9 @@
   const status = document.querySelector("#sync-status");
   const form = document.querySelector("#cloud-login");
   const app = document.querySelector("main");
+  const loginPanel = document.querySelector("#cloud-panel");
+  const syncTools = document.querySelector("#sync-tools");
+  const workTools = document.querySelector("#work-tools");
   const toolbar = document.querySelector("#cloud-tools");
   const conflictTools = document.querySelector("#sync-conflict");
   const migrate = document.querySelector("#sync-import");
@@ -42,8 +45,17 @@
     conflict = null;
     state = null;
     app.hidden = toolbar.hidden = conflictTools.hidden = true;
+    loginPanel.append(syncTools);
+    loginPanel.hidden = false;
     form.hidden = false;
     refresh();
+  }
+
+  function showCalendar() {
+    if (!app.hidden) return;
+    workTools.append(syncTools);
+    loginPanel.hidden = true;
+    app.hidden = false;
   }
 
   function enter(name) {
@@ -81,7 +93,7 @@
         if (!newer && !sent.pending) refresh();
         status.textContent = newer ? "Ожидает синхронизации" : "Синхронизировано";
       }
-      app.hidden = false;
+      showCalendar();
     } catch (error) {
       if (error.status === 401) {
         leave();
@@ -89,7 +101,7 @@
       } else {
         status.textContent = state?.pending ? "Правки на устройстве. Ожидают синхронизации." : "Облако недоступно. Повторяем подключение.";
         retry = true;
-        if (state?.revision || state?.pending) app.hidden = false;
+        if (state?.revision || state?.pending) showCalendar();
       }
     } finally {
       busy = false;
