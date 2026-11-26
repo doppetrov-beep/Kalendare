@@ -4,7 +4,7 @@ from zipfile import ZipFile
 
 dist = Path("dist")
 dist.mkdir(exist_ok=True)
-for name in ("index.html", "sync.js", "manifest.webmanifest", "service-worker.js",
+for name in ("index.html", "sync.js", "theme.js", "manifest.webmanifest", "service-worker.js",
              "icon-192.png", "apple-touch-icon.png", "work/index.html", "dnd/index.html"):
     target = dist / name
     target.parent.mkdir(parents=True, exist_ok=True)

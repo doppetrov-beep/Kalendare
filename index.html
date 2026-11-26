@@ -11,6 +11,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
   <title>Мои смены — календарь</title>
+  <script src="./theme.js"></script>
   <style>
     .shift-indicator { display:inline-grid; place-items:center; width:25px; height:25px; border-radius:8px; font-size:13px; font-weight:800; flex:none; }
     .shift-Д { background:#ffdf56; color:#342b00; } .shift-Н { background:#3189ed; color:white; } .shift-В { background:#e55a59; color:white; }
@@ -157,6 +158,25 @@
     .shift-change { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:12px; }
     .shift-change label { font-weight:650; }
     .shift-change select, .shift-change button { min-height:44px; padding:6px 10px; font:inherit; border:1px solid #c7d1e2; border-radius:12px; background:var(--surface); color:var(--text); }
+    .theme-picker { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:0 0 12px; font-size:14px; font-weight:650; }
+    .theme-picker select { min-height:44px; padding:6px 10px; font:inherit; font-size:16px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--text); }
+    :root[data-theme="dark"] {
+      color-scheme:dark;
+      --bg:#111723; --surface:#1a2333; --text:#edf2fc; --muted:#aebbd0;
+      --line:#36445b; --blue:#2f6ade; --night:#235bb1; --off:#9b3f53;
+    }
+    [data-theme="dark"] .surface, [data-theme="dark"] .all-notes,
+    [data-theme="dark"] .cloud-panel input, [data-theme="dark"] .shift-change :is(select,button) { border-color:var(--line); }
+    [data-theme="dark"] dialog { background:var(--surface); }
+    [data-theme="dark"] :is(.arrow,.today-button,.notes-empty,.note-item,.roster-row,.settings input,.note-editor textarea) { background:#253148; color:var(--text); }
+    [data-theme="dark"] :is(.settings input,.note-editor textarea,#backupImportLabel) { border-color:var(--line); }
+    [data-theme="dark"] :is(.weekday,.footnote,.note-status,.reset) { color:var(--muted); }
+    [data-theme="dark"] :is(.notes-count,.note-item-date,.detail-shift.night) { color:#9cc8ff; }
+    [data-theme="dark"] :is(.detail-shift.off,.note-delete) { color:#ff9caf; }
+    [data-theme="dark"] .detail-shift.daytime { color:#ffdf80; }
+    [data-theme="dark"] .income { color:#8ce5c5; }
+    [data-theme="dark"] .day.is-today { border-color:#edf2fc; }
+    [data-theme="dark"] .day.is-selected { outline-color:#b6d4ff; }
     @media (min-width:1000px) {
       .shell { max-width:1100px; }
       main.shell { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:18px; align-items:start; }
@@ -169,6 +189,13 @@
 </head>
 <body>
   <section id="cloud-panel" class="shell" aria-label="Облачная синхронизация">
+    <label class="theme-picker" for="themeMode">Тема
+      <select id="themeMode">
+        <option value="system">Как на устройстве</option>
+        <option value="light">Светлая</option>
+        <option value="dark">Тёмная</option>
+      </select>
+    </label>
     <form id="cloud-login" class="surface cloud-panel">
       <h1>Мои смены</h1>
       <p>Войди с логином и паролем, которые тебе выдали.</p>
@@ -266,7 +293,7 @@
         <p class="notes-hint">Сохрани отдельный файл с заметками, настройками графика, именами бригад и разовыми сменами. В копию входят и правки, которые ещё ждут отправки на Яндекс Диск.</p>
         <div style="display:flex;flex-wrap:wrap;gap:10px">
           <button type="button" id="backupExport" style="border:0;border-radius:12px;background:#2469db;color:white;padding:12px 16px;font-weight:700">Скачать полную копию</button>
-          <label style="display:inline-block;border:1px solid #b9c9d1;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer">Восстановить из файла<input id="backupImport" type="file" accept=".json,application/json" style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0"></label>
+          <label id="backupImportLabel" style="display:inline-block;border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer">Восстановить из файла<input id="backupImport" type="file" accept=".json,application/json" style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0"></label>
         </div>
       <p class="notes-hint" style="margin:15px 0 0">Храни файл отдельно, например в «Файлах» или на Диске. Восстановление полной копии заменит данные текущего профиля и отправит их на синхронизацию.</p>
     </section>
