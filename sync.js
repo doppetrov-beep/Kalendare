@@ -14,6 +14,8 @@
   const migrate = document.querySelector("#sync-import");
   let login = null;
   let firstCrewName = null;
+  let lockedCycleStart = null;
+  let canRestoreBackup = true;
   let state;
   let conflict;
   let busy = false;
@@ -45,6 +47,8 @@
   function leave() {
     login = null;
     firstCrewName = null;
+    lockedCycleStart = null;
+    canRestoreBackup = true;
     conflict = null;
     state = null;
     app.hidden = toolbar.hidden = conflictTools.hidden = true;
@@ -61,9 +65,12 @@
     app.hidden = false;
   }
 
-  function enter({ login: name, displayName, firstCrewName: lockedName }) {
+  function enter({ login: name, displayName, firstCrewName: lockedName, lockedCycleStart: cycleStart, canRestoreBackup: canRestore }) {
     profileName.textContent = displayName || name;
     firstCrewName = lockedName || null;
+    lockedCycleStart = cycleStart || null;
+    canRestoreBackup = canRestore !== false;
+    document.querySelector("#backupImportLabel").hidden = !canRestoreBackup;
     let cached = null;
     try {
       const saved = JSON.parse(localStorage.getItem("kalendare-cloud:" + name) || "null");
@@ -73,7 +80,7 @@
     } catch {}
     login = name;
     state = cached || { revision: null, data: empty(), pending: false };
-    migrate.hidden = !keys.some(key => localStorage.getItem(key) !== null);
+    migrate.hidden = !canRestoreBackup || !keys.some(key => localStorage.getItem(key) !== null);
     toolbar.hidden = false;
     form.hidden = true;
     refresh();
@@ -89,7 +96,7 @@
     status.textContent = "Синхронизация…";
     try {
       const result = await api("state", sent.pending ? "PUT" : "GET",
-        sent.pending ? { revision: sent.revision, data: sent.data } : null);
+        sent.pending ? { revision: sent.revision, data: applyProfileLocks(sent.data) } : null);
       const remote = result.data;
       if (result.conflict || (state !== sent && !sent.pending && state.revision !== remote.revision)) {
         conflict = remote;
@@ -124,7 +131,7 @@
 
   function updateAll(values) {
     if (!login || !state) throw new Error("session");
-    values = lockFirstCrew(values);
+    values = applyProfileLocks(values);
     if (Object.entries(values).every(([key, value]) => state.data[key] === value)) return;
     const data = { ...state.data, ...values };
     const upload = JSON.stringify({ revision: state.revision ?? "0".repeat(36), data });
@@ -138,17 +145,28 @@
 
   window.calendarStorage = {
     get firstCrewName() { return firstCrewName; },
+    get lockedCycleStart() { return lockedCycleStart; },
+    get canRestoreBackup() { return canRestoreBackup; },
     getItem: key => state?.data[key] ?? null,
     setItem: (key, value) => updateAll({ [key]: value }),
     setItems: updateAll
   };
 
-  function lockFirstCrew(data) {
-    const crews = data[keys[2]];
-    if (!firstCrewName || typeof crews !== "string") return data;
-    const names = JSON.parse(crews);
-    if (!Array.isArray(names) || names.length !== 3) return data;
-    return { ...data, [keys[2]]: JSON.stringify([firstCrewName, names[1], names[2]]) };
+  function applyProfileLocks(data) {
+    const result = { ...data };
+    if (firstCrewName && typeof data[keys[2]] === "string") {
+      try {
+        const names = JSON.parse(data[keys[2]]);
+        if (Array.isArray(names) && names.length === 3) result[keys[2]] = JSON.stringify([firstCrewName, names[1], names[2]]);
+      } catch {}
+    }
+    if (lockedCycleStart && typeof data[keys[0]] === "string") {
+      try {
+        const settings = JSON.parse(data[keys[0]]);
+        result[keys[0]] = JSON.stringify({ ...settings, base: lockedCycleStart });
+      } catch {}
+    }
+    return result;
   }
 
   form.addEventListener("submit", async event => {
@@ -194,7 +212,7 @@
   });
 
   migrate.addEventListener("click", () => {
-    if (busy || conflict || app.hidden) return;
+    if (!canRestoreBackup || busy || conflict || app.hidden) return;
     if (!confirm("Перенести заметки и настройки из прежнего календаря? Заметки с совпадающими датами сохранятся из облачной копии.")) return;
     const data = { ...state.data };
     for (const key of keys) {
@@ -208,7 +226,7 @@
         data[key] ??= previous;
       }
     }
-    store({ ...state, data: lockFirstCrew(data), pending: true });
+    store({ ...state, data: applyProfileLocks(data), pending: true });
     migrate.hidden = true;
     refresh();
     sync();

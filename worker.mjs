@@ -56,7 +56,13 @@ function accountVerifier(account) {
 }
 
 function profile(login, account) {
-  return { login, displayName: account?.displayName || login, firstCrewName: account?.firstCrewName ?? null };
+  return {
+    login,
+    displayName: account?.displayName || login,
+    firstCrewName: account?.firstCrewName ?? null,
+    lockedCycleStart: login === "admin" ? null : "2026-10-21",
+    canRestoreBackup: account?.canRestoreBackup !== false
+  };
 }
 
 async function session(request, env, accounts) {
@@ -118,7 +124,12 @@ export default {
       if (request.method === "GET") return object.fetch("https://sync.internal/" + login);
       const payload = await body(request, maxBody).catch(() => null);
       if (!validSnapshot(payload)) return json({ error: "data" }, 400);
-      const firstCrewName = accounts[login]?.firstCrewName;
+      const { firstCrewName, lockedCycleStart } = profile(login, accounts[login]);
+      const settings = payload.data[storageKeys[0]];
+      if (lockedCycleStart && settings !== null) {
+        const calendar = await Promise.resolve().then(() => JSON.parse(settings)).catch(() => null);
+        if (calendar?.base !== lockedCycleStart) return json({ error: "cycle_start_locked" }, 403);
+      }
       const crews = payload.data[storageKeys[2]];
       if (firstCrewName && crews !== null) {
         const names = await Promise.resolve().then(() => JSON.parse(crews)).catch(() => null);
