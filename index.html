@@ -520,6 +520,8 @@
       });
       $('backupExport').addEventListener('click', async () => {
         try {
+          const rawNotes = localStorage.getItem(NOTES_KEY);
+          if (rawNotes !== null) { const parsed=JSON.parse(rawNotes); if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || Object.keys(parsed).length !== Object.keys(readNotes()).length) throw new Error('Invalid notes'); }
           const data = {format:'moi-smeny-backup', version:1, exportedAt:new Date().toISOString(), notes:readNotes(), settings:readSettings(), crews:readCrews()};
           const file = new File([JSON.stringify(data,null,2)], 'moi-smeny-backup.json', {type:'application/json'});
           if (navigator.canShare && navigator.canShare({files:[file]}) && navigator.share) {
