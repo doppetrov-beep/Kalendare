@@ -154,6 +154,9 @@
     .cloud-panel button, .cloud-actions button { padding:8px 14px; min-height:44px; font:inherit; font-weight:700; border:1px solid var(--line); border-radius:12px; color:var(--text); background:var(--surface); }
     .cloud-panel button[type="submit"] { color:#fff; background:var(--blue); border-color:var(--blue); }
     .cloud-panel button:disabled { opacity:.65; cursor:wait; }
+    .shift-change { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:12px; }
+    .shift-change label { font-weight:650; }
+    .shift-change select, .shift-change button { min-height:44px; padding:6px 10px; font:inherit; border:1px solid #c7d1e2; border-radius:12px; background:var(--surface); color:var(--text); }
     @media (min-width:1000px) {
       .shell { max-width:1100px; }
       main.shell { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:18px; align-items:start; }
@@ -229,6 +232,15 @@
       <div class="detail" aria-live="polite">
         <div><div class="detail-label">Выбранный день</div><div class="detail-date" id="selectedDate">—</div></div>
         <div class="detail-shift" id="selectedShift">—</div>
+      </div>
+      <div class="shift-change" id="shiftChange" hidden>
+        <label for="shiftChoice">Смена бригады 1</label>
+        <select id="shiftChoice">
+          <option value="0">Дневная</option>
+          <option value="1">Ночная</option>
+          <option value="2">Выходной</option>
+        </select>
+        <button type="button" id="restoreShift" hidden>Вернуть по графику</button>
       </div>
     </section>
 
@@ -320,9 +332,13 @@
       function readSettings() {
         try {
           const stored = JSON.parse(window.calendarStorage.getItem(STORAGE_KEY));
-          if (stored && parseLocalDate(stored.base) && Number.isInteger(stored.rate) && stored.rate>=0 && stored.rate<=100000000) return {base:stored.base,rate:stored.rate};
+          if (stored && parseLocalDate(stored.base) && Number.isInteger(stored.rate) && stored.rate>=0 && stored.rate<=100000000) return {base:stored.base,rate:stored.rate,overrides:readShiftOverrides(stored.overrides)};
         } catch (_) { /* Private browsing or disabled storage: use defaults. */ }
-        return {...DEFAULTS};
+        return {...DEFAULTS,overrides:{}};
+      }
+      function readShiftOverrides(value) {
+        return Object.fromEntries(Object.entries(value ?? {}).filter(([date,shift]) =>
+          parseLocalDate(date) && Number.isInteger(shift) && shift >= 0 && shift < shifts.length));
       }
       function readNotes() {
         try {
@@ -401,15 +417,18 @@
         return [...DEFAULT_CREWS];
       }
       let crewNames = readCrews();
-      function getCrewAssignments(date) {
-        // For crew 1, current phase 0=day, 1=night, 2=off.
-        // Other crews are staggered by one 3-day block, so every date has
-        // exactly one day crew, one night crew, and one resting crew.
+      function getRegularPhase(date) {
+        // UTC ordinals preserve the daily cycle when daylight-saving time changes.
         const diffDays = dayOrdinal(date) - dayOrdinal(parseLocalDate(settings.base));
         const cycle = ((diffDays % 9) + 9) % 9;
-        const phase = Math.floor(cycle / 3);
+        return Math.floor(cycle / 3);
+      }
+      function getCrewAssignments(date) {
+        const phase = getRegularPhase(date);
         const output = [null, null, null];
         for (let i=0; i<3; i++) output[(phase + i) % 3] = crewNames[i];
+        const chosen = settings.overrides[isoDate(date)];
+        if (chosen !== undefined) [output[phase], output[chosen]] = [output[chosen], output[phase]];
         return output; // [day crew, night crew, resting crew]
       }
       let settings = readSettings();
@@ -419,11 +438,7 @@
       let selectedDay = now.getDate();
 
       function getShift(date) {
-        const base = parseLocalDate(settings.base);
-        // UTC ordinals avoid changing shift dates when daylight-saving time changes.
-        const diffDays = dayOrdinal(date)-dayOrdinal(base);
-        const cycle = ((diffDays % 9)+9)%9;
-        return shifts[Math.floor(cycle/3)];
+        return shifts[settings.overrides[isoDate(date)] ?? getRegularPhase(date)];
       }
       function renderToday() {
         now = new Date();
@@ -470,18 +485,26 @@
           const number=document.createElement('span'); number.className='number'; number.textContent=String(n);
           const letter=document.createElement('span'); letter.className='letter'; letter.textContent=shift.letter;
           button.append(number,letter);
-          button.addEventListener('click',() => {selectedDay=n; render(); $('noteEditor').scrollIntoView({behavior:'smooth',block:'nearest'});});
+          button.addEventListener('click',() => {
+            selectedDay=n;
+            render();
+            $('calendar').querySelector('[aria-pressed="true"]').focus({preventScroll:true});
+          });
           fragment.appendChild(button);
         }
         $('calendar').appendChild(fragment);
         if (selectedDay!==null && selectedDay>=1 && selectedDay<=count) {
           const date=new Date(year,month,selectedDay), shift=getShift(date);
+          $('shiftChange').hidden=false;
+          $('shiftChoice').value=String(shifts.indexOf(shift));
+          $('restoreShift').hidden=!Object.hasOwn(settings.overrides,isoDate(date));
           $('selectedDate').textContent=detailDateFormat.format(date);
           $('selectedShift').textContent=`${shift.name} · ${crewNames[0]}`;
           const [day,night,off]=getCrewAssignments(date);
           $('selectedCrewDay').textContent=day; $('selectedCrewNight').textContent=night; $('selectedCrewOff').textContent=off;
           $('selectedShift').className=`detail-shift ${shift.css}`;
         } else {
+          $('shiftChange').hidden=true;
           $('selectedDate').textContent='Выбери дату';
           $('selectedShift').textContent='';
           $('selectedCrewDay').textContent='—'; $('selectedCrewNight').textContent='—'; $('selectedCrewOff').textContent='—';
@@ -489,6 +512,26 @@
         }
         renderNoteEditor();
       }
+      function changeSelectedShift(shift) {
+        const key=noteKey();
+        if (key===null) return;
+        const overrides={...settings.overrides};
+        if (shift===getRegularPhase(parseLocalDate(key))) delete overrides[key];
+        else overrides[key]=shift;
+        const next={...settings,overrides};
+        try {
+          window.calendarStorage.setItem(STORAGE_KEY,JSON.stringify(next));
+          settings=next;
+        } catch (_) {
+          alert('Не удалось сохранить смену на устройстве.');
+        }
+        render();
+      }
+      $('shiftChoice').addEventListener('change',event=>changeSelectedShift(Number(event.target.value)));
+      $('restoreShift').addEventListener('click',()=>{
+        const date=parseLocalDate(noteKey());
+        if (date) changeSelectedShift(getRegularPhase(date));
+      });
       function changeMonth(delta) {
         const moved=new Date(year,month+delta,1);
         year=moved.getFullYear(); month=moved.getMonth();
@@ -560,7 +603,10 @@
           const keys=[NOTES_KEY, STORAGE_KEY, CREWS_KEY], previous=keys.map(k=>window.calendarStorage.getItem(k));
           try {
             window.calendarStorage.setItem(NOTES_KEY,JSON.stringify(merged));
-            if (restoreSettings && validSettings) window.calendarStorage.setItem(STORAGE_KEY,JSON.stringify(st));
+            if (restoreSettings && validSettings) {
+              const overrides=st.overrides === undefined ? settings.overrides : readShiftOverrides(st.overrides);
+              window.calendarStorage.setItem(STORAGE_KEY,JSON.stringify({base:st.base,rate:st.rate,overrides}));
+            }
             if (restoreSettings && validCrews) window.calendarStorage.setItem(CREWS_KEY,JSON.stringify(cr));
           } catch (error) {
             keys.forEach((key,i)=>{try { if (previous[i]===null) window.calendarStorage.removeItem(key); else window.calendarStorage.setItem(key,previous[i]); } catch (_) {}});
@@ -610,7 +656,7 @@
         if (!Number.isInteger(rate)||rate<0||rate>100000000||!parseLocalDate(base)) {window.alert('Проверь оплату и дату начала цикла.'); return;}
         const names=[0,1,2].map(i => $('crewName'+i).value.trim());
         if (names.some(name => !name || name.length>50)) { window.alert('Заполни имена трёх бригад (до 50 символов).'); return; }
-        settings={rate,base};
+        settings={...settings,rate,base};
         crewNames=names;
         try {
           window.calendarStorage.setItem(STORAGE_KEY,JSON.stringify(settings));
@@ -619,8 +665,8 @@
         dialog.close(); render();
       });
       $('resetSettings').addEventListener('click',()=>{
-        settings={...DEFAULTS};
-        try {window.calendarStorage.removeItem(STORAGE_KEY);} catch (_) {}
+        settings={...DEFAULTS,overrides:settings.overrides};
+        try {window.calendarStorage.setItem(STORAGE_KEY,JSON.stringify(settings));} catch (_) {}
         $('baseInput').value=settings.base;
         // Do not erase names or dated notes when resetting the shift cycle.
         dialog.close(); render();
