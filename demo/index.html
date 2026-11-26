@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f6fa">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Kalendare Демо">
+  <meta name="description" content="Личный календарь рабочих смен: 3 дневных, 3 ночных, 3 выходных. Расписание смен.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <title>Kalendare — демо</title>
+  <style>
+    .shift-indicator { display:inline-grid; place-items:center; width:25px; height:25px; border-radius:8px; font-size:13px; font-weight:800; flex:none; }
+    .shift-Д { background:#ffdf56; color:#342b00; } .shift-Н { background:#3189ed; color:white; } .shift-В { background:#e55a59; color:white; }
+    .all-notes { margin-top:20px; padding:16px; border:1px solid #e8ebf1; border-radius:16px; } .all-notes summary { cursor:pointer; font-weight:750; } .all-notes .notes-list-wrap { margin-top:12px; }
+
+    :root {
+      color-scheme: light;
+      --bg: #f5f6fa; --surface: #ffffff; --text: #1e2431; --muted: #747c8b;
+      --line: #e8ebf1; --blue: #2469db; --yellow: #ffdf56; --night: #3189ed;
+      --off: #e55a59; --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+    }
+    button, input { font: inherit; }
+    button { -webkit-appearance: none; appearance: none; cursor: pointer; touch-action: manipulation; }
+    button:focus-visible, input:focus-visible { outline: 3px solid #659fff; outline-offset: 3px; }
+    .shell { max-width: 540px; min-width: 280px; margin: 0 auto; padding: 22px 16px 36px; }
+    .header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; }
+    .eyebrow { color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .13em; text-transform:uppercase; margin:0 0 5px; }
+    h1 { font-size: clamp(24px, 6vw, 30px); letter-spacing: -.045em; line-height:1.1; margin:0; font-weight: 800; }
+    .icon-button { display:grid; place-items:center; width:46px; height:46px; flex:none; border:1px solid var(--line); border-radius:15px; background:var(--surface); color:var(--text); box-shadow:0 2px 7px rgba(28,42,68,.03); }
+    .icon-button:active, .arrow:active, .today-button:active { transform:scale(.96); }
+    .icon-button svg { width:22px; height:22px; }
+    .today-card { padding:22px; background:linear-gradient(128deg, #263d67 0%, #192944 100%); border-radius:var(--radius); color:#fff; box-shadow:0 12px 26px rgba(28,51,93,.14); margin-bottom:16px; }
+    .today-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .card-label { font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.095em; opacity:.68; }
+    .today-date { margin:10px 0 20px; font-size:clamp(21px,5.8vw,28px); font-weight:800; line-height:1.18; letter-spacing:-.035em; }
+    .today-bottom { display:flex; align-items:center; gap:12px; }
+    .today-symbol { display:grid; place-items:center; flex:none; width:46px; height:46px; border-radius:14px; font-size:21px; font-weight:900; background:var(--yellow); color:#24272b; }
+    .today-symbol.night { background:var(--night); color:white; }
+    .today-symbol.off { background:var(--off); color:white; }
+    .today-shift-title { font-weight:800; font-size:17px; line-height:1.3; }
+    .today-subtitle { color:#c7d3e6; font-size:13px; margin-top:2px; }
+    .dot { width:8px; height:8px; border-radius:50%; background:#6ee3b1; }
+    .surface { background:var(--surface); border:1px solid rgba(220,225,233,.75); border-radius:var(--radius); padding:18px 16px; box-shadow:0 4px 14px rgba(45,55,75,.035); }
+    .calendar-card { margin-bottom:16px; }
+    .month-nav { display:flex; justify-content:space-between; align-items:center; gap:9px; margin-bottom:18px; }
+    .month-title { font-size:20px; margin:0; font-weight:800; letter-spacing:-.035em; text-transform:capitalize; min-width:0; }
+    .month-controls { display:flex; align-items:center; gap:6px; flex:none; }
+    .arrow { border:0; background:#f1f3f8; color:#2f3b50; border-radius:12px; width:40px; height:40px; display:grid; place-items:center; font-size:25px; line-height:1; }
+    .today-button { font-size:12px; font-weight:800; min-height:40px; border-radius:12px; padding:0 10px; border:0; color:#215dbb; background:#edf3ff; }
+    .weekdays, .calendar-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); column-gap:5px; row-gap:7px; }
+    .weekdays { margin-bottom:8px; }
+    .weekday { text-align:center; padding:4px 0; font-size:11px; font-weight:750; color:#7e8797; }
+    .weekday:nth-last-child(-n+2) { color:#9c7e85; }
+    .day { border:2px solid transparent; min-width:0; width:100%; aspect-ratio: .89; border-radius:13px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:0 1px; position:relative; }
+    .day .number { font-weight:850; font-size:16px; line-height:1.1; font-variant-numeric:tabular-nums; }
+    .day .letter { font-size:11px; line-height:1.1; font-weight:800; opacity:.85; }
+    .day.daytime { background:var(--yellow); color:#342b14; }
+    .day.night { background:var(--night); color:#fff; }
+    .day.off { background:var(--off); color:#fff; }
+    .day.is-today::after { content:""; position:absolute; bottom:3px; width:5px; height:5px; background:currentColor; border-radius:50%; }
+    .day.is-today { border-color:#1b2539; }
+    .day.is-selected { outline:3px solid #1c2b4b; outline-offset:2px; z-index:1; }
+    .day.empty { background:transparent; pointer-events:none; }
+    .legend { display:flex; flex-wrap:wrap; align-items:center; gap:9px 14px; margin:17px 0 0; }
+    .legend-item { display:flex; gap:6px; align-items:center; font-size:11px; color:var(--muted); font-weight:700; }
+    .legend-square { width:12px; height:12px; border-radius:4px; }
+    .detail { margin-top:16px; border-top:1px solid var(--line); padding-top:14px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .detail-label { color:var(--muted); font-size:12px; margin-bottom:5px; }
+    .detail-date { font-size:14px; font-weight:800; }
+    .detail-shift { font-size:13px; font-weight:750; white-space:nowrap; }
+    .detail-shift.daytime { color:#8d6600; } .detail-shift.night { color:#1679dd; } .detail-shift.off { color:#da4f4f; }
+    .income-card { margin-bottom:16px; }
+    .income-head { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); font-size:13px; font-weight:700; }
+    .income { font-weight:850; font-variant-numeric:tabular-nums; font-size:clamp(28px,8vw,36px); line-height:1.2; letter-spacing:-.045em; margin:8px 0 15px; color:#208164; }
+    .stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0; border-top:1px solid var(--line); padding-top:15px; }
+    .stat { padding:0 9px; border-right:1px solid var(--line); }
+    .stat:first-child { padding-left:0; } .stat:last-child { border-right:0; padding-right:0; }
+    .stat-num { font-size:19px; font-weight:850; line-height:1.2; font-variant-numeric:tabular-nums; }
+    .stat-label { color:var(--muted); font-size:11px; margin-top:3px; line-height:1.25; }
+    .footnote { text-align:center; color:#9098a5; font-size:12px; line-height:1.5; margin:18px 10px 0; }
+    dialog { border:none; padding:0; border-radius:24px; width:min(calc(100% - 24px),460px); max-height:min(90dvh,670px); box-shadow:0 30px 80px rgba(15,25,45,.3); color:var(--text); }
+    dialog::backdrop { background:rgba(14,22,39,.55); backdrop-filter:blur(3px); }
+    .settings { padding:22px 20px; }
+    .settings-head { display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:8px; }
+    .settings-head h2 { margin:0; font-size:23px; letter-spacing:-.035em; }
+    .settings-description { margin:0 0 22px; color:var(--muted); font-size:13px; line-height:1.5; }
+    .setting-label { display:block; font-weight:780; font-size:14px; margin-bottom:8px; }
+    .setting-help { margin:6px 0 20px; font-size:12px; color:var(--muted); line-height:1.45; }
+    .settings input { display:block; width:100%; font-size:17px; padding:13px 14px; border:1px solid #d9e0ea; border-radius:13px; color:var(--text); background:#fafbfe; min-height:48px; }
+    .settings-actions { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:12px; }
+    .primary { color:white; background:#2569dc; font-size:15px; font-weight:800; border:0; border-radius:14px; padding:13px 24px; min-height:48px; }
+    .reset { background:transparent; border:0; color:#667287; font-weight:750; padding:12px 4px; font-size:13px; }
+    .day.has-note::before { content:""; position:absolute; top:4px; right:4px; width:7px; height:7px; border-radius:50%; background:#26364e; box-shadow:0 0 0 1.5px white; }
+    .notes-card { margin-bottom:16px; }
+    .notes-head { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .notes-head h2 { font-size:20px; font-weight:800; margin:0; letter-spacing:-.035em; }
+    .notes-count { font-size:12px; font-weight:750; color:#2469db; white-space:nowrap; }
+    .notes-hint { color:var(--muted); font-size:13px; line-height:1.5; margin:9px 0 17px; }
+    .note-editor label { display:block; font-size:14px; font-weight:800; margin-bottom:9px; }
+    .note-editor textarea { display:block; width:100%; min-height:110px; padding:13px 14px; border:1px solid #d9e0ea; border-radius:14px; color:var(--text); background:#fafbfe; font:inherit; font-size:16px; line-height:1.45; resize:vertical; }
+    .note-editor textarea:focus { outline:2px solid #70a7f9; outline-offset:1px; }
+    .note-footer { margin-top:9px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .note-status { font-size:12px; line-height:1.4; color:#687789; }
+    .note-delete { font-size:12px; border:0; background:transparent; color:#cb4b52; font-weight:800; padding:8px 0; white-space:nowrap; }
+    .notes-empty { padding:14px; background:#f3f5fa; border-radius:13px; color:var(--muted); font-size:13px; line-height:1.5; }
+    .notes-list-wrap { margin-top:19px; padding-top:16px; border-top:1px solid var(--line); }
+    .notes-list-wrap h3 { font-size:14px; margin:0 0 10px; }
+    .notes-list { display:grid; gap:8px; max-height:245px; overflow-y:auto; }
+    .note-item { text-align:left; width:100%; border:1px solid var(--line); background:#f9faff; padding:10px 12px; border-radius:12px; display:flex; align-items:start; gap:12px; }
+    .note-item-date { flex:0 0 54px; font-weight:800; font-size:12px; color:#2f5da7; }
+    .note-item-preview { font-size:13px; line-height:1.35; min-width:0; flex:1; color:var(--text); overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; white-space:pre-wrap; overflow-wrap:anywhere; }
+    [hidden] { display:none !important; }
+    .roster-summary { margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,.18); display:grid; gap:7px; }
+    .roster-summary-title { color:#c7d3e6; font-size:12px; letter-spacing:.025em; font-weight:750; margin-bottom:3px; }
+    .roster-summary-row { display:flex; align-items:center; gap:8px; font-size:13px; min-width:0; }
+    .roster-summary-role { color:#c7d3e6; width:67px; flex:none; }
+    .roster-summary-name { font-weight:800; min-width:0; overflow-wrap:anywhere; }
+    .roster-card { margin-bottom:16px; }
+    .roster-head { display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:4px; }
+    .roster-head h2 { margin:0; font-size:20px; font-weight:800; letter-spacing:-.035em; }
+    .roster-date { color:var(--muted); font-size:12px; font-weight:750; }
+    .roster-list { display:grid; gap:9px; margin-top:14px; }
+    .roster-row { display:flex; align-items:center; gap:12px; padding:11px 12px; background:#f7f9fc; border-radius:14px; min-width:0; }
+    .roster-badge { display:grid; place-items:center; width:36px; height:36px; border-radius:11px; font-size:17px; font-weight:900; color:#2f2f35; background:var(--yellow); flex:none; }
+    .roster-row.night .roster-badge { color:white; background:var(--night); }
+    .roster-row.off .roster-badge { color:white; background:var(--off); }
+    .roster-row-label { color:var(--muted); font-size:11px; font-weight:700; margin-bottom:3px; }
+    .roster-row-name { color:var(--text); font-size:15px; font-weight:800; overflow-wrap:anywhere; min-width:0; }
+    .roster-caption { margin:11px 0 0; color:var(--muted); font-size:12px; line-height:1.45; }
+    .crew-settings { margin-top:19px; padding-top:18px; border-top:1px solid var(--line); }
+    .crew-settings h3 { font-size:16px; font-weight:800; margin:0 0 8px; }
+    .crew-settings .setting-help { margin:0 0 14px; }
+    .crew-settings .setting-label { margin-top:10px; }
+    @media (max-width:360px) { .shell { padding-left:12px; padding-right:12px; } .surface { padding-left:12px; padding-right:12px; } .weekdays,.calendar-grid { column-gap:4px; row-gap:6px; } .day { border-radius:10px; } .day .number { font-size:14px; } .month-title { font-size:18px; } .today-button { padding:0 8px; } }
+    @media (min-width:540px) { .shell { padding-top:28px; } .day { aspect-ratio:1.05; } }
+    @media (prefers-reduced-motion:no-preference) { .day,.arrow,.icon-button,.today-button { transition:transform .12s ease,outline-color .12s ease; } }
+    [hidden] { display:none !important; }
+    .cloud-panel { display:grid; gap:12px; margin-bottom:16px; }
+    .cloud-panel h1, .cloud-panel p { margin:0; }
+    .cloud-panel input { width:100%; min-width:0; min-height:46px; padding:10px 12px; font:inherit; font-size:16px; border:1px solid #c7d1e2; border-radius:12px; color:var(--text); background:var(--surface); }
+    .cloud-panel label { display:grid; gap:6px; min-width:0; font-weight:650; }
+    .cloud-actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .cloud-panel button, .cloud-actions button { padding:8px 14px; min-height:44px; font:inherit; font-weight:700; border:1px solid var(--line); border-radius:12px; color:var(--text); background:var(--surface); }
+    .cloud-panel button[type="submit"] { color:#fff; background:var(--blue); border-color:var(--blue); }
+    .cloud-panel button:disabled { opacity:.65; cursor:wait; }
+    @media (min-width:1000px) {
+      .shell { max-width:1100px; }
+      main.shell { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:18px; align-items:start; }
+      main.shell > :not(.calendar-card):not([aria-labelledby="notesTitle"]) { grid-column:1/-1; }
+      main.shell > .calendar-card, main.shell > [aria-labelledby="notesTitle"] { margin-top:0; }
+      .calendar-card .day { aspect-ratio:auto; min-height:58px; }
+      #cloud-panel { max-width:720px; margin-inline:auto; }
+    }
+  </style>
+</head>
+<body>
+  <section id="cloud-panel" class="shell" aria-label="Демонстрационная версия"><p>Демо. Записи сохраняются только в этом браузере.</p>
+    <form id="cloud-login" class="surface cloud-panel">
+      <h1>Мои смены</h1>
+      <p>Для просмотра нажми «Войти». Данные для демо уже подставлены.</p>
+      <label>Логин<input name="login" value="demo" readonly autocomplete="off" autocapitalize="none" maxlength="40" required></label>
+      <label>Пароль<input name="password" value="demo" readonly type="password" autocomplete="off" maxlength="128" required></label>
+      <button type="submit">Войти</button>
+    </form>
+    <p id="sync-status" role="status"></p>
+    <div id="cloud-tools" class="cloud-actions" hidden>
+      <button id="cloud-logout" type="button">Выйти</button>
+      <button id="sync-import" type="button" hidden>Перенести прежние записи</button>
+    </div>
+    <div id="sync-conflict" class="cloud-actions" hidden>
+      <button type="button" data-choose="remote">Взять облачную копию</button>
+      <button type="button" data-choose="local">Отправить эту копию</button>
+    </div>
+  </section>
+  <main class="shell" hidden>
+    <header class="header">
+      <div><p class="eyebrow">Личный планировщик</p><h1>Мои смены</h1></div>
+      <button class="icon-button" id="settingsOpen" type="button" aria-label="Открыть настройки" title="Настройки">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.1v1.6m0 14.6v1.6M4.3 4.3l1.1 1.1m13.2 13.2 1.1 1.1M3.1 12h1.6m14.6 0h1.6M4.3 19.7l1.1-1.1M18.6 5.4l1.1-1.1"/><circle cx="12" cy="12" r="4"/></svg>
+      </button>
+    </header>
+
+    <p style="margin:0 0 18px"><a href="./work/" style="display:block;padding:16px 20px;border-radius:18px;background:#153b3b;color:white;text-decoration:none;font-weight:700">Рабочий журнал · техника и расходники</a></p>
+
+    <section class="today-card" aria-labelledby="todayHeading">
+      <div class="today-top"><span class="card-label" id="todayHeading">Сегодня</span><span class="dot" aria-hidden="true"></span></div>
+      <div class="today-date" id="todayDate">Загружаем дату…</div>
+      <div class="today-bottom">
+        <div class="today-symbol" id="todaySymbol">Д</div>
+        <div><div class="today-shift-title" id="todayShift">Дневная смена</div><div class="today-subtitle" id="todayPerson">—</div></div>
+      </div>
+      <div class="roster-summary" aria-label="Бригады сегодня">
+        <div class="roster-summary-title">Кто сегодня в день, ночь и на выходном</div>
+        <div class="roster-summary-row"><span class="roster-summary-role">День</span><span class="shift-indicator shift-Д" aria-hidden="true">Д</span><span class="roster-summary-name" id="todayCrewDay">—</span></div>
+        <div class="roster-summary-row"><span class="roster-summary-role">Ночь</span><span class="shift-indicator shift-Н" aria-hidden="true">Н</span><span class="roster-summary-name" id="todayCrewNight">—</span></div>
+        <div class="roster-summary-row"><span class="roster-summary-role">Отдыхает</span><span class="shift-indicator shift-В" aria-hidden="true">В</span><span class="roster-summary-name" id="todayCrewOff">—</span></div>
+      </div>
+    </section>
+
+    <section class="surface calendar-card" aria-labelledby="monthTitle">
+      <div class="month-nav">
+        <h2 class="month-title" id="monthTitle">Октябрь 2026</h2>
+        <div class="month-controls">
+          <button class="today-button" id="jumpToday" type="button">Сегодня</button>
+          <button class="arrow" id="prevMonth" type="button" aria-label="Предыдущий месяц">‹</button>
+          <button class="arrow" id="nextMonth" type="button" aria-label="Следующий месяц">›</button>
+        </div>
+      </div>
+      <div class="weekdays" aria-hidden="true">
+        <span class="weekday">Пн</span><span class="weekday">Вт</span><span class="weekday">Ср</span><span class="weekday">Чт</span><span class="weekday">Пт</span><span class="weekday">Сб</span><span class="weekday">Вс</span>
+      </div>
+      <div class="calendar-grid" id="calendar" role="group" aria-label="Дни календаря"></div>
+      <div class="legend" aria-label="Обозначения смен">
+        <span class="legend-item"><span class="legend-square" style="background:var(--yellow)"></span><span id="selectedCrewDay">—</span></span>
+        <span class="legend-item"><span class="legend-square" style="background:var(--night)"></span><span id="selectedCrewNight">—</span></span>
+        <span class="legend-item"><span class="legend-square" style="background:var(--off)"></span><span id="selectedCrewOff">—</span></span>
+      </div>
+      <div class="detail" aria-live="polite">
+        <div><div class="detail-label">Выбранный день</div><div class="detail-date" id="selectedDate">—</div></div>
+        <div class="detail-shift" id="selectedShift">—</div>
+      </div>
+    </section>
+
+    <section class="surface notes-card" aria-labelledby="notesTitle">
+      <div class="notes-head">
+        <h2 id="notesTitle">Заметки по датам</h2>
+        <span class="notes-count" id="notesCount">0 записей</span>
+      </div>
+      <p class="notes-hint">Нажми на день в календаре и запиши, что произошло. Точка в углу дня означает, что там есть заметка.</p>
+      <div class="note-editor" id="noteEditor" hidden>
+        <label for="noteInput">Заметка за <span id="noteDate">—</span></label>
+        <textarea id="noteInput" rows="3" maxlength="2000" placeholder="Например: Помыли машину, поменяли масло, пробег 120 000 км…"></textarea>
+        <div class="note-footer">
+          <span class="note-status" id="noteStatus" role="status">Сохраняется автоматически на этом устройстве</span>
+          <button class="note-delete" id="noteDelete" type="button">Удалить заметку</button>
+        </div>
+      </div>
+      <div id="notesEmpty" class="notes-empty" hidden>Выбери день в календаре, чтобы написать или прочитать заметку.</div>
+      <details class="all-notes"><summary>Все заметки</summary><div class="notes-list-wrap" id="notesListWrap" hidden><div class="notes-list" id="notesList"></div></div><p id="allNotesEmpty" class="notes-hint" hidden>Заметок пока нет.</p></details>
+    </section>
+    <section class="surface notes-card" aria-labelledby="backupTitle">
+        <h2 id="backupTitle">Резервная копия</h2>
+        <p class="notes-hint">Сохрани файл в «Файлы» или на Диск. Для переноса выбери его на другом устройстве. Облачная синхронизация пока не подключена.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <button type="button" id="backupExport" style="border:0;border-radius:12px;background:#2469db;color:white;padding:12px 16px;font-weight:700">Сохранить данные в файл</button>
+          <label style="display:inline-block;border:1px solid #b9c9d1;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer">Восстановить из файла<input id="backupImport" type="file" accept=".json,application/json" style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0"></label>
+        </div>
+      <p class="notes-hint" style="margin:15px 0 0">Заметки хранятся в памяти приложения на этом iPhone. На другой телефон они автоматически не переносятся; при удалении приложения или его данных записи могут пропасть.</p>
+    </section>
+
+    <p class="footnote">Листай календарь влево и вправо, чтобы переключать месяцы.<br>График и настройки доступны без учётной записи.</p>
+  </main>
+
+  <dialog id="settingsDialog" aria-labelledby="settingsTitle">
+    <form class="settings" id="settingsForm">
+      <div class="settings-head"><h2 id="settingsTitle">Настройки</h2><button type="button" class="icon-button" id="settingsClose" aria-label="Закрыть настройки">×</button></div>
+      <p class="settings-description">График повторяется каждые 9 дней: 3 дневные смены, 3 ночные и 3 выходных.</p>
+      <label class="setting-label" for="baseInput">Первый день дневной смены</label>
+      <input id="baseInput" name="base" type="date" required>
+      <p class="setting-help">Исходная дата: 21 октября 2026 года. От неё рассчитывается весь график, в том числе предыдущие месяцы.</p>
+      <div class="crew-settings">
+        <h3>Имена трёх бригад</h3>
+        <p class="setting-help">На дату начала цикла: первая бригада — день, вторая — ночь, третья — отдыхает. Вводи имя водителя или название бригады.</p>
+        <label class="setting-label" for="crewName0">Бригада 1 — сначала день</label>
+        <input id="crewName0" name="crewName0" maxlength="50" autocomplete="off" placeholder="Например: Я" required>
+        <label class="setting-label" for="crewName1">Бригада 2 — сначала ночь</label>
+        <input id="crewName1" name="crewName1" maxlength="50" autocomplete="off" placeholder="Например: Данил" required>
+        <label class="setting-label" for="crewName2">Бригада 3 — сначала выходной</label>
+        <input id="crewName2" name="crewName2" maxlength="50" autocomplete="off" placeholder="Например: Марат" required>
+        <p class="setting-help" style="margin:12px 0 8px">Имена хранятся только на этом устройстве. Смена имён не сбрасывает заметки.</p>
+      </div>
+      <div class="settings-actions"><button class="reset" id="resetSettings" type="button">Сбросить график</button><button class="primary" type="submit">Сохранить</button></div>
+    </form>
+  </dialog>
+
+  <script src="./demo.js"></script>
+  <script src="./sync.js"></script>
+  <script>
+    (() => {
+      'use strict';
+      const DEFAULTS = Object.freeze({ rate: 3800, base: '2026-10-21' });
+      const STORAGE_KEY = 'shift-calendar-v1';
+      const NOTES_KEY = 'shift-calendar-notes-v1';
+      const CREWS_KEY = 'shift-calendar-crews-v1';
+      const DEFAULT_CREWS = Object.freeze(['Бригада 1', 'Бригада 2', 'Бригада 3']);
+      const DAY_MS = 24 * 60 * 60 * 1000;
+      const $ = id => document.getElementById(id);
+      const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+      const fullDateFormat = new Intl.DateTimeFormat('ru-RU', {day:'numeric', month:'long', year:'numeric'});
+      const detailDateFormat = new Intl.DateTimeFormat('ru-RU', {day:'numeric', month:'long'});
+      const shifts = [
+        {letter:'Д', name:'Дневная смена', css:'daytime', work:true},
+        {letter:'Н', name:'Ночная смена', css:'night', work:true},
+        {letter:'В', name:'Выходной', css:'off', work:false}
+      ];
+      function parseLocalDate(value) {
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value || '');
+        if (!match) return null;
+        const [y,m,d] = match.slice(1).map(Number);
+        const result = new Date(y, m-1, d);
+        return result.getFullYear()===y && result.getMonth()===m-1 && result.getDate()===d ? result : null;
+      }
+      function isoDate(date) {
+        return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+      }
+      function dayOrdinal(date) {
+        return Math.round(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate())/DAY_MS);
+      }
+      function readSettings() {
+        try {
+          const stored = JSON.parse(window.calendarStorage.getItem(STORAGE_KEY));
+          if (stored && parseLocalDate(stored.base) && Number.isInteger(stored.rate) && stored.rate>=0 && stored.rate<=100000000) return {base:stored.base,rate:stored.rate};
+        } catch (_) { /* Private browsing or disabled storage: use defaults. */ }
+        return {...DEFAULTS};
+      }
+      function readNotes() {
+        try {
+          const stored = JSON.parse(window.calendarStorage.getItem(NOTES_KEY) || '{}');
+          if (!stored || typeof stored !== 'object' || Array.isArray(stored)) return {};
+          const valid = {};
+          for (const [key, value] of Object.entries(stored)) {
+            if (parseLocalDate(key) && isoDate(parseLocalDate(key)) === key && typeof value === 'string' && value.trim()) {
+              valid[key] = value.slice(0,2000);
+            }
+          }
+          return valid;
+        } catch (_) { return {}; }
+      }
+      let notes = readNotes();
+      function saveNotes() {
+        try {
+          window.calendarStorage.setItem(NOTES_KEY,JSON.stringify(notes));
+          return true;
+        } catch (_) { return false; }
+      }
+      function noteKey() {
+        return selectedDay === null ? null : isoDate(new Date(year,month,selectedDay));
+      }
+      function renderNoteList() {
+        const entries = Object.keys(notes).filter(key => notes[key].trim()).sort().reverse();
+        $('notesCount').textContent = entries.length + (entries.length===1 ? ' запись' : entries.length>=2 && entries.length<=4 ? ' записи' : ' записей');
+        $('notesListWrap').hidden = entries.length === 0;
+        $('allNotesEmpty').hidden = entries.length !== 0;
+        const container = $('notesList');
+        container.replaceChildren();
+        for (const key of entries) {
+          const button = document.createElement('button');
+          button.type='button';
+          button.className='note-item';
+          const date = document.createElement('span');
+          date.className='note-item-date';
+          date.textContent=fullDateFormat.format(parseLocalDate(key));
+          const preview = document.createElement('span');
+          preview.className='note-item-preview';
+          preview.textContent=notes[key];
+          button.append(date,preview);
+          button.addEventListener('click', () => {
+            const date=parseLocalDate(key); year=date.getFullYear(); month=date.getMonth(); selectedDay=date.getDate();
+            render();
+            $('noteInput').scrollIntoView({behavior:'smooth',block:'center'});
+          });
+          container.appendChild(button);
+        }
+      }
+      function renderNoteEditor() {
+        const key=noteKey();
+        $('noteEditor').hidden = key === null;
+        $('notesEmpty').hidden = key !== null;
+        if (key !== null) {
+          const date = parseLocalDate(key);
+          $('noteDate').textContent = fullDateFormat.format(date);
+          $('noteInput').value = notes[key] || '';
+          $('noteStatus').textContent = 'Сохраняется автоматически на этом устройстве';
+          $('noteDelete').hidden = !notes[key];
+        }
+        renderNoteList();
+      }
+      function updateNoteMarkers() {
+        for (const button of $('calendar').querySelectorAll('.day[data-date]')) {
+          const key=button.getAttribute('data-date');
+          button.classList.toggle('has-note',!!(notes[key] && notes[key].trim()));
+        }
+      }
+      function readCrews() {
+        try {
+          const data = JSON.parse(window.calendarStorage.getItem(CREWS_KEY) || 'null');
+          if (Array.isArray(data) && data.length === 3 && data.every(name => typeof name === 'string' && name.trim() && name.length <= 50))
+            return data.map(name => name.trim());
+        } catch (_) { /* Storage unavailable; default crew names. */ }
+        return [...DEFAULT_CREWS];
+      }
+      let crewNames = readCrews();
+      function getCrewAssignments(date) {
+        // For crew 1, current phase 0=day, 1=night, 2=off.
+        // Other crews are staggered by one 3-day block, so every date has
+        // exactly one day crew, one night crew, and one resting crew.
+        const diffDays = dayOrdinal(date) - dayOrdinal(parseLocalDate(settings.base));
+        const cycle = ((diffDays % 9) + 9) % 9;
+        const phase = Math.floor(cycle / 3);
+        const output = [null, null, null];
+        for (let i=0; i<3; i++) output[(phase + i) % 3] = crewNames[i];
+        return output; // [day crew, night crew, resting crew]
+      }
+      let settings = readSettings();
+      let now = new Date();
+      let year = now.getFullYear();
+      let month = now.getMonth();
+      let selectedDay = now.getDate();
+
+      function getShift(date) {
+        const base = parseLocalDate(settings.base);
+        // UTC ordinals avoid changing shift dates when daylight-saving time changes.
+        const diffDays = dayOrdinal(date)-dayOrdinal(base);
+        const cycle = ((diffDays % 9)+9)%9;
+        return shifts[Math.floor(cycle/3)];
+      }
+      function renderToday() {
+        now = new Date();
+        const shift = getShift(now);
+        $('todayDate').textContent = fullDateFormat.format(now);
+        $('todaySymbol').textContent = shift.letter;
+        $('todaySymbol').className = `today-symbol ${shift.css}`;
+        $('todayShift').textContent = shift.name;
+        $('todayPerson').textContent = crewNames[0];
+        const [day, night, off] = getCrewAssignments(now);
+        $('todayCrewDay').textContent = day;
+        $('todayCrewNight').textContent = night;
+        $('todayCrewOff').textContent = off;
+      }
+      function render() {
+        renderToday();
+        const first = new Date(year,month,1);
+        const count = new Date(year,month+1,0).getDate();
+        const offset = (first.getDay()+6)%7;
+        $('monthTitle').textContent = `${monthNames[month]} ${year}`;
+        $('calendar').replaceChildren();
+        const fragment = document.createDocumentFragment();
+        for (let i=0;i<offset;i++) {
+          const placeholder=document.createElement('span');
+          placeholder.className='day empty'; placeholder.setAttribute('aria-hidden','true');
+          fragment.appendChild(placeholder);
+        }
+        let dayShifts=0, nightShifts=0;
+        for (let n=1;n<=count;n++) {
+          const date = new Date(year,month,n);
+          const shift = getShift(date);
+          if (shift.css==='daytime') dayShifts++;
+          if (shift.css==='night') nightShifts++;
+          const button = document.createElement('button');
+          button.type='button';
+          button.className=`day ${shift.css}`;
+          const key = isoDate(date);
+          button.dataset.date=key;
+          if (notes[key] && notes[key].trim()) button.classList.add('has-note');
+          if (n===now.getDate() && year===now.getFullYear() && month===now.getMonth()) button.classList.add('is-today');
+          if (n===selectedDay) button.classList.add('is-selected');
+          button.setAttribute('aria-pressed',String(n===selectedDay));
+          button.setAttribute('aria-label',`${fullDateFormat.format(date)} — ${shift.name}${notes[key] ? ', есть заметка' : ''}`);
+          const number=document.createElement('span'); number.className='number'; number.textContent=String(n);
+          const letter=document.createElement('span'); letter.className='letter'; letter.textContent=shift.letter;
+          button.append(number,letter);
+          button.addEventListener('click',() => {selectedDay=n; render(); $('noteEditor').scrollIntoView({behavior:'smooth',block:'nearest'});});
+          fragment.appendChild(button);
+        }
+        $('calendar').appendChild(fragment);
+        if (selectedDay!==null && selectedDay>=1 && selectedDay<=count) {
+          const date=new Date(year,month,selectedDay), shift=getShift(date);
+          $('selectedDate').textContent=detailDateFormat.format(date);
+          $('selectedShift').textContent=`${shift.name} · ${crewNames[0]}`;
+          const [day,night,off]=getCrewAssignments(date);
+          $('selectedCrewDay').textContent=day; $('selectedCrewNight').textContent=night; $('selectedCrewOff').textContent=off;
+          $('selectedShift').className=`detail-shift ${shift.css}`;
+        } else {
+          $('selectedDate').textContent='Выбери дату';
+          $('selectedShift').textContent='';
+          $('selectedCrewDay').textContent='—'; $('selectedCrewNight').textContent='—'; $('selectedCrewOff').textContent='—';
+
+        }
+        renderNoteEditor();
+      }
+      function changeMonth(delta) {
+        const moved=new Date(year,month+delta,1);
+        year=moved.getFullYear(); month=moved.getMonth();
+        const current=new Date();
+        selectedDay=(year===current.getFullYear()&&month===current.getMonth())?current.getDate():null;
+        render();
+      }
+      $('noteInput').addEventListener('input', event => {
+        const key=noteKey();
+        if (!key) return;
+        const value=event.target.value;
+        if (value.trim()) notes[key]=value;
+        else delete notes[key];
+        const saved=saveNotes();
+        $('noteStatus').textContent=saved ? 'Сохранено на этом iPhone' : 'Не удалось сохранить: хранилище Safari недоступно';
+        $('noteDelete').hidden=!notes[key];
+        updateNoteMarkers();
+        renderNoteList();
+      });
+      $('noteDelete').addEventListener('click', () => {
+        const key=noteKey();
+        if (!key || !notes[key]) return;
+        if (!window.confirm('Удалить заметку за выбранный день?')) return;
+        delete notes[key];
+        $('noteInput').value='';
+        const saved=saveNotes();
+        $('noteStatus').textContent=saved ? 'Заметка удалена' : 'Не удалось сохранить удаление';
+        $('noteDelete').hidden=true;
+        updateNoteMarkers();
+        renderNoteList();
+      });
+      $('backupExport').addEventListener('click', async () => {
+        try {
+          const rawNotes = window.calendarStorage.getItem(NOTES_KEY);
+          if (rawNotes !== null) { const parsed=JSON.parse(rawNotes); if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || Object.keys(parsed).length !== Object.keys(readNotes()).length) throw new Error('Invalid notes'); }
+          const data = {format:'moi-smeny-backup', version:1, exportedAt:new Date().toISOString(), notes:readNotes(), settings:readSettings(), crews:readCrews()};
+          const file = new File([JSON.stringify(data,null,2)], 'moi-smeny-backup.json', {type:'application/json'});
+          if (navigator.canShare && navigator.canShare({files:[file]}) && navigator.share) {
+            try { await navigator.share({files:[file],title:'Резервная копия «Мои смены»'}); } catch (error) { if (error.name !== 'AbortError') alert('Не удалось открыть сохранение файла. Попробуйте ещё раз.'); }
+          } else {
+            const url=URL.createObjectURL(file), a=document.createElement('a');
+            a.href=url; a.download=file.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),60000);
+          }
+        } catch (_) { alert('Не удалось подготовить файл. Проверьте доступ к памяти устройства.'); }
+      });
+      $('backupImport').addEventListener('change', async event => {
+        const input=event.target, file=input.files[0]; if (!file) return;
+        try {
+          if (file.size > 2*1024*1024) throw new Error('Файл слишком большой.');
+          const bytes=await file.arrayBuffer();
+          let text;
+          try { text=new TextDecoder('utf-8',{fatal:true}).decode(bytes); }
+          catch (_) { throw new Error('Файл не в UTF-8. Экспортируйте его заново или используйте неповреждённую копию.'); }
+          const data=JSON.parse(text);
+          if (JSON.stringify(data).includes('\uFFFD')) throw new Error('В файле обнаружены повреждённые символы. Выберите исходную неповреждённую копию.');
+          if (!data || data.format!=='moi-smeny-backup' || data.version!==1 || !data.notes || typeof data.notes!=='object' || Array.isArray(data.notes)) throw new Error('Это не файл резервной копии «Мои смены».');
+          const entries=Object.entries(data.notes);
+          if (entries.some(([k,v])=>!parseLocalDate(k) || isoDate(parseLocalDate(k))!==k || typeof v!=='string' || !v.trim() || v.length>2000)) throw new Error('В файле есть неверная дата или заметка. Данные не изменены.');
+          const current=readNotes(), merged={...current}; let added=0, conflicts=0;
+          const damaged=[];
+          for (const [k,v] of entries) { if (!(k in current)) { merged[k]=v; added++; } else if (current[k]!==v) { if (current[k].includes('\uFFFD')) damaged.push([k,v]); else conflicts++; } }
+          let repaired=0;
+          if (damaged.length && confirm(`Обнаружено заметок с символом замены �: ${damaged.length}. Заменить их текстом из файла? Сначала сохраните резервную копию текущих данных.`)) { for (const [k,v] of damaged) merged[k]=v; repaired=damaged.length; }
+          if (!confirm(`В файле заметок: ${entries.length}. Будет добавлено: ${added}. Заменено повреждённых: ${repaired}. Существующих заметок с другим текстом: ${conflicts} — они останутся без изменений. Продолжить?`)) return;
+          const st=data.settings, cr=data.crews;
+          const validSettings=st && parseLocalDate(st.base) && Number.isInteger(st.rate) && st.rate>=0 && st.rate<=100000000;
+          const validCrews=Array.isArray(cr) && cr.length===3 && cr.every(n=>typeof n==='string' && n.trim() && n.length<=50);
+          const restoreSettings=(validSettings || validCrews) && confirm('Восстановить также настройки графика и имена бригад из файла? Текущие настройки будут заменены.');
+          const keys=[NOTES_KEY, STORAGE_KEY, CREWS_KEY], previous=keys.map(k=>window.calendarStorage.getItem(k));
+          try {
+            window.calendarStorage.setItem(NOTES_KEY,JSON.stringify(merged));
+            if (restoreSettings && validSettings) window.calendarStorage.setItem(STORAGE_KEY,JSON.stringify(st));
+            if (restoreSettings && validCrews) window.calendarStorage.setItem(CREWS_KEY,JSON.stringify(cr));
+          } catch (error) {
+            keys.forEach((key,i)=>{try { if (previous[i]===null) window.calendarStorage.removeItem(key); else window.calendarStorage.setItem(key,previous[i]); } catch (_) {}});
+            throw error;
+          }
+          notes=readNotes(); settings=readSettings(); crewNames=readCrews(); render();
+          alert(`Добавлено заметок: ${added}. Заменено повреждённых: ${repaired}. Пропущено несовпадающих: ${conflicts}. Проверьте записи в календаре.`);
+        } catch (error) { alert('Не удалось восстановить заметки: '+(error.message || 'ошибка файла или памяти устройства')); }
+        finally { input.value=''; }
+      });
+
+      window.addEventListener('kalendare-sync', () => {
+        notes = readNotes();
+        settings = readSettings();
+        crewNames = readCrews();
+        render();
+      });
+      $('prevMonth').addEventListener('click',()=>changeMonth(-1));
+      $('nextMonth').addEventListener('click',()=>changeMonth(1));
+      $('jumpToday').addEventListener('click',()=>{
+        const today=new Date(); year=today.getFullYear(); month=today.getMonth(); selectedDay=today.getDate(); render();
+      });
+      let touchStart=null;
+      $('calendar').addEventListener('touchstart',event=>{
+        if (event.touches.length!==1) {touchStart=null;return;}
+        touchStart={x:event.touches[0].clientX,y:event.touches[0].clientY};
+      },{passive:true});
+      $('calendar').addEventListener('touchend',event=>{
+        if (!touchStart||event.changedTouches.length!==1) return;
+        const dx=event.changedTouches[0].clientX-touchStart.x;
+        const dy=event.changedTouches[0].clientY-touchStart.y;
+        touchStart=null;
+        if (Math.abs(dx)>55 && Math.abs(dx)>Math.abs(dy)*1.25) changeMonth(dx<0?1:-1);
+      },{passive:true});
+      const dialog=$('settingsDialog');
+      $('settingsOpen').addEventListener('click',()=>{
+        $('baseInput').value=settings.base;
+        for (let i=0;i<3;i++) $('crewName'+i).value=crewNames[i];
+        dialog.showModal();
+      });
+      $('settingsClose').addEventListener('click',()=>dialog.close());
+      dialog.addEventListener('click',event=>{if (event.target===dialog) dialog.close();});
+      $('settingsForm').addEventListener('submit',event=>{
+        event.preventDefault();
+        const rate=settings.rate;
+        const base=$('baseInput').value;
+        if (!Number.isInteger(rate)||rate<0||rate>100000000||!parseLocalDate(base)) {window.alert('Проверь оплату и дату начала цикла.'); return;}
+        const names=[0,1,2].map(i => $('crewName'+i).value.trim());
+        if (names.some(name => !name || name.length>50)) { window.alert('Заполни имена трёх бригад (до 50 символов).'); return; }
+        settings={rate,base};
+        crewNames=names;
+        try {
+          window.calendarStorage.setItem(STORAGE_KEY,JSON.stringify(settings));
+          window.calendarStorage.setItem(CREWS_KEY,JSON.stringify(crewNames));
+        } catch (_) { window.alert('Настройки применены, но Safari не дал сохранить их на устройстве.'); }
+        dialog.close(); render();
+      });
+      $('resetSettings').addEventListener('click',()=>{
+        settings={...DEFAULTS};
+        try {window.calendarStorage.removeItem(STORAGE_KEY);} catch (_) {}
+        $('baseInput').value=settings.base;
+        // Do not erase names or dated notes when resetting the shift cycle.
+        dialog.close(); render();
+      });
+      document.addEventListener('visibilitychange',()=>{if (!document.hidden) render();});
+      window.addEventListener('pageshow',()=>render());
+      render();
+    })();
+  </script>
+</body>
+</html>
