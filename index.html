@@ -145,10 +145,43 @@
     @media (max-width:360px) { .shell { padding-left:12px; padding-right:12px; } .surface { padding-left:12px; padding-right:12px; } .weekdays,.calendar-grid { column-gap:4px; row-gap:6px; } .day { border-radius:10px; } .day .number { font-size:14px; } .month-title { font-size:18px; } .today-button { padding:0 8px; } }
     @media (min-width:540px) { .shell { padding-top:28px; } .day { aspect-ratio:1.05; } }
     @media (prefers-reduced-motion:no-preference) { .day,.arrow,.icon-button,.today-button { transition:transform .12s ease,outline-color .12s ease; } }
+    [hidden] { display:none !important; }
+    .cloud-panel { display:grid; gap:12px; margin-bottom:16px; }
+    .cloud-panel h1, .cloud-panel p { margin:0; }
+    .cloud-panel input { width:100%; min-width:0; padding:10px; font:inherit; }
+    .cloud-panel label { display:grid; gap:4px; min-width:0; }
+    .cloud-actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .cloud-panel button, .cloud-actions button { padding:8px 14px; min-height:44px; font:inherit; }
+    @media (min-width:1000px) {
+      .shell { max-width:1100px; }
+      main.shell { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:18px; align-items:start; }
+      main.shell > :not(.calendar-card):not([aria-labelledby="notesTitle"]) { grid-column:1/-1; }
+      main.shell > .calendar-card, main.shell > [aria-labelledby="notesTitle"] { margin-top:0; }
+      .calendar-card .day { aspect-ratio:auto; min-height:58px; }
+      #cloud-panel { max-width:720px; margin-inline:auto; }
+    }
   </style>
 </head>
 <body>
-  <main class="shell">
+  <section id="cloud-panel" class="shell" aria-label="Облачная синхронизация">
+    <form id="cloud-login" class="surface cloud-panel">
+      <h1>Мои смены</h1>
+      <p>Войди с логином и паролем, которые тебе выдали.</p>
+      <label>Логин<input name="login" autocomplete="username" autocapitalize="none" maxlength="40" required></label>
+      <label>Пароль<input name="password" type="password" autocomplete="current-password" maxlength="128" required></label>
+      <button type="submit">Войти</button>
+    </form>
+    <p id="sync-status" role="status"></p>
+    <div id="cloud-tools" class="cloud-actions" hidden>
+      <button id="cloud-logout" type="button">Выйти</button>
+      <button id="sync-import" type="button" hidden>Перенести прежние записи</button>
+    </div>
+    <div id="sync-conflict" class="cloud-actions" hidden>
+      <button type="button" data-choose="remote">Взять облачную копию</button>
+      <button type="button" data-choose="local">Отправить эту копию</button>
+    </div>
+  </section>
+  <main class="shell" hidden>
     <header class="header">
       <div><p class="eyebrow">Личный планировщик</p><h1>Мои смены</h1></div>
       <button class="icon-button" id="settingsOpen" type="button" aria-label="Открыть настройки" title="Настройки">
@@ -249,6 +282,7 @@
     </form>
   </dialog>
 
+  <script src="./sync.js"></script>
   <script>
     (() => {
       'use strict';
@@ -282,14 +316,14 @@
       }
       function readSettings() {
         try {
-          const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+          const stored = JSON.parse(window.calendarStorage.getItem(STORAGE_KEY));
           if (stored && parseLocalDate(stored.base) && Number.isInteger(stored.rate) && stored.rate>=0 && stored.rate<=100000000) return {base:stored.base,rate:stored.rate};
         } catch (_) { /* Private browsing or disabled storage: use defaults. */ }
         return {...DEFAULTS};
       }
       function readNotes() {
         try {
-          const stored = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}');
+          const stored = JSON.parse(window.calendarStorage.getItem(NOTES_KEY) || '{}');
           if (!stored || typeof stored !== 'object' || Array.isArray(stored)) return {};
           const valid = {};
           for (const [key, value] of Object.entries(stored)) {
@@ -303,7 +337,7 @@
       let notes = readNotes();
       function saveNotes() {
         try {
-          localStorage.setItem(NOTES_KEY,JSON.stringify(notes));
+          window.calendarStorage.setItem(NOTES_KEY,JSON.stringify(notes));
           return true;
         } catch (_) { return false; }
       }
@@ -357,7 +391,7 @@
       }
       function readCrews() {
         try {
-          const data = JSON.parse(localStorage.getItem(CREWS_KEY) || 'null');
+          const data = JSON.parse(window.calendarStorage.getItem(CREWS_KEY) || 'null');
           if (Array.isArray(data) && data.length === 3 && data.every(name => typeof name === 'string' && name.trim() && name.length <= 50))
             return data.map(name => name.trim());
         } catch (_) { /* Storage unavailable; default crew names. */ }
@@ -485,7 +519,7 @@
       });
       $('backupExport').addEventListener('click', async () => {
         try {
-          const rawNotes = localStorage.getItem(NOTES_KEY);
+          const rawNotes = window.calendarStorage.getItem(NOTES_KEY);
           if (rawNotes !== null) { const parsed=JSON.parse(rawNotes); if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || Object.keys(parsed).length !== Object.keys(readNotes()).length) throw new Error('Invalid notes'); }
           const data = {format:'moi-smeny-backup', version:1, exportedAt:new Date().toISOString(), notes:readNotes(), settings:readSettings(), crews:readCrews()};
           const file = new File([JSON.stringify(data,null,2)], 'moi-smeny-backup.json', {type:'application/json'});
@@ -520,13 +554,13 @@
           const validSettings=st && parseLocalDate(st.base) && Number.isInteger(st.rate) && st.rate>=0 && st.rate<=100000000;
           const validCrews=Array.isArray(cr) && cr.length===3 && cr.every(n=>typeof n==='string' && n.trim() && n.length<=50);
           const restoreSettings=(validSettings || validCrews) && confirm('Восстановить также настройки графика и имена бригад из файла? Текущие настройки будут заменены.');
-          const keys=[NOTES_KEY, STORAGE_KEY, CREWS_KEY], previous=keys.map(k=>localStorage.getItem(k));
+          const keys=[NOTES_KEY, STORAGE_KEY, CREWS_KEY], previous=keys.map(k=>window.calendarStorage.getItem(k));
           try {
-            localStorage.setItem(NOTES_KEY,JSON.stringify(merged));
-            if (restoreSettings && validSettings) localStorage.setItem(STORAGE_KEY,JSON.stringify(st));
-            if (restoreSettings && validCrews) localStorage.setItem(CREWS_KEY,JSON.stringify(cr));
+            window.calendarStorage.setItem(NOTES_KEY,JSON.stringify(merged));
+            if (restoreSettings && validSettings) window.calendarStorage.setItem(STORAGE_KEY,JSON.stringify(st));
+            if (restoreSettings && validCrews) window.calendarStorage.setItem(CREWS_KEY,JSON.stringify(cr));
           } catch (error) {
-            keys.forEach((key,i)=>{try { if (previous[i]===null) localStorage.removeItem(key); else localStorage.setItem(key,previous[i]); } catch (_) {}});
+            keys.forEach((key,i)=>{try { if (previous[i]===null) window.calendarStorage.removeItem(key); else window.calendarStorage.setItem(key,previous[i]); } catch (_) {}});
             throw error;
           }
           notes=readNotes(); settings=readSettings(); crewNames=readCrews(); render();
@@ -535,10 +569,11 @@
         finally { input.value=''; }
       });
 
-      window.addEventListener('storage', event => {
-        if (event.key === NOTES_KEY) { notes = readNotes(); render(); }
-        if (event.key === CREWS_KEY) { crewNames = readCrews(); render(); }
-        if (event.key === STORAGE_KEY) { settings = readSettings(); render(); }
+      window.addEventListener('kalendare-sync', () => {
+        notes = readNotes();
+        settings = readSettings();
+        crewNames = readCrews();
+        render();
       });
       $('prevMonth').addEventListener('click',()=>changeMonth(-1));
       $('nextMonth').addEventListener('click',()=>changeMonth(1));
@@ -575,14 +610,14 @@
         settings={rate,base};
         crewNames=names;
         try {
-          localStorage.setItem(STORAGE_KEY,JSON.stringify(settings));
-          localStorage.setItem(CREWS_KEY,JSON.stringify(crewNames));
+          window.calendarStorage.setItem(STORAGE_KEY,JSON.stringify(settings));
+          window.calendarStorage.setItem(CREWS_KEY,JSON.stringify(crewNames));
         } catch (_) { window.alert('Настройки применены, но Safari не дал сохранить их на устройстве.'); }
         dialog.close(); render();
       });
       $('resetSettings').addEventListener('click',()=>{
         settings={...DEFAULTS};
-        try {localStorage.removeItem(STORAGE_KEY);} catch (_) {}
+        try {window.calendarStorage.removeItem(STORAGE_KEY);} catch (_) {}
         $('baseInput').value=settings.base;
         // Do not erase names or dated notes when resetting the shift cycle.
         dialog.close(); render();
