@@ -17,9 +17,11 @@ if path.exists():
 values.setdefault("AUTH_SECRET", secrets.token_hex(32))
 accounts = json.loads(values.get("ACCOUNTS", "{}"))
 generated_password = None
-login = input("Login to add, change or remove: ").strip().lower()
-if not re.fullmatch(r"[a-z0-9][a-z0-9_-]{1,39}", login):
-    raise SystemExit("Use 2–40 ASCII letters, digits, underscores or hyphens.")
+while True:
+    login = input("Login (e.g. admin): ").strip().lower()
+    if re.fullmatch(r"[a-z0-9][a-z0-9_-]{1,39}", login):
+        break
+    print("Use 2–40 Latin letters, digits, underscores or hyphens.")
 action = input("Set password [enter] or remove account [r]: ").strip()
 if action == "r":
     if login not in accounts:
