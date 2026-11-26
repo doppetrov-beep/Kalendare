@@ -28,16 +28,20 @@ html = html.replace("<main>", '<main><a href="../">← Рабочий журна
 html = html.replace("Выберите руководство. Интернет не требуется.", "Выберите руководство.")
 html = html.replace("</style>", "@media(max-width:600px){main{margin:0;padding:20px}a{padding:14px}}</style>")
 landing.write_text(html, encoding="utf-8")
+copy2("work/heidelberg/navigation.js", landing.with_name("navigation.js"))
 
 for guide in ("ctp", "shooter"):
     page = landing.with_name(guide + ".html")
     html = page.read_text(encoding="utf-8")
-    # Cloudflare serves the article at its canonical URL without ".html".
-    # Keep the archive's page identifiers when the iframe reports that URL.
-    html = html.replace(r"(x-[0-9]+\.html)$", r"(x-[0-9]+)(?:\.html)?$", 1)
-    html = html.replace("current=m[2];", "current=m[2]+'.html';", 1)
+    controller = html.rfind("<script>")
+    if controller < 0 or "window.setLanguage=" not in html[controller:]:
+        raise ValueError(f"Language controller missing from {guide}")
+    end = html.index("</script>", controller) + len("</script>")
+    html = html[:controller] + '<script src="./navigation.js"></script>' + html[end:]
+    for language in ("ru", "en"):
+        html = html.replace(f""" onclick="setLanguage('{language}')" """.rstrip(), "", 1)
+    html = html.replace("<main>", f'<main data-guide="{guide}">', 1)
     html = html.replace(f'src="original_{guide}/x-1.html"', f'src="russian_{guide}/x-1.html"', 1)
-    html = html.replace(f"currentDir='original_{guide}',mode='ru'", f"currentDir='russian_{guide}',mode='ru'", 1)
     html = html.replace('id="langStatus" role="status">Английский оригинал', 'id="langStatus" role="status">Русский перевод', 1)
     language_bar = re.search(r'<div class="langbar">.*?</div>', html, re.DOTALL)
     if not language_bar:
@@ -46,6 +50,8 @@ for guide in ("ctp", "shooter"):
     html = html.replace("</style>", """
 .langbar{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;align-items:center;gap:6px;height:auto;min-height:44px}
 .langbar button[aria-pressed="true"]{background:#143b5d;color:#fff;border-color:#143b5d}
+.wrap main{position:relative}
+.article-loading{position:absolute;inset:0;visibility:hidden;pointer-events:none}
 @media(min-width:701px){.wrap{height:calc(100vh - 124px)}}
 </style>""", 1)
     page.write_text(html, encoding="utf-8")
