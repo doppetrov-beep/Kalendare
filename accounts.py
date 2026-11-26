@@ -4,11 +4,31 @@ import hmac
 import json
 import re
 import secrets
+import subprocess
+import sys
 from pathlib import Path
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 path = Path(".dev.vars.production")
+
+
+def read_secret(prompt):
+    if sys.platform != "win32":
+        return getpass.getpass(prompt + ": ")
+    print(prompt + ":", flush=True)
+    command = (
+        "$value = Read-Host -AsSecureString; "
+        "[Console]::OutputEncoding = [Text.Encoding]::UTF8; "
+        "[Console]::Write([Net.NetworkCredential]::new('', $value).Password)"
+    )
+    result = subprocess.run(
+        ["powershell.exe", "-NoProfile", "-Command", command],
+        stdout=subprocess.PIPE,
+        encoding="utf-8",
+        check=True,
+    )
+    return result.stdout
 values = {}
 if path.exists():
     for line in path.read_text().splitlines():
@@ -30,7 +50,7 @@ if action == "r":
 else:
     if login not in accounts and len(accounts) >= 5:
         raise SystemExit("All five account slots are in use.")
-    password = getpass.getpass("Password (20–128 characters, or Enter to generate): ")
+    password = read_secret("Password (20–128 characters, or Enter to generate)")
     if password and not 20 <= len(password) <= 128:
         raise SystemExit("Password must have 20–128 characters.")
     if not password:
@@ -41,7 +61,7 @@ else:
     ).hexdigest()
 values["ACCOUNTS"] = json.dumps(accounts, separators=(",", ":"))
 if not values.get("DISK_TOKEN"):
-    token = getpass.getpass("Yandex Disk OAuth token (Enter to configure later): ").strip()
+    token = read_secret("Yandex Disk OAuth token (Enter to configure later)").strip()
     if token:
         request = Request(
             "https://cloud-api.yandex.net/v1/disk/resources?path=app%3A%2F&fields=path,type",
@@ -50,6 +70,8 @@ if not values.get("DISK_TOKEN"):
         try:
             with urlopen(request, timeout=15) as response:
                 folder = json.load(response)
+        except HTTPError as error:
+            raise SystemExit(f"Yandex Disk returned HTTP {error.code}.") from None
         except (URLError, ValueError):
             raise SystemExit("Yandex Disk did not accept the token or could not be reached.") from None
         folder_name = folder.get("path", "").rstrip("/").rsplit("/", 1)[-1]
