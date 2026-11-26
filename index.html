@@ -262,13 +262,13 @@
       <details class="all-notes"><summary>Все заметки</summary><div class="notes-list-wrap" id="notesListWrap" hidden><div class="notes-list" id="notesList"></div></div><p id="allNotesEmpty" class="notes-hint" hidden>Заметок пока нет.</p></details>
     </section>
     <section class="surface notes-card" aria-labelledby="backupTitle">
-        <h2 id="backupTitle">Резервная копия</h2>
-        <p class="notes-hint">Сохрани файл в «Файлы» или на Диск. Для переноса выбери его на другом устройстве. Облачная синхронизация пока не подключена.</p>
+        <h2 id="backupTitle">Полная резервная копия</h2>
+        <p class="notes-hint">Сохрани отдельный файл с заметками, настройками графика, именами бригад и разовыми сменами. В копию входят и правки, которые ещё ждут отправки на Яндекс Диск.</p>
         <div style="display:flex;flex-wrap:wrap;gap:10px">
-          <button type="button" id="backupExport" style="border:0;border-radius:12px;background:#2469db;color:white;padding:12px 16px;font-weight:700">Сохранить данные в файл</button>
+          <button type="button" id="backupExport" style="border:0;border-radius:12px;background:#2469db;color:white;padding:12px 16px;font-weight:700">Скачать полную копию</button>
           <label style="display:inline-block;border:1px solid #b9c9d1;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer">Восстановить из файла<input id="backupImport" type="file" accept=".json,application/json" style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0"></label>
         </div>
-      <p class="notes-hint" style="margin:15px 0 0">Заметки хранятся в памяти приложения на этом iPhone. На другой телефон они автоматически не переносятся; при удалении приложения или его данных записи могут пропасть.</p>
+      <p class="notes-hint" style="margin:15px 0 0">Храни файл отдельно, например в «Файлах» или на Диске. Восстановление полной копии заменит данные текущего профиля и отправит их на синхронизацию.</p>
     </section>
 
     <p class="footnote">Листай календарь влево и вправо, чтобы переключать месяцы.<br>График и настройки доступны без учётной записи.</p>
@@ -296,7 +296,7 @@
     </form>
   </dialog>
 
-  <script src="./sync.js"></script>
+  <script src="./sync.js?v=10"></script>
   <script>
     (() => {
       'use strict';
@@ -566,8 +566,9 @@
         try {
           const rawNotes = window.calendarStorage.getItem(NOTES_KEY);
           if (rawNotes !== null) { const parsed=JSON.parse(rawNotes); if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || Object.keys(parsed).length !== Object.keys(readNotes()).length) throw new Error('Invalid notes'); }
-          const data = {format:'moi-smeny-backup', version:1, exportedAt:new Date().toISOString(), notes:readNotes(), settings:readSettings(), crews:readCrews()};
-          const file = new File([JSON.stringify(data,null,2)], 'moi-smeny-backup.json', {type:'application/json'});
+          const data = {format:'moi-smeny-backup', version:2, exportedAt:new Date().toISOString(), notes:readNotes(), settings:readSettings(), crews:readCrews()};
+          const stamp = data.exportedAt.slice(0,19).replaceAll(':','-');
+          const file = new File([JSON.stringify(data,null,2)], `kalendare-backup-${stamp}.json`, {type:'application/json'});
           if (navigator.canShare && navigator.canShare({files:[file]}) && navigator.share) {
             try { await navigator.share({files:[file],title:'Резервная копия «Мои смены»'}); } catch (error) { if (error.name !== 'AbortError') alert('Не удалось открыть сохранение файла. Попробуйте ещё раз.'); }
           } else {
@@ -586,31 +587,40 @@
           catch (_) { throw new Error('Файл не в UTF-8. Экспортируйте его заново или используйте неповреждённую копию.'); }
           const data=JSON.parse(text);
           if (JSON.stringify(data).includes('\uFFFD')) throw new Error('В файле обнаружены повреждённые символы. Выберите исходную неповреждённую копию.');
-          if (!data || data.format!=='moi-smeny-backup' || data.version!==1 || !data.notes || typeof data.notes!=='object' || Array.isArray(data.notes)) throw new Error('Это не файл резервной копии «Мои смены».');
+          if (!data || data.format!=='moi-smeny-backup' || ![1,2].includes(data.version) || !data.notes || typeof data.notes!=='object' || Array.isArray(data.notes)) throw new Error('Это не файл резервной копии «Мои смены».');
           const entries=Object.entries(data.notes);
           if (entries.some(([k,v])=>!parseLocalDate(k) || isoDate(parseLocalDate(k))!==k || typeof v!=='string' || !v.trim() || v.length>2000)) throw new Error('В файле есть неверная дата или заметка. Данные не изменены.');
+          const st=data.settings, cr=data.crews;
+          const validSettings=st && parseLocalDate(st.base) && Number.isInteger(st.rate) && st.rate>=0 && st.rate<=100000000;
+          const validCrews=Array.isArray(cr) && cr.length===3 && cr.every(n=>typeof n==='string' && n.trim() && n.length<=50);
+          if (data.version===2) {
+            const overrides=readShiftOverrides(st?.overrides);
+            if (!validSettings || !validCrews || !st.overrides || typeof st.overrides!=='object' || Array.isArray(st.overrides) ||
+                Object.keys(overrides).length!==Object.keys(st.overrides).length) throw new Error('В копии повреждены настройки графика.');
+            if (!confirm(`Заменить данные текущего профиля этой копией? В копии заметок: ${entries.length}. Если нужно сохранить текущие данные, сначала скачай отдельную копию.`)) return;
+            window.calendarStorage.setItems({
+              [NOTES_KEY]:JSON.stringify(data.notes),
+              [STORAGE_KEY]:JSON.stringify({base:st.base,rate:st.rate,overrides}),
+              [CREWS_KEY]:JSON.stringify(cr)
+            });
+            window.dispatchEvent(new Event('kalendare-sync'));
+            alert('Копия восстановлена. Статус отправки показан вверху страницы.');
+            return;
+          }
           const current=readNotes(), merged={...current}; let added=0, conflicts=0;
           const damaged=[];
           for (const [k,v] of entries) { if (!(k in current)) { merged[k]=v; added++; } else if (current[k]!==v) { if (current[k].includes('\uFFFD')) damaged.push([k,v]); else conflicts++; } }
           let repaired=0;
           if (damaged.length && confirm(`Обнаружено заметок с символом замены �: ${damaged.length}. Заменить их текстом из файла? Сначала сохраните резервную копию текущих данных.`)) { for (const [k,v] of damaged) merged[k]=v; repaired=damaged.length; }
           if (!confirm(`В файле заметок: ${entries.length}. Будет добавлено: ${added}. Заменено повреждённых: ${repaired}. Существующих заметок с другим текстом: ${conflicts} — они останутся без изменений. Продолжить?`)) return;
-          const st=data.settings, cr=data.crews;
-          const validSettings=st && parseLocalDate(st.base) && Number.isInteger(st.rate) && st.rate>=0 && st.rate<=100000000;
-          const validCrews=Array.isArray(cr) && cr.length===3 && cr.every(n=>typeof n==='string' && n.trim() && n.length<=50);
           const restoreSettings=(validSettings || validCrews) && confirm('Восстановить также настройки графика и имена бригад из файла? Текущие настройки будут заменены.');
-          const keys=[NOTES_KEY, STORAGE_KEY, CREWS_KEY], previous=keys.map(k=>window.calendarStorage.getItem(k));
-          try {
-            window.calendarStorage.setItem(NOTES_KEY,JSON.stringify(merged));
-            if (restoreSettings && validSettings) {
-              const overrides=st.overrides === undefined ? settings.overrides : readShiftOverrides(st.overrides);
-              window.calendarStorage.setItem(STORAGE_KEY,JSON.stringify({base:st.base,rate:st.rate,overrides}));
-            }
-            if (restoreSettings && validCrews) window.calendarStorage.setItem(CREWS_KEY,JSON.stringify(cr));
-          } catch (error) {
-            keys.forEach((key,i)=>{try { if (previous[i]===null) window.calendarStorage.removeItem(key); else window.calendarStorage.setItem(key,previous[i]); } catch (_) {}});
-            throw error;
+          const changes={[NOTES_KEY]:JSON.stringify(merged)};
+          if (restoreSettings && validSettings) {
+            const overrides=st.overrides === undefined ? settings.overrides : readShiftOverrides(st.overrides);
+            changes[STORAGE_KEY]=JSON.stringify({base:st.base,rate:st.rate,overrides});
           }
+          if (restoreSettings && validCrews) changes[CREWS_KEY]=JSON.stringify(cr);
+          window.calendarStorage.setItems(changes);
           notes=readNotes(); settings=readSettings(); crewNames=readCrews(); render();
           alert(`Добавлено заметок: ${added}. Заменено повреждённых: ${repaired}. Пропущено несовпадающих: ${conflicts}. Проверьте записи в календаре.`);
         } catch (error) { alert('Не удалось восстановить заметки: '+(error.message || 'ошибка файла или памяти устройства')); }

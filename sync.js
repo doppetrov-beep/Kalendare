@@ -97,18 +97,23 @@
     }
   }
 
-  function update(key, value) {
+  function updateAll(values) {
     if (!login || !state) throw new Error("session");
-    if (state.data[key] === value) return;
-    store({ ...state, data: { ...state.data, [key]: value }, pending: true });
+    if (Object.entries(values).every(([key, value]) => state.data[key] === value)) return;
+    const data = { ...state.data, ...values };
+    const upload = JSON.stringify({ revision: state.revision ?? "0".repeat(36), data });
+    if (new TextEncoder().encode(upload).length > 1024 * 1024) {
+      throw new Error("Данные превышают допустимый размер синхронизации.");
+    }
+    store({ ...state, data, pending: true });
     status.textContent = "Ожидает синхронизации";
     schedule();
   }
 
   window.calendarStorage = {
     getItem: key => state?.data[key] ?? null,
-    setItem: update,
-    removeItem: key => update(key, null)
+    setItem: (key, value) => updateAll({ [key]: value }),
+    setItems: updateAll
   };
 
   form.addEventListener("submit", async event => {
