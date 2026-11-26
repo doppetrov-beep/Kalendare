@@ -5,6 +5,8 @@ import json
 import re
 import secrets
 from pathlib import Path
+from urllib.error import URLError
+from urllib.request import Request, urlopen
 
 path = Path(".dev.vars.production")
 values = {}
@@ -14,6 +16,7 @@ if path.exists():
         values[name] = json.loads(value)
 values.setdefault("AUTH_SECRET", secrets.token_hex(32))
 accounts = json.loads(values.get("ACCOUNTS", "{}"))
+generated_password = None
 login = input("Login to add, change or remove: ").strip().lower()
 if not re.fullmatch(r"[a-z0-9][a-z0-9_-]{1,39}", login):
     raise SystemExit("Use 2–40 ASCII letters, digits, underscores or hyphens.")
@@ -30,7 +33,7 @@ else:
         raise SystemExit("Password must have 20–128 characters.")
     if not password:
         password = secrets.token_urlsafe(24)
-        print(f"Save this password before closing the terminal: {password}")
+        generated_password = password
     accounts[login] = hmac.new(
         values["AUTH_SECRET"].encode(), f"password:{login}:{password}".encode(), hashlib.sha256
     ).hexdigest()
@@ -38,8 +41,23 @@ values["ACCOUNTS"] = json.dumps(accounts, separators=(",", ":"))
 if not values.get("DISK_TOKEN"):
     token = getpass.getpass("Yandex Disk OAuth token (Enter to configure later): ").strip()
     if token:
+        request = Request(
+            "https://cloud-api.yandex.net/v1/disk/resources?path=app%3A%2F&fields=path,type",
+            headers={"Authorization": f"OAuth {token}"},
+        )
+        try:
+            with urlopen(request, timeout=15) as response:
+                folder = json.load(response)
+        except (URLError, ValueError):
+            raise SystemExit("Yandex Disk did not accept the token or could not be reached.") from None
+        folder_name = folder.get("path", "").rstrip("/").rsplit("/", 1)[-1]
+        if folder.get("type") != "dir" or folder_name.casefold() != "kalendare":
+            raise SystemExit("Use the token for the Kalendare application folder.")
         values["DISK_TOKEN"] = token
+        print("Verified access to the Kalendare folder.")
 tmp = path.with_suffix(".tmp")
 tmp.write_text("".join(f"{name}={json.dumps(value)}\n" for name, value in values.items()))
 tmp.replace(path)
 print("Local configuration updated.")
+if generated_password:
+    print(f"Save this password before closing the terminal: {generated_password}")
