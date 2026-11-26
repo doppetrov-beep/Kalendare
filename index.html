@@ -222,6 +222,14 @@
         <h3>Записи в этом месяце</h3>
         <div class="notes-list" id="notesList"></div>
       </div>
+      <div style="margin-top:20px;padding:18px;background:#f3f7f6;border-radius:16px">
+        <strong>Резервная копия</strong>
+        <p class="notes-hint">Сохрани файл в «Файлы» или на Диск. Для переноса выбери его на другом устройстве. Облачная синхронизация пока не подключена.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <button type="button" id="backupExport" style="border:0;border-radius:12px;background:#2469db;color:white;padding:12px 16px;font-weight:700">Сохранить данные в файл</button>
+          <label style="display:inline-block;border:1px solid #b9c9d1;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer">Восстановить из файла<input id="backupImport" type="file" accept=".json,application/json" style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0"></label>
+        </div>
+      </div>
       <p class="notes-hint" style="margin:15px 0 0">Заметки хранятся в памяти приложения на этом iPhone. На другой телефон они автоматически не переносятся; при удалении приложения или его данных записи могут пропасть.</p>
     </section>
 
@@ -510,6 +518,50 @@
         updateNoteMarkers();
         renderNoteList();
       });
+      $('backupExport').addEventListener('click', async () => {
+        try {
+          const rawNotes = localStorage.getItem(NOTES_KEY);
+          if (rawNotes !== null) { const parsed=JSON.parse(rawNotes); if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed) || Object.keys(parsed).length !== Object.keys(readNotes()).length) throw new Error('Invalid notes'); }
+          const data = {format:'moi-smeny-backup', version:1, exportedAt:new Date().toISOString(), notes:readNotes(), settings:readSettings(), crews:readCrews()};
+          const file = new File([JSON.stringify(data,null,2)], 'moi-smeny-backup.json', {type:'application/json'});
+          if (navigator.canShare && navigator.canShare({files:[file]}) && navigator.share) {
+            try { await navigator.share({files:[file],title:'Резервная копия «Мои смены»'}); } catch (error) { if (error.name !== 'AbortError') alert('Не удалось открыть сохранение файла. Попробуйте ещё раз.'); }
+          } else {
+            const url=URL.createObjectURL(file), a=document.createElement('a');
+            a.href=url; a.download=file.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),60000);
+          }
+        } catch (_) { alert('Не удалось подготовить файл. Проверьте доступ к памяти устройства.'); }
+      });
+      $('backupImport').addEventListener('change', async event => {
+        const input=event.target, file=input.files[0]; if (!file) return;
+        try {
+          if (file.size > 2*1024*1024) throw new Error('Файл слишком большой.');
+          const data=JSON.parse(await file.text());
+          if (!data || data.format!=='moi-smeny-backup' || data.version!==1 || !data.notes || typeof data.notes!=='object' || Array.isArray(data.notes)) throw new Error('Это не файл резервной копии «Мои смены».');
+          const entries=Object.entries(data.notes);
+          if (entries.some(([k,v])=>!parseLocalDate(k) || isoDate(parseLocalDate(k))!==k || typeof v!=='string' || !v.trim() || v.length>2000)) throw new Error('В файле есть неверная дата или заметка. Данные не изменены.');
+          const current=readNotes(), merged={...current}; let added=0, conflicts=0;
+          for (const [k,v] of entries) { if (!(k in current)) { merged[k]=v; added++; } else if (current[k]!==v) conflicts++; }
+          if (!confirm(`В файле заметок: ${entries.length}. Будет добавлено: ${added}. Существующих заметок с другим текстом: ${conflicts} — они останутся без изменений. Продолжить?`)) return;
+          const st=data.settings, cr=data.crews;
+          const validSettings=st && parseLocalDate(st.base) && Number.isInteger(st.rate) && st.rate>=0 && st.rate<=100000000;
+          const validCrews=Array.isArray(cr) && cr.length===3 && cr.every(n=>typeof n==='string' && n.trim() && n.length<=50);
+          const restoreSettings=(validSettings || validCrews) && confirm('Восстановить также настройки графика и имена бригад из файла? Текущие настройки будут заменены.');
+          const keys=[NOTES_KEY, STORAGE_KEY, CREWS_KEY], previous=keys.map(k=>localStorage.getItem(k));
+          try {
+            localStorage.setItem(NOTES_KEY,JSON.stringify(merged));
+            if (restoreSettings && validSettings) localStorage.setItem(STORAGE_KEY,JSON.stringify(st));
+            if (restoreSettings && validCrews) localStorage.setItem(CREWS_KEY,JSON.stringify(cr));
+          } catch (error) {
+            keys.forEach((key,i)=>{try { if (previous[i]===null) localStorage.removeItem(key); else localStorage.setItem(key,previous[i]); } catch (_) {}});
+            throw error;
+          }
+          notes=readNotes(); settings=readSettings(); crewNames=readCrews(); render();
+          alert(`Добавлено заметок: ${added}. Пропущено несовпадающих: ${conflicts}. Проверьте записи в календаре.`);
+        } catch (error) { alert('Не удалось восстановить заметки: '+(error.message || 'ошибка файла или памяти устройства')); }
+        finally { input.value=''; }
+      });
+
       window.addEventListener('storage', event => {
         if (event.key === NOTES_KEY) { notes = readNotes(); render(); }
         if (event.key === CREWS_KEY) { crewNames = readCrews(); render(); }
