@@ -1,5 +1,5 @@
-const CACHE_NAME = 'my-shifts-v13';
-const ASSETS = ['./','./theme.js','./sync.js?v=13','./index.html','./manifest.webmanifest','./icon-192.png','./apple-touch-icon.png'];
+const CACHE_NAME = 'my-shifts-v14';
+const ASSETS = ['./','./theme.js','./sync.js?v=14','./index.html','./manifest.webmanifest','./icon-192.png','./apple-touch-icon.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
 });

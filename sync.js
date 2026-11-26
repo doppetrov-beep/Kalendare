@@ -59,12 +59,22 @@
   }
 
   function enter(name) {
-    const cached = JSON.parse(localStorage.getItem("kalendare-cloud:" + name) || "null");
+    let cached = null;
+    try {
+      const saved = JSON.parse(localStorage.getItem("kalendare-cloud:" + name) || "null");
+      if (saved?.data && keys.every(key => saved.data[key] === null || typeof saved.data[key] === "string")) {
+        cached = saved;
+      }
+    } catch {}
     login = name;
     state = cached || { revision: null, data: empty(), pending: false };
     migrate.hidden = !keys.some(key => localStorage.getItem(key) !== null);
     toolbar.hidden = false;
     form.hidden = true;
+    if (cached) {
+      refresh();
+      showCalendar();
+    }
     sync();
   }
 
@@ -90,7 +100,7 @@
           pending: newer
         };
         store(next);
-        if (!newer && !sent.pending) refresh();
+        if (!newer && !sent.pending && keys.some(key => sent.data[key] !== next.data[key])) refresh();
         status.textContent = newer ? "Ожидает синхронизации" : "Синхронизировано";
       }
       showCalendar();
