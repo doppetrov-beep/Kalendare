@@ -60,25 +60,29 @@ else:
         values["AUTH_SECRET"].encode(), f"password:{login}:{password}".encode(), hashlib.sha256
     ).hexdigest()
 values["ACCOUNTS"] = json.dumps(accounts, separators=(",", ":"))
-if not values.get("DISK_TOKEN"):
+while not values.get("DISK_TOKEN"):
     token = read_secret("Yandex Disk OAuth token (Enter to configure later)").strip()
-    if token:
-        request = Request(
-            "https://cloud-api.yandex.net/v1/disk/resources?path=app%3A%2F&fields=path,type",
-            headers={"Authorization": f"OAuth {token}"},
-        )
-        try:
-            with urlopen(request, timeout=15) as response:
-                folder = json.load(response)
-        except HTTPError as error:
-            raise SystemExit(f"Yandex Disk returned HTTP {error.code}.") from None
-        except (URLError, ValueError):
-            raise SystemExit("Yandex Disk did not accept the token or could not be reached.") from None
-        folder_name = folder.get("path", "").rstrip("/").rsplit("/", 1)[-1]
-        if folder.get("type") != "dir" or folder_name.casefold() != "kalendare":
-            raise SystemExit("Use the token for the Kalendare application folder.")
-        values["DISK_TOKEN"] = token
-        print("Verified access to the Kalendare folder.")
+    if not token:
+        break
+    request = Request(
+        "https://cloud-api.yandex.net/v1/disk/resources?path=app%3A%2F&fields=path,type,name",
+        headers={"Authorization": f"OAuth {token}"},
+    )
+    try:
+        with urlopen(request, timeout=15) as response:
+            folder = json.load(response)
+    except HTTPError as error:
+        print(f"Yandex Disk returned HTTP {error.code}.")
+        continue
+    except (URLError, ValueError):
+        print("Could not check the token. Check your connection and try again.")
+        continue
+    folder_name = folder.get("path", "").rstrip("/").rsplit("/", 1)[-1]
+    if folder.get("type") != "dir" or folder_name.strip().casefold() not in {"calendar", "kalendare"}:
+        print(f"Yandex Disk opened folder {folder_name or '(unnamed)'!r}; expected 'Calendar' or 'Kalendare'.")
+        continue
+    values["DISK_TOKEN"] = token
+    print(f"Verified access to the {folder_name} folder.")
 tmp = path.with_suffix(".tmp")
 tmp.write_text("".join(f"{name}={json.dumps(value)}\n" for name, value in values.items()))
 tmp.replace(path)
