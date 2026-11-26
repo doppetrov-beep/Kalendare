@@ -7,11 +7,15 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Мои смены">
-  <meta name="description" content="Личный календарь рабочих смен: 3 дневных, 3 ночных, 3 выходных. Доход по месяцам.">
+  <meta name="description" content="Личный календарь рабочих смен: 3 дневных, 3 ночных, 3 выходных. Расписание смен.">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
   <title>Мои смены — календарь</title>
   <style>
+    .shift-indicator { display:inline-grid; place-items:center; width:25px; height:25px; border-radius:8px; font-size:13px; font-weight:800; flex:none; }
+    .shift-Д { background:#ffdf56; color:#342b00; } .shift-Н { background:#3189ed; color:white; } .shift-В { background:#e55a59; color:white; }
+    .all-notes { margin-top:20px; padding:16px; border:1px solid #e8ebf1; border-radius:16px; } .all-notes summary { cursor:pointer; font-weight:750; } .all-notes .notes-list-wrap { margin-top:12px; }
+
     :root {
       color-scheme: light;
       --bg: #f5f6fa; --surface: #ffffff; --text: #1e2431; --muted: #747c8b;
@@ -159,13 +163,13 @@
       <div class="today-date" id="todayDate">Загружаем дату…</div>
       <div class="today-bottom">
         <div class="today-symbol" id="todaySymbol">Д</div>
-        <div><div class="today-shift-title" id="todayShift">Дневная смена</div><div class="today-subtitle" id="todayPay">3 800 ₽ за смену</div></div>
+        <div><div class="today-shift-title" id="todayShift">Дневная смена</div><div class="today-subtitle" id="todayPerson">—</div></div>
       </div>
       <div class="roster-summary" aria-label="Бригады сегодня">
         <div class="roster-summary-title">Кто сегодня в день, ночь и на выходном</div>
-        <div class="roster-summary-row"><span class="roster-summary-role">День</span><span class="roster-summary-name" id="todayCrewDay">—</span></div>
-        <div class="roster-summary-row"><span class="roster-summary-role">Ночь</span><span class="roster-summary-name" id="todayCrewNight">—</span></div>
-        <div class="roster-summary-row"><span class="roster-summary-role">Отдыхает</span><span class="roster-summary-name" id="todayCrewOff">—</span></div>
+        <div class="roster-summary-row"><span class="roster-summary-role">День</span><span class="shift-indicator shift-Д" aria-hidden="true">Д</span><span class="roster-summary-name" id="todayCrewDay">—</span></div>
+        <div class="roster-summary-row"><span class="roster-summary-role">Ночь</span><span class="shift-indicator shift-Н" aria-hidden="true">Н</span><span class="roster-summary-name" id="todayCrewNight">—</span></div>
+        <div class="roster-summary-row"><span class="roster-summary-role">Отдыхает</span><span class="shift-indicator shift-В" aria-hidden="true">В</span><span class="roster-summary-name" id="todayCrewOff">—</span></div>
       </div>
     </section>
 
@@ -183,24 +187,14 @@
       </div>
       <div class="calendar-grid" id="calendar" role="group" aria-label="Дни календаря"></div>
       <div class="legend" aria-label="Обозначения смен">
-        <span class="legend-item"><span class="legend-square" style="background:var(--yellow)"></span>Дневная</span>
-        <span class="legend-item"><span class="legend-square" style="background:var(--night)"></span>Ночная</span>
-        <span class="legend-item"><span class="legend-square" style="background:var(--off)"></span>Выходной</span>
+        <span class="legend-item"><span class="legend-square" style="background:var(--yellow)"></span><span id="selectedCrewDay">—</span></span>
+        <span class="legend-item"><span class="legend-square" style="background:var(--night)"></span><span id="selectedCrewNight">—</span></span>
+        <span class="legend-item"><span class="legend-square" style="background:var(--off)"></span><span id="selectedCrewOff">—</span></span>
       </div>
       <div class="detail" aria-live="polite">
         <div><div class="detail-label">Выбранный день</div><div class="detail-date" id="selectedDate">—</div></div>
         <div class="detail-shift" id="selectedShift">—</div>
       </div>
-    </section>
-
-    <section class="surface roster-card" aria-labelledby="rosterTitle">
-      <div class="roster-head"><h2 id="rosterTitle">Кто работает</h2><span id="rosterDate" class="roster-date">—</span></div>
-      <div id="rosterList" class="roster-list" aria-live="polite">
-        <div class="roster-row daytime"><span class="roster-badge">Д</span><div><div class="roster-row-label">Дневная смена</div><div class="roster-row-name" id="rosterDay">—</div></div></div>
-        <div class="roster-row night"><span class="roster-badge">Н</span><div><div class="roster-row-label">Ночная смена</div><div class="roster-row-name" id="rosterNight">—</div></div></div>
-        <div class="roster-row off"><span class="roster-badge">В</span><div><div class="roster-row-label">Выходной</div><div class="roster-row-name" id="rosterOff">—</div></div></div>
-      </div>
-      <p class="roster-caption">Показаны бригады на выбранную календарную дату. Имена меняются в ⚙ Настройках.</p>
     </section>
 
     <section class="surface notes-card" aria-labelledby="notesTitle">
@@ -218,30 +212,18 @@
         </div>
       </div>
       <div id="notesEmpty" class="notes-empty" hidden>Выбери день в календаре, чтобы написать или прочитать заметку.</div>
-      <div class="notes-list-wrap" id="notesListWrap" hidden>
-        <h3>Записи в этом месяце</h3>
-        <div class="notes-list" id="notesList"></div>
-      </div>
-      <div style="margin-top:20px;padding:18px;background:#f3f7f6;border-radius:16px">
-        <strong>Резервная копия</strong>
+      <details class="all-notes"><summary>Все заметки</summary><div class="notes-list-wrap" id="notesListWrap" hidden><div class="notes-list" id="notesList"></div></div><p id="allNotesEmpty" class="notes-hint" hidden>Заметок пока нет.</p></details>
+    </section>
+    <section class="surface notes-card" aria-labelledby="backupTitle">
+        <h2 id="backupTitle">Резервная копия</h2>
         <p class="notes-hint">Сохрани файл в «Файлы» или на Диск. Для переноса выбери его на другом устройстве. Облачная синхронизация пока не подключена.</p>
         <div style="display:flex;flex-wrap:wrap;gap:10px">
           <button type="button" id="backupExport" style="border:0;border-radius:12px;background:#2469db;color:white;padding:12px 16px;font-weight:700">Сохранить данные в файл</button>
           <label style="display:inline-block;border:1px solid #b9c9d1;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer">Восстановить из файла<input id="backupImport" type="file" accept=".json,application/json" style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0"></label>
         </div>
-      </div>
       <p class="notes-hint" style="margin:15px 0 0">Заметки хранятся в памяти приложения на этом iPhone. На другой телефон они автоматически не переносятся; при удалении приложения или его данных записи могут пропасть.</p>
     </section>
 
-    <section class="surface income-card" aria-labelledby="incomeTitle">
-      <div class="income-head"><span id="incomeTitle">Доход за выбранный месяц</span><span id="rateCaption">3 800 ₽ / смена</span></div>
-      <div class="income" id="income">— ₽</div>
-      <div class="stats">
-        <div class="stat"><div class="stat-num" id="allCount">—</div><div class="stat-label">Рабочих смен</div></div>
-        <div class="stat"><div class="stat-num" id="dayCount">—</div><div class="stat-label">Дневных</div></div>
-        <div class="stat"><div class="stat-num" id="nightCount">—</div><div class="stat-label">Ночных</div></div>
-      </div>
-    </section>
     <p class="footnote">Листай календарь влево и вправо, чтобы переключать месяцы.<br>График и настройки доступны без учётной записи.</p>
   </main>
 
@@ -249,9 +231,6 @@
     <form class="settings" id="settingsForm">
       <div class="settings-head"><h2 id="settingsTitle">Настройки</h2><button type="button" class="icon-button" id="settingsClose" aria-label="Закрыть настройки">×</button></div>
       <p class="settings-description">График повторяется каждые 9 дней: 3 дневные смены, 3 ночные и 3 выходных.</p>
-      <label class="setting-label" for="rateInput">Оплата за одну смену (₽)</label>
-      <input id="rateInput" name="rate" type="number" inputmode="numeric" min="0" max="100000000" step="1" required>
-      <p class="setting-help">Сумма за месяц рассчитывается по количеству рабочих смен.</p>
       <label class="setting-label" for="baseInput">Первый день дневной смены</label>
       <input id="baseInput" name="base" type="date" required>
       <p class="setting-help">Исходная дата: 21 октября 2026 года. От неё рассчитывается весь график, в том числе предыдущие месяцы.</p>
@@ -264,7 +243,7 @@
         <input id="crewName1" name="crewName1" maxlength="50" autocomplete="off" placeholder="Например: Данил" required>
         <label class="setting-label" for="crewName2">Бригада 3 — сначала выходной</label>
         <input id="crewName2" name="crewName2" maxlength="50" autocomplete="off" placeholder="Например: Марат" required>
-        <p class="setting-help" style="margin:12px 0 8px">Имена хранятся только на этом устройстве. Смена имён не сбрасывает заметки или зарплату.</p>
+        <p class="setting-help" style="margin:12px 0 8px">Имена хранятся только на этом устройстве. Смена имён не сбрасывает заметки.</p>
       </div>
       <div class="settings-actions"><button class="reset" id="resetSettings" type="button">Сбросить график</button><button class="primary" type="submit">Сохранить</button></div>
     </form>
@@ -280,7 +259,6 @@
       const DEFAULT_CREWS = Object.freeze(['Бригада 1', 'Бригада 2', 'Бригада 3']);
       const DAY_MS = 24 * 60 * 60 * 1000;
       const $ = id => document.getElementById(id);
-      const money = value => `${new Intl.NumberFormat('ru-RU', {maximumFractionDigits:0}).format(value)} ₽`;
       const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
       const fullDateFormat = new Intl.DateTimeFormat('ru-RU', {day:'numeric', month:'long', year:'numeric'});
       const detailDateFormat = new Intl.DateTimeFormat('ru-RU', {day:'numeric', month:'long'});
@@ -333,10 +311,10 @@
         return selectedDay === null ? null : isoDate(new Date(year,month,selectedDay));
       }
       function renderNoteList() {
-        const prefix = String(year) + '-' + String(month+1).padStart(2,'0') + '-';
-        const entries = Object.keys(notes).filter(key => key.startsWith(prefix) && notes[key].trim()).sort();
+        const entries = Object.keys(notes).filter(key => notes[key].trim()).sort().reverse();
         $('notesCount').textContent = entries.length + (entries.length===1 ? ' запись' : entries.length>=2 && entries.length<=4 ? ' записи' : ' записей');
         $('notesListWrap').hidden = entries.length === 0;
+        $('allNotesEmpty').hidden = entries.length !== 0;
         const container = $('notesList');
         container.replaceChildren();
         for (const key of entries) {
@@ -345,13 +323,13 @@
           button.className='note-item';
           const date = document.createElement('span');
           date.className='note-item-date';
-          date.textContent=String(Number(key.slice(8))) + ' ' + monthNames[month].toLowerCase();
+          date.textContent=fullDateFormat.format(parseLocalDate(key));
           const preview = document.createElement('span');
           preview.className='note-item-preview';
           preview.textContent=notes[key];
           button.append(date,preview);
           button.addEventListener('click', () => {
-            selectedDay=Number(key.slice(8));
+            const date=parseLocalDate(key); year=date.getFullYear(); month=date.getMonth(); selectedDay=date.getDate();
             render();
             $('noteInput').scrollIntoView({behavior:'smooth',block:'center'});
           });
@@ -397,13 +375,6 @@
         for (let i=0; i<3; i++) output[(phase + i) % 3] = crewNames[i];
         return output; // [day crew, night crew, resting crew]
       }
-      function renderRoster(date) {
-        const [day, night, off] = getCrewAssignments(date);
-        $('rosterDate').textContent = fullDateFormat.format(date);
-        $('rosterDay').textContent = day;
-        $('rosterNight').textContent = night;
-        $('rosterOff').textContent = off;
-      }
       let settings = readSettings();
       let now = new Date();
       let year = now.getFullYear();
@@ -424,7 +395,7 @@
         $('todaySymbol').textContent = shift.letter;
         $('todaySymbol').className = `today-symbol ${shift.css}`;
         $('todayShift').textContent = shift.name;
-        $('todayPay').textContent = shift.work ? `${money(settings.rate)} за смену` : 'Время отдохнуть';
+        $('todayPerson').textContent = crewNames[0];
         const [day, night, off] = getCrewAssignments(now);
         $('todayCrewDay').textContent = day;
         $('todayCrewNight').textContent = night;
@@ -458,32 +429,26 @@
           if (n===now.getDate() && year===now.getFullYear() && month===now.getMonth()) button.classList.add('is-today');
           if (n===selectedDay) button.classList.add('is-selected');
           button.setAttribute('aria-pressed',String(n===selectedDay));
-          button.setAttribute('aria-label',`${fullDateFormat.format(date)} — ${shift.name}${shift.work ? `, ${money(settings.rate)}` : ''}${notes[key] ? ', есть заметка' : ''}`);
+          button.setAttribute('aria-label',`${fullDateFormat.format(date)} — ${shift.name}${notes[key] ? ', есть заметка' : ''}`);
           const number=document.createElement('span'); number.className='number'; number.textContent=String(n);
           const letter=document.createElement('span'); letter.className='letter'; letter.textContent=shift.letter;
           button.append(number,letter);
-          button.addEventListener('click',() => {selectedDay=n; render(); $('rosterDate').scrollIntoView({behavior:'smooth',block:'nearest'});});
+          button.addEventListener('click',() => {selectedDay=n; render(); $('noteEditor').scrollIntoView({behavior:'smooth',block:'nearest'});});
           fragment.appendChild(button);
         }
         $('calendar').appendChild(fragment);
-        $('dayCount').textContent=String(dayShifts);
-        $('nightCount').textContent=String(nightShifts);
-        $('allCount').textContent=String(dayShifts+nightShifts);
-        $('income').textContent=money((dayShifts+nightShifts)*settings.rate);
-        $('rateCaption').textContent=`${money(settings.rate)} / смена`;
         if (selectedDay!==null && selectedDay>=1 && selectedDay<=count) {
           const date=new Date(year,month,selectedDay), shift=getShift(date);
           $('selectedDate').textContent=detailDateFormat.format(date);
-          $('selectedShift').textContent=shift.name;
+          $('selectedShift').textContent=`${shift.name} · ${crewNames[0]}`;
+          const [day,night,off]=getCrewAssignments(date);
+          $('selectedCrewDay').textContent=day; $('selectedCrewNight').textContent=night; $('selectedCrewOff').textContent=off;
           $('selectedShift').className=`detail-shift ${shift.css}`;
-          renderRoster(date);
         } else {
           $('selectedDate').textContent='Выбери дату';
           $('selectedShift').textContent='';
-          $('rosterDate').textContent='Выбери день';
-          $('rosterDay').textContent='—';
-          $('rosterNight').textContent='—';
-          $('rosterOff').textContent='—';
+          $('selectedCrewDay').textContent='—'; $('selectedCrewNight').textContent='—'; $('selectedCrewOff').textContent='—';
+
         }
         renderNoteEditor();
       }
@@ -594,7 +559,6 @@
       },{passive:true});
       const dialog=$('settingsDialog');
       $('settingsOpen').addEventListener('click',()=>{
-        $('rateInput').value=String(settings.rate);
         $('baseInput').value=settings.base;
         for (let i=0;i<3;i++) $('crewName'+i).value=crewNames[i];
         dialog.showModal();
@@ -603,7 +567,7 @@
       dialog.addEventListener('click',event=>{if (event.target===dialog) dialog.close();});
       $('settingsForm').addEventListener('submit',event=>{
         event.preventDefault();
-        const rate=Number($('rateInput').value);
+        const rate=settings.rate;
         const base=$('baseInput').value;
         if (!Number.isInteger(rate)||rate<0||rate>100000000||!parseLocalDate(base)) {window.alert('Проверь оплату и дату начала цикла.'); return;}
         const names=[0,1,2].map(i => $('crewName'+i).value.trim());
@@ -619,7 +583,7 @@
       $('resetSettings').addEventListener('click',()=>{
         settings={...DEFAULTS};
         try {localStorage.removeItem(STORAGE_KEY);} catch (_) {}
-        $('rateInput').value=String(settings.rate); $('baseInput').value=settings.base;
+        $('baseInput').value=settings.base;
         // Do not erase names or dated notes when resetting the shift cycle.
         dialog.close(); render();
       });
