@@ -17,21 +17,49 @@ function parse(raw) {
   };
 }
 function draftKey() { return "kalendare:offline:draft:" + get("day").value; }
+function schedule(day) {
+  const elapsed = (Date.parse(day) - Date.parse(snapshot.settings.base)) / 86400000;
+  const phase = Math.floor(((elapsed % 9) + 9) % 9 / 3);
+  const changed = snapshot.settings.overrides[day];
+  return { phase, selected: [0,1,2].includes(changed) ? changed : phase };
+}
+function renderMonth(day) {
+  const month = get("month");
+  month.replaceChildren();
+  const first = new Date(day.slice(0,7) + "-01T00:00:00Z");
+  const count = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth()+1, 0)).getUTCDate();
+  for (const label of ["Пн","Вт","Ср","Чт","Пт","Сб","Вс"]) {
+    const heading = document.createElement("small");
+    heading.textContent = label;
+    month.append(heading);
+  }
+  for (let blank=0; blank<(first.getUTCDay()+6)%7; blank++) month.append(document.createElement("span"));
+  for (let number=1; number<=count; number++) {
+    const key = day.slice(0,8) + String(number).padStart(2,"0");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.style.minHeight = "38px";
+    button.setAttribute("aria-pressed", String(key===day));
+    button.textContent = number + " " + ["Д","Н","В"][schedule(key).selected];
+    button.addEventListener("click",()=>{ get("day").value = key; render(); });
+    month.append(button);
+  }
+}
 function render() {
   const day = get("day").value;
   get("draft").value = localStorage.getItem(draftKey()) ?? "";
   get("draftStatus").textContent = "";
   if (!snapshot || !day) {
+    get("month").replaceChildren();
     get("roster").textContent = "";
     get("note").textContent = "";
     return;
   }
-  const elapsed = (Date.parse(day) - Date.parse(snapshot.settings.base)) / 86400000;
-  const phase = Math.floor(((elapsed % 9) + 9) % 9 / 3);
+  renderMonth(day);
+  const { phase, selected } = schedule(day);
   const crews = [];
   snapshot.crews.forEach((name,index) => { crews[(phase + index) % 3] = name; });
-  const changed = snapshot.settings.overrides[day];
-  if ([0,1,2].includes(changed)) [crews[phase],crews[changed]] = [crews[changed],crews[phase]];
+  [crews[phase],crews[selected]] = [crews[selected],crews[phase]];
   get("roster").textContent = ["День", "Ночь", "Выходной"].map((label,index)=>label+" · "+crews[index]).join(" / ");
   get("note").textContent = typeof snapshot.notes[day] === "string" ? snapshot.notes[day] : "На эту дату заметок нет.";
 }
@@ -57,7 +85,7 @@ async function update() {
     if (!response.ok) throw Error("link");
     const { href } = await response.json();
     if (new URL(href).protocol !== "https:") throw Error("link");
-    const download = await fetch(href,{credentials:"omit",signal:AbortSignal.timeout(15000)});
+    const download = await fetch(href,{credentials:"omit",referrerPolicy:"no-referrer",signal:AbortSignal.timeout(15000)});
     if (!download.ok) throw Error("download");
     const sealed = await download.json();
     if (sealed.format !== "kalendare-encrypted" || sealed.version !== 1) throw Error("snapshot");
