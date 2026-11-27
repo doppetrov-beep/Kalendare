@@ -196,6 +196,13 @@ export class DiskSync {
           method: "PUT", body: JSON.stringify(snapshot), signal: AbortSignal.timeout(6000)
         });
         if (!response.ok) throw new Error("upload");
+        if (login === "artem-m" && this.env.OFFLINE_READER_KEY) {
+          try {
+            await publishReader(this.env, snapshot.data);
+          } catch {
+            console.warn("Offline reader snapshot could not be updated");
+          }
+        }
         return json(snapshot);
       } catch (error) {
         const upstream = /^disk_(download|upload)_http_\d{3}$/.test(error?.message ?? "") ? error.message : null;
@@ -203,4 +210,31 @@ export class DiskSync {
       }
     });
   }
+}
+
+async function publishReader(env, data) {
+  const settings = JSON.parse(data["shift-calendar-v1"] ?? "{}");
+  const crews = JSON.parse(data["shift-calendar-crews-v1"] ?? '["Бригада 1","Бригада 2","Бригада 3"]');
+  const profile = JSON.parse(env.ACCOUNTS)["artem-m"];
+  if (profile.firstCrewName) crews[0] = profile.firstCrewName;
+  const snapshot = {
+    format: "kalendare-shared",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    settings: { base: "2026-10-21", overrides: settings.overrides ?? {} },
+    crews,
+    notes: JSON.parse(data["shift-calendar-notes-v1"] ?? "{}")
+  };
+  const raw = Uint8Array.from(atob(env.OFFLINE_READER_KEY), char => char.charCodeAt(0));
+  const secret = await crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["encrypt"]);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ciphertext = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, secret, encoder.encode(JSON.stringify(snapshot))));
+  const toBase64 = bytes => btoa(Array.from(bytes, byte => String.fromCharCode(byte)).join(""));
+  const href = await diskLink(env, "kalendare-offline-shared", "upload");
+  const response = await fetch(href, {
+    method: "PUT",
+    body: JSON.stringify({ format: "kalendare-encrypted", version: 1, iv: toBase64(iv), data: toBase64(ciphertext) }),
+    signal: AbortSignal.timeout(6000)
+  });
+  if (!response.ok) throw new Error("reader upload");
 }

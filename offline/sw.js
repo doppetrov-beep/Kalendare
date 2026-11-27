@@ -1,7 +1,13 @@
-const version = "kalendare-reader-v3";
+const version = "kalendare-reader-v4";
 importScripts("./assets.js");
 self.addEventListener("install", event => {
-  event.waitUntil(caches.open(version).then(cache => cache.addAll(self.readerAssets)).then(()=>self.skipWaiting()));
+  event.waitUntil((async () => {
+    const cache = await caches.open(version);
+    for (let offset = 0; offset < self.readerAssets.length; offset += 12) {
+      await cache.addAll(self.readerAssets.slice(offset, offset + 12));
+    }
+    await self.skipWaiting();
+  })());
 });
 self.addEventListener("activate", event => {
   event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith("kalendare-reader-") && key !== version).map(key => caches.delete(key)))).then(()=>self.clients.claim()));

@@ -125,14 +125,15 @@ get("copy").addEventListener("click",async()=>{
 get("source").value = localStorage.getItem(sourceKey) ?? "";
 get("key").value = localStorage.getItem(accessKey) ?? "";
 const invite = new URLSearchParams(location.hash.slice(1));
-if (invite.has("source") && invite.has("key")) {
+const invited = invite.has("source") && invite.has("key");
+if (invited) {
   get("source").value = invite.get("source");
   get("key").value = invite.get("key");
   history.replaceState(null,"",location.pathname + location.search);
-  update();
 }
 try {
   const saved = localStorage.getItem(snapshotKey);
   if (saved) { snapshot = parse(JSON.parse(saved)); showSnapshot(); }
 } catch {}
+if (invited || (navigator.onLine && get("source").value && get("key").value)) update();
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});
