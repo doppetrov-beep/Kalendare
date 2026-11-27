@@ -12,16 +12,14 @@
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
   <title>Мои смены — календарь</title>
   <script src="./theme.js"></script>
+  <link rel="stylesheet" href="./site.css">
   <style>
     .shift-indicator { display:inline-grid; place-items:center; width:25px; height:25px; border-radius:8px; font-size:13px; font-weight:800; flex:none; }
     .shift-Д { background:#ffdf56; color:#342b00; } .shift-Н { background:#3189ed; color:white; } .shift-В { background:#e55a59; color:white; }
     .all-notes { margin-top:20px; padding:16px; border:1px solid #e8ebf1; border-radius:16px; } .all-notes summary { cursor:pointer; font-weight:750; } .all-notes .notes-list-wrap { margin-top:12px; }
 
     :root {
-      color-scheme: light;
-      --bg: #f5f6fa; --surface: #ffffff; --text: #1e2431; --muted: #747c8b;
-      --line: #e8ebf1; --blue: #2469db; --yellow: #ffdf56; --night: #3189ed;
-      --off: #e55a59; --radius: 24px;
+      --yellow: #ffdf56; --night: #3189ed; --off: #e55a59;
     }
     * { box-sizing: border-box; }
     html { -webkit-text-size-adjust: 100%; }
@@ -41,7 +39,7 @@
     .icon-button { display:grid; place-items:center; width:46px; height:46px; flex:none; border:1px solid var(--line); border-radius:15px; background:var(--surface); color:var(--text); box-shadow:0 2px 7px rgba(28,42,68,.03); }
     .icon-button:active, .arrow:active, .today-button:active { transform:scale(.96); }
     .icon-button svg { width:22px; height:22px; }
-    .today-card { padding:22px; background:linear-gradient(128deg, #263d67 0%, #192944 100%); border-radius:var(--radius); color:#fff; box-shadow:0 12px 26px rgba(28,51,93,.14); margin-bottom:16px; }
+    .today-card { padding:22px; background:var(--hero); border-radius:var(--radius); color:#fff; box-shadow:0 12px 26px rgba(28,51,93,.14); margin-bottom:16px; }
     .today-top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
     .card-label { font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.095em; opacity:.68; }
     .today-date { margin:10px 0 20px; font-size:clamp(21px,5.8vw,28px); font-weight:800; line-height:1.18; letter-spacing:-.035em; }
@@ -169,9 +167,7 @@
     #sync-status:empty { display:none; }
     #sync-conflict, #cloud-tools:has(button:not([hidden])) { margin-top:8px; }
     :root[data-theme="dark"] {
-      color-scheme:dark;
-      --bg:#111723; --surface:#1a2333; --text:#edf2fc; --muted:#aebbd0;
-      --line:#36445b; --blue:#2f6ade; --night:#235bb1; --off:#9b3f53;
+      --night:#235bb1; --off:#9b3f53;
     }
     [data-theme="dark"] .surface, [data-theme="dark"] .all-notes,
     [data-theme="dark"] .cloud-panel input, [data-theme="dark"] .shift-change :is(select,button) { border-color:var(--line); }
