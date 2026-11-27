@@ -57,7 +57,7 @@ async function update() {
     if (!response.ok) throw Error("link");
     const { href } = await response.json();
     if (new URL(href).protocol !== "https:") throw Error("link");
-    const download = await fetch(href,{credentials:"omit",signal:AbortSignal.timeout(15000)});
+    const download = await fetch(href,{credentials:"omit",referrerPolicy:"no-referrer",signal:AbortSignal.timeout(15000)});
     if (!download.ok) throw Error("download");
     const sealed = await download.json();
     if (sealed.format !== "kalendare-encrypted" || sealed.version !== 1) throw Error("snapshot");
