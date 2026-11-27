@@ -144,6 +144,7 @@
   }
 
   window.calendarStorage = {
+    get isAdmin() { return login === 'admin'; },
     get firstCrewName() { return firstCrewName; },
     get lockedCycleStart() { return lockedCycleStart; },
     get canRestoreBackup() { return canRestoreBackup; },
