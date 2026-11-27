@@ -1,0 +1,24 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kalendare офлайн</title><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon.png">
+<link rel="stylesheet" href="site.css"><script src="theme.js"></script>
+<body class="kalendare-page"><main class="page-shell">
+<header class="page-hero"><h1>Kalendare офлайн</h1><p id="status" role="status">Загрузите общую копию.</p></header>
+<section class="page-card" style="margin-top:16px">
+<label for="source">Ссылка на общую копию Яндекс Диска</label>
+<input id="source" type="url" style="display:block;width:100%;margin-block:8px">
+<label for="key">Ключ общей копии</label>
+<input id="key" type="password" autocomplete="off" style="display:block;width:100%;margin-block:8px">
+<button id="update">Обновить с Диска</button>
+<label> <span>Открыть файл копии</span> <input id="file" type="file" accept=".json,application/json"></label>
+</section>
+<section class="page-card" style="margin-top:16px">
+<h2>График и заметки</h2><label>Дата <input type="date" id="day"></label>
+<p id="roster"></p><p id="note" style="white-space:pre-wrap;overflow-wrap:anywhere"></p>
+</section>
+<section class="page-card" style="margin-top:16px">
+<h2>Локальный черновик</h2><label for="draft">Запись на выбранную дату</label>
+<textarea id="draft" rows="4" style="display:block;width:100%;margin-block:8px"></textarea>
+<button id="save">Сохранить на устройстве</button><button id="copy">Копировать для основного приложения</button>
+<p id="draftStatus" role="status"></p></section>
+<nav class="page-chips"><a href="work/">Рабочий журнал и справочники</a></nav>
+</main><script src="reader.js"></script></body></html>

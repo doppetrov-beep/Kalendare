@@ -1,0 +1,108 @@
+<!DOCTYPE HTML FM_PUBLIC "-//W3C//DTD HTML 4.0//EN"><html class="manual-article">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<LINK REL="STYLESHEET" HREF="HDJ.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE>Steps in the CP2000 User Interface</TITLE><meta name="viewport" content="width=device-width, initial-scale=1"><script src="../../../theme.js"></script><link rel="stylesheet" href="../../../site.css"></head>
+<BODY>
+<P Class="NavBar"><NoBr><A HRef="x-57.html" onfocus="click();"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-59.html" onfocus="click();"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A></NoBr></P>
+<H1>
+<A NAME="50455193_pgfId-1048046"></A>Steps in the CP2000 User Interface</H1>
+<P>
+<A NAME="50455193_pgfId-1048047"></A>First go to the &quot;Manage Service/Data Storage&quot; form either with &quot;Service &gt; Data storage management&quot; (older CP2000 versions) or &quot;Service &gt; Prinect Configuration &gt; Data storage management&quot; (newer CP2000 versions). The &quot;MetaDimension&quot; device (or whatever the name of the device may be) must be in the &quot;Active data storage devices&quot; list.</P>
+<P><P><IMG SRC="img/Aktive_Datenspeicher.gif" Align="Left">
+<A NAME="50455193_pgfId-1051259"></A><br clear="all">
+</P>
+<P>
+<A NAME="50455193_pgfId-1048054"></A>After you select &quot;MetaDimension&quot; in &quot;Active data storage devices&quot;, you can then configure the device by clicking the &quot;Data storage configuration&quot; button. A list of the configurable parameters will then be shown for this device.</P>
+<P><P><IMG SRC="img/Datenspeicher_konfigurieren.gif" Align="Left">
+<A NAME="50455193_pgfId-1051265"></A><br clear="all">
+</P>
+<P>
+<A NAME="50455193_pgfId-1048061"></A>The first parameter, &quot;DeviceName&quot;, allows you to choose any name for the device. If no name is entered, &quot;MetaDimension&quot; is used. For example, you can enter &quot;Prinect Shooter&quot;.</P>
+<P>
+<A NAME="50455193_pgfId-1048062"></A>For the &quot;URL&quot; parameter, you must enter the URL - including port number - of the HTTP server that Prinect Shooter provides.</P>
+<P>
+<A NAME="50455193_pgfId-1048063"></A>After Prinect Shooter is installed, the URL is set as follows:</P>
+<P>
+<A NAME="50455193_pgfId-1048064"></A>URL = http://hostname:port number/ImageSetter</P>
+<P>
+<A NAME="50455193_pgfId-1048065"></A>The &quot;hostname&quot; can either be the alphanumeric computer name of the server or the IP address of the server, entered in this form: aaa.bbb.ccc.ddd. For example, the computer name &quot;localhost&quot; is also used as a synonym for the local computer and its IP address is: &quot;127.0.0.1&quot; (this is valid in general).</P>
+<P>
+<A NAME="50455193_pgfId-1048066"></A>From experience, you should use the numeric IP address as this avoids having to first assign the host name to the IP address. This action could involve longer response times.</P>
+<P>
+<A NAME="50455193_pgfId-1048067"></A>The port number and &quot;ImageSetter&quot; are set by Prinect Shooter and your URL is as follows:</P>
+<P>
+<A NAME="50455193_pgfId-1048068"></A>URL = http://hostname:49300/ImageSetter,</P>
+<P>
+<A NAME="50455193_pgfId-1048069"></A>with &quot;hostname&quot; standing for the Prinect Shooter computer or its IP address.</P>
+<P>
+<A NAME="50455193_pgfId-1048070"></A>The other parameters allow you to activate or deactivate the display of certain columns in the job list. Only when one (&quot;1&quot;) is entered will the column in question be shown in the job list. On the other hand, a zero (&quot;0&quot;) means that the column will not be shown.</P>
+<P>
+<A NAME="50455193_pgfId-1048071"></A>The parameters are assigned to the columns as follows:</P>
+<TABLE>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455193_pgfId-1048074"></A>View\JobID:</P>
+</TD>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455193_pgfId-1048076"></A>Job number</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455193_pgfId-1048078"></A>View\JobPartID:</P>
+</TD>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455193_pgfId-1048080"></A>Component job number</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455193_pgfId-1048082"></A>View\JobName:</P>
+</TD>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455193_pgfId-1048084"></A>Job Name</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455193_pgfId-1048086"></A>View\Priority:</P>
+</TD>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455193_pgfId-1048088"></A>Priority</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455193_pgfId-1048090"></A>View\CreationTime:</P>
+</TD>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455193_pgfId-1048092"></A>Creation date and time</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455193_pgfId-1048094"></A>View\Preview:</P>
+</TD>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455193_pgfId-1048096"></A>Show or not show preview images</P>
+</TD>
+</TR>
+</TABLE>
+<P>
+<A NAME="50455193_pgfId-1051271"></A><br clear="all">
+</P>
+<P Class="NavBar"><BR Clear="Left"><NoBr><A HRef="x-57.html"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-59.html"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A>&nbsp;&nbsp;&nbsp;Copyright &#169; 2013 Heidelberger Druckmaschinen AG</NoBr></P><script>(function(){function tell(){try{parent.postMessage({type:'heidelberg-help-page',path:decodeURIComponent(location.pathname),hash:location.hash},'*');}catch(e){}}if(window.addEventListener){window.addEventListener('load',tell,false);window.addEventListener('hashchange',tell,false);}else if(window.attachEvent){window.attachEvent('onload',tell);window.attachEvent('onhashchange',tell);}})();</script></BODY>
+</HTML>

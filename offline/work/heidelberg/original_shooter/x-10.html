@@ -1,0 +1,34 @@
+<!DOCTYPE HTML FM_PUBLIC "-//W3C//DTD HTML 4.0//EN"><html class="manual-article">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<LINK REL="STYLESHEET" HREF="HDJ.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE>JDF (Job Definition Format) Support</TITLE><meta name="viewport" content="width=device-width, initial-scale=1"><script src="../../../theme.js"></script><link rel="stylesheet" href="../../../site.css"></head>
+<BODY>
+<P Class="NavBar"><NoBr><A HRef="x-9.html" onfocus="click();"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-11.html" onfocus="click();"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A></NoBr></P>
+<H1>
+<A NAME="50455187_pgfId-1044710"></A><A NAME="50455187_62935"></A>JDF (Job Definition Format) Support</H1>
+<P>
+<A NAME="50455187_pgfId-1044712"></A>Prinect Shooter is prepared for connection to <A NAME="50455187_marker-1044711"></A>JDF -based workflow systems such as Heidelberg's Prinect Integration Manager. In a configuration with the Integration Manager, you need a Prinect Renderer or a Prinect MetaDimension RIP to create the Tiff-B screening data.</P>
+<P><P><IMG SRC="x-8.gif" Align="Left">
+<A NAME="50455187_pgfId-1051668"></A><br clear="all">
+</P>
+<P>
+<A NAME="50455187_pgfId-1044734"></A>The exchange of data between Prinect Integration Manager/Prinect Integration Manager S and Prinect MetaDimension  is based on the &quot;Job Definition Format (JDF)&quot;. For that reason, the Prinect Shooter software contains a &quot;JDF Portal&quot; where this interface is configured.</P>
+<P>
+<A NAME="50455187_pgfId-1044735"></A>While the exchange of data between the Prinect Integration Manager or Prinect Integration Manager S is solely through the JDF portal, a File Based Device Interface (FBDI) can be used for the exchange of data between Prinect MetaDimension and Prinect Shooter You can configure how the FBDI interface will be used in Prinect MetaDimension in the TIFF-B-Export Engine Manager. If an FBDI output is enabled, Prinect MetaDimension creates a JDF document containing all the important job data for every job it sends to the Prinect Shooter.</P>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455187_pgfId-1044746"></A><EM>Note: </EM> You can connect several Prinect Shooters to an Integration Manager or a Prinect MetaDimension RIP. In this way, you can control a number of Prinect Shooters with a connected Heidelberg imagesetter with just one Prinect MetaDimension system.</P>
+<P>
+<A NAME="50455187_pgfId-1044747"></A>If you wish to connect a Heidelberg imagesetter to a workflow system or a RIP of another make via Prinect Shooter, this RIP must be able to generate TIFF-B data. Use the &quot;Prinect TIFF Toolbox&quot; software to check the TIFF-B bitmaps and, if necessary, prepare them so that they can be output with Prinect Shooter if this is possible at all.</P>
+<P>
+<A NAME="50455187_pgfId-1044748"></A>Prinect Shooter sends data about the imaging status and any device errors, etc. to the connected workflow system. (What device information is sent, and whether you can send it at all, depends on your connected output device.) The &quot;<A NAME="50455187_marker-1044749"></A>Job Messaging Format (JMF)&quot; is used for this. Vice versa, Prinect Integration Manager or Prinect MetaDimension can, for example, trigger a reprint of a single separation at the Prinect Shooter.</P>
+<P>
+<A NAME="50455187_pgfId-1044750"></A>In addition, Prinect MetaDimension (but not Prinect Integration Manager/Prepress Manager S) can send information about the job context of single separations to Prinect Shooter via an <A NAME="50455187_marker-1044751"></A>FBDI protocol (see the <A HREF="x-15.html#50455187_24961">Sorted and Unsorted Output</A>).</P>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455187_pgfId-1044766"></A><EM>Note: </EM> You can follow the imaging process in the progress bar in the Prinect MetaDimension job list if &quot;Supervised FBDI output&quot; is enabled in the Prinect MetaDimension Tiff-B <A NAME="50455187_marker-1044765"></A>Engine Manager. In other words, a job's status is &quot;done&quot; only if imaging was finished successfully. In the case of a non-supervised FBDI output or an output without an FBDI protocol, a job in the Prinect MetaDimension job list is only given the status &quot;done&quot; if Tiff-B data were created. Imaging can no longer be checked in Prinect MetaDimension. To do this, you must launch one of the Prinect Shooter user interfaces (Printmanager or browser user interface).</P>
+<P>
+<A NAME="50455187_pgfId-1044767"></A>The FBDI format and the JMF format are components of the JDF specification. Through JDF support, Prinect Shooter fits into a JDF-based overall workflow such as is implemented in the Heidelberg Prinect System.</P>
+<P>
+<A NAME="50455187_pgfId-1044769"></A>You can link Prinect Shooter to the Prinect MDS server if Prinect Shooter is run in a Prinect system environment with a &quot;<A NAME="50455187_marker-1044768"></A>Master Data Store&quot; (MDS) (see also the <A HREF="x-50.html#50455191_61671">Prinect Services</A>). In this case, Prinect Shooter sends device information to the Master Data Store so that this information is available from a central source in the Prinect system environment. Prinect Shooter also uses the joint user management of the Master Data Store (see the <A HREF="x-55.html#50455192_16690">Prinect Permissions Structure (Managed in the Master Data Store)</A>).</P>
+<P Class="NavBar"><BR Clear="Left"><NoBr><A HRef="x-9.html"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-11.html"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A>&nbsp;&nbsp;&nbsp;Copyright &#169; 2013 Heidelberger Druckmaschinen AG</NoBr></P><script>(function(){function tell(){try{parent.postMessage({type:'heidelberg-help-page',path:decodeURIComponent(location.pathname),hash:location.hash},'*');}catch(e){}}if(window.addEventListener){window.addEventListener('load',tell,false);window.addEventListener('hashchange',tell,false);}else if(window.attachEvent){window.attachEvent('onload',tell);window.attachEvent('onhashchange',tell);}})();</script></BODY>
+</HTML>

@@ -1,0 +1,1168 @@
+<!DOCTYPE HTML FM_PUBLIC "-//W3C//DTD HTML 4.0//EN"><html class="manual-article">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<LINK REL="STYLESHEET" HREF="HDJ.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE>User Management</TITLE><meta name="viewport" content="width=device-width, initial-scale=1"><script src="../../../theme.js"></script><link rel="stylesheet" href="../../../site.css"></head>
+<BODY>
+<P Class="NavBar"><NoBr><A HRef="x-54.html" onfocus="click();"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-56.html" onfocus="click();"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A></NoBr></P>
+<H1>
+<A NAME="50455192_pgfId-1045155"></A><A NAME="50455192_Benutzerverwaltung"></A>User Management</H1>
+<P>
+<A NAME="50455192_pgfId-1045156"></A>Administration of permissions for Prinect Shooter is done in &quot;Users&quot;, &quot;Groups&quot; and &quot;Permission&quot;. Prinect Shooter has its own user administration. This means that you can define and manage your users yourself in Prinect Shooter. You can use the user data of a Master Data Store if there is a connection to such a store (see the <A HREF="x-50.html#50455191_61671">Prinect Services</A>).</P>
+<H2>
+<A NAME="50455192_pgfId-1045160"></A>Concept of User Management and Permissions Structure</H2>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455192_pgfId-1045171"></A><EM>Note: </EM> You will find details about the user interface setup in the <A HREF="x-55.html#50455192_22868">Users</A>.</P>
+<P>
+<A NAME="50455192_pgfId-1045175"></A>User management for Prinect Shooter has nothing to do with user management of your operating system. To have a better overview of your work, it may be a good idea to use the same user names and passwords in the user management of Prinect Shooter and in your operating system.</P>
+<P>
+<A NAME="50455192_pgfId-1045176"></A>In user management, a difference is always made between saving and managing your Prinect Shooter user data locally on your Prinect Shooter PC and centrally on a master data (MDS) server (see also the <A HREF="x-50.html#50455191_61671">Prinect Services</A>).</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045180"></A>Local user management</LI>
+<UL>
+<LI CLASS="L2a">
+<A NAME="50455192_pgfId-1045181"></A>Type: &quot;local&quot;</LI>
+</UL>
+</UL>
+<P CLASS="List-2-noi">
+<A NAME="50455192_pgfId-1045182"></A>The user data are stored locally on your computer.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045183"></A>MDS (Master Data Store) user management</LI>
+<UL>
+<LI CLASS="L2a">
+<A NAME="50455192_pgfId-1045184"></A>Type: &quot;MDS&quot;</LI>
+</UL>
+</UL>
+<P><P><IMG SRC="common/_IconPrerequesite.gif" Align="Left">
+<A NAME="50455192_pgfId-1045197"></A><EM>Prerequisite: </EM> There is a connection to a MDS server (see <A HREF="x-50.html#50455191_61671">Prinect Services</A>).</P>
+<P CLASS="List-2-noi">
+<A NAME="50455192_pgfId-1045199"></A>The Prinect Shooter master data and your user data are stored on the MDS server.</P>
+<P CLASS="List-2-noi">
+<A NAME="50455192_pgfId-1045202"></A>Prinect permissions structure is valid (see the <A HREF="x-55.html#50455192_16690">Prinect Permissions Structure (Managed in the Master Data Store)</A>).</P>
+<P>
+<A NAME="50455192_pgfId-1045204"></A>The following is applicable both for local and for MDS user management: The permissions of a user are defined solely by belonging to one of the following permission groups:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045205"></A>Group with administrator permissions</LI>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045206"></A>Group with Poweruser permissions</LI>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045207"></A>Group with user permissions</LI>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045208"></A>Group with guest permissions</LI>
+</UL>
+<P>
+<A NAME="50455192_pgfId-1045209"></A>The permissions of the group are based on a hierarchy: administrator permissions have the most authority and user permissions the least.</P>
+<P>
+<A NAME="50455192_pgfId-1045210"></A>The following users are defined by default after installation:</P>
+<H2>
+<A NAME="50455192_pgfId-1045211"></A>Local user management:</H2>
+<Table Border="1" CellSpacing="0" CellPadding="3">
+<TR>
+<TH>
+<P CLASS="TabTL">
+<A NAME="50455192_pgfId-1045214"></A>Predefined Users</P>
+</TH>
+<TH>
+<P CLASS="TabTC">
+<A NAME="50455192_pgfId-1045216"></A>User Name</P>
+</TH>
+<TH>
+<P CLASS="TabTC">
+<A NAME="50455192_pgfId-1045218"></A>Password</P>
+</TH>
+<TH>
+<P CLASS="TabTC">
+<A NAME="50455192_pgfId-1045220"></A>Permission Groups</P>
+</TH>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045222"></A>Administrator</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045224"></A>Admin</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045226"></A>Admin</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045228"></A>Administrators</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045230"></A>Poweruser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045232"></A>Poweruser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045234"></A>Poweruser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045236"></A>Powerusers</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045238"></A>User</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045240"></A>User</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045242"></A>User</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045244"></A>Users</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045246"></A>Guest</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045248"></A>Guest</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045250"></A>Guest</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045252"></A>Guests</P>
+</TD>
+</TR>
+</TABLE>
+<P>
+<A NAME="50455192_pgfId-1053038"></A><br clear="all">
+</P>
+<P CLASS="Graphic-Text-L">
+<A NAME="50455192_pgfId-1045257"></A><A NAME="50455192_75044"></A>Prinect user management</P>
+<Table Border="1" CellSpacing="0" CellPadding="3">
+<TR>
+<TH>
+<P CLASS="TabTL">
+<A NAME="50455192_pgfId-1045260"></A>Predefined Users</P>
+</TH>
+<TH>
+<P CLASS="TabTC">
+<A NAME="50455192_pgfId-1045262"></A>User Name</P>
+</TH>
+<TH>
+<P CLASS="TabTC">
+<A NAME="50455192_pgfId-1045264"></A>Password</P>
+</TH>
+<TH>
+<P CLASS="TabTC">
+<A NAME="50455192_pgfId-1045266"></A>Permission Groups</P>
+</TH>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045268"></A>Administrator</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045270"></A>PrePressAdministrator</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045272"></A>Admin</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045274"></A>PrePressAdministrators</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045276"></A>PostPressGuest</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045278"></A>PostPressGuest</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045280"></A>Guest</P>
+</TD>
+<TD>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045284"></A>PostPressPowerUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045286"></A>PostPressPowerUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045288"></A>Poweruser</P>
+</TD>
+<TD>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045292"></A>PostPressUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045294"></A>PostPressUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045296"></A>PostPressUser</P>
+</TD>
+<TD>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045300"></A>PrePressGuest</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045302"></A>PrePressGuest</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045304"></A>PrePressUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045306"></A>PrePressGuest</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045308"></A>PrePressPowerUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045310"></A>PrePressPowerUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045312"></A>PrePressPowerUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045314"></A>PrePressPowerUsers</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045316"></A>PrePressUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045318"></A>PrePressUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045320"></A>PrePressUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045322"></A>PrePressUsers</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045324"></A>PressGuest</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045326"></A>PressGuest</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045328"></A>PressGuest</P>
+</TD>
+<TD>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045332"></A>PressPowerUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045334"></A>PressPowerUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045336"></A>PressPowerUser</P>
+</TD>
+<TD>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045340"></A>PressUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045342"></A>PressUser</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045344"></A>PressUser</P>
+</TD>
+<TD>
+</TD>
+</TR>
+</TABLE>
+<P>
+<A NAME="50455192_pgfId-1053044"></A><br clear="all">
+</P>
+<P>
+<A NAME="50455192_pgfId-1045350"></A>You should log in as administrator the first time you start Prinect Shooter Printmanager after installation. You can then create new users and assign each user to a permission group.</P>
+<H2>
+<A NAME="50455192_pgfId-1045352"></A><A NAME="50455192_16690"></A>Prinect Permissions Structure (Managed in the Master Data Store)</H2>
+<P>
+<A NAME="50455192_pgfId-1045353"></A>The MDS users created in a Prinect application are stored on the MDS server. They are available to all other Prinect applications that are connected to the MDS server.</P>
+<P>
+<A NAME="50455192_pgfId-1045354"></A>In the MDS permissions structure, the following permission groups are mandatory for all Prinect applications (see also the <A HREF="x-55.html#50455192_75044">Prinect user management</A>):</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045358"></A>PrePressAdministrators</LI>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045359"></A>PrePressPowerUsers</LI>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045360"></A>PrePressUsers</LI>
+</UL>
+<P>
+<A NAME="50455192_pgfId-1045361"></A>The permissions of the MDS users are managed autonomously by each Prinect application. This means that the permissions that an MDS user has are defined separately in each Prinect application. The permissions of the MDS user are defined by means of the group the user belongs to. (Prinect Integration Manager is an exception in the Prinect system. In this case, individual permissions can also be assigned to the MDS users.)</P>
+<H2>
+<A NAME="50455192_pgfId-1045362"></A>Example</H2>
+<P>
+<A NAME="50455192_pgfId-1045363"></A>Prinect Shooter, Prinect Signa Station and Prinect Integration Manager are connected to a central MDS server.</P>
+<P>
+<A NAME="50455192_pgfId-1045364"></A>You create an MDS user &quot;HD_Global&quot; in Prinect Shooter and assign it to the &quot;PrePressUsers&quot; permission group.</P>
+<P>
+<A NAME="50455192_pgfId-1045365"></A>The &quot;HD_Global&quot; user is now available in all other Prinect applications that are connected to the MDS server, this means in our example in Prinect Signa Station and Prinect Integration Manager. In other words, you can log in as &quot;HD_Global&quot; with the appropriate password on Prinect Signa Station and on the Prinect Integration Manager as well. Here too, the &quot;HD_Global&quot; user has the permissions of the &quot;PrePressUsers&quot; permission group.</P>
+<P>
+<A NAME="50455192_pgfId-1045366"></A>All users in all Prinect applications that have administrator permission can assign the &quot;HD_Global&quot; user to another permission group. This means that an administrator at Prinect Signa Station, for example, can change the permissions of the &quot;HD_Global&quot; user in the MDS.</P>
+<H2>
+<A NAME="50455192_pgfId-1045368"></A><A NAME="50455192_22868"></A>Users</H2>
+<P>
+<A NAME="50455192_pgfId-1045369"></A>Existing users are listed in the &quot;Users&quot; section. The &quot;New&quot; button lets you create a new user account.</P>
+<P><P><IMG SRC="img/b_new_user.gif" Align="Left">
+<A NAME="50455192_pgfId-1053050"></A><br clear="all">
+</P>
+<P>
+<A NAME="50455192_pgfId-1045376"></A>In addition to entering the user name and password, you also define in &quot;Type&quot; whether the user will be local or an MDS user. You can only select &quot;MDS&quot; as the type if Prinect Shooter is linked to an MDS server (see <A HREF="x-50.html#50455191_61671">Prinect Services</A>).</P>
+<P>
+<A NAME="50455192_pgfId-1045380"></A>The &quot;Type&quot; column in the user list displays your setting.</P>
+<P><P><IMG SRC="img/b_system_user.gif" Align="Left">
+<A NAME="50455192_pgfId-1053056"></A><br clear="all">
+</P>
+<P>
+<A NAME="50455192_pgfId-1045387"></A>When you select a user, the permission groups that you can assign to this user are shown in &quot;Available Groups&quot;. You can assign one or more permission groups to the user with &quot;Add&quot;. You can undo the assigned permission group(s) with &quot;Remove&quot;.</P>
+<P>
+<A NAME="50455192_pgfId-1045390"></A>For more information about the administration of users and groups, see the <A HREF="x-55.html#50455192_11265">Management of Users and Groups</A>.</P>
+<H2>
+<A NAME="50455192_pgfId-1045393"></A><A NAME="50455192_53378"></A>Groups</H2>
+<P>
+<A NAME="50455192_pgfId-1045394"></A>Existing permission groups in user management are listed in the &quot;Groups&quot; section.</P>
+<P><P><IMG SRC="img/b_system_groups.gif" Align="Left">
+<A NAME="50455192_pgfId-1053062"></A><br clear="all">
+</P>
+<P>
+<A NAME="50455192_pgfId-1045401"></A>When you select a group, the users that you can assign this group to are shown in &quot;Available Users&quot;. You can assign one or more users to the group with &quot;Add&quot;. You can undo the assigned permission group(s) with &quot;Remove&quot;.</P>
+<P>
+<A NAME="50455192_pgfId-1045404"></A>For more information about the administration of users and groups, see the <A HREF="x-55.html#50455192_11265">Management of Users and Groups</A>.</P>
+<H2>
+<A NAME="50455192_pgfId-1045407"></A><A NAME="50455192_11265"></A>Management of Users and Groups</H2>
+<P>
+<A NAME="50455192_pgfId-1045408"></A>The following three examples will be used to describe the procedure for the management of users and groups.</P>
+<P>
+<A NAME="50455192_pgfId-1045409"></A>Essentially you can perform the following actions:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045410"></A>Create a user</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455192_pgfId-1045414"></A>See <A HREF="x-55.html#50455192_37672">&quot;Users&quot;: Example 1: Creating a new user</A>.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045415"></A>Assign a user to a permission group. The user then has all the permissions of this permission group.</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455192_pgfId-1045418"></A>See <A HREF="x-55.html#50455192_33079">&quot;Users&quot;: Example 2: Assigning a user to a permission group.</A>.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045420"></A>Assign one or more users to a permission group. All the assigned users then have the permissions of this group.</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455192_pgfId-1045423"></A>See <A HREF="x-55.html#50455192_82182">&quot;Groups&quot;: Example 3: Assigning several users at the same time to a different permission group</A>.</P>
+<H2>
+<A NAME="50455192_pgfId-1045426"></A>&quot;Users&quot;: <A NAME="50455192_37672"></A>Example 1: Creating a new user</H2>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455192_pgfId-1045437"></A><EM>Note: </EM> You must have administrator permissions for the actions given in the examples.<BR>
+</P>
+<P>
+<A NAME="50455192_pgfId-1045438"></A>The following user will be created in this example:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045439"></A>User name: &quot;HD_Admin&quot;</LI>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045440"></A>Password: &quot;Prinect&quot;</LI>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045441"></A>Domain: &quot;local&quot; (local user management)</LI>
+</UL>
+<P>
+<A NAME="50455192_pgfId-1045442"></A>	1.	Select the &quot;Users&quot; tab on the left. You will see a list of all defined users in this tab.</P>
+<P>
+<A NAME="50455192_pgfId-1045443"></A>	2.	Click &quot;New&quot; to create a new user.</P>
+<P>
+<A NAME="50455192_pgfId-1045444"></A>	3.	Type in &quot;HD_Admin&quot; as the user name, &quot;Prinect&quot; as the password, &quot;local&quot; as the domain and click &quot;OK&quot;.</P>
+<P CLASS="List-1-noi">
+<A NAME="50455192_pgfId-1045445"></A>You will then see the new &quot;HD_Admin&quot; user in the list of defined users. The &quot;HD_Admin&quot; user is first assigned permissions of the &quot;Users&quot; group. You can change these permissions later by assigning a different permission group to the &quot;HD_Admin&quot; user.</P>
+<P>
+<A NAME="50455192_pgfId-1045446"></A>	4.	You can define properties for each user. Double-click the user in the user list or click &quot;Properties&quot;. Take note of the following items:</P>
+<UL>
+<UL>
+<LI CLASS="L2a">
+<A NAME="50455192_pgfId-1045447"></A>&quot;Enabled&quot;: In the user list, the &quot;Enabled&quot; column shows whether this option is set or not. If a user is enabled, he/she can log in to Prinect Shooter Printmanager. You can also disable users with this option without having to delete the user account with all its properties.</LI>
+<LI CLASS="L2a">
+<A NAME="50455192_pgfId-1045448"></A>&quot;Details&quot;: You can enter information about this user account into this box. for example, to point out the activities of this user account. This information displays in the &quot;Details&quot; column in the user list.</LI>
+<LI CLASS="L2a">
+<A NAME="50455192_pgfId-1045449"></A>&quot;Address &gt; Name&quot;: This box is filled automatically if you enter the &quot;First Name&quot; and &quot;Family Name&quot; in &quot;Person&quot;.</LI>
+</UL>
+</UL>
+<P>
+<A NAME="50455192_pgfId-1045450"></A>	5.	You can change the password of every user. To do this, select the user in the user list and then click &quot;Change Password&quot;. Type in the new password and confirm it with &#171;OK&quot;.</P>
+<P>
+<A NAME="50455192_pgfId-1045451"></A>	6.	You can delete every user that you created. To do this, select the user in the user list and then click &quot;Delete&quot;.</P>
+<H2>
+<A NAME="50455192_pgfId-1045453"></A>&quot;Users&quot;: <A NAME="50455192_33079"></A>Example 2: Assigning a user to a permission group.</H2>
+<P>
+<A NAME="50455192_pgfId-1045454"></A>The &quot;HD_Admin&quot; user from example 1 is to have administrator permissions.</P>
+<P>
+<A NAME="50455192_pgfId-1045455"></A>	1.	Select the &quot;Users&quot; tab on the left.</P>
+<P>
+<A NAME="50455192_pgfId-1045456"></A>	2.	Click the &quot;HD_Admin&quot; user. The available permission groups are shown in &quot;Available Groups&quot;. You can use the &quot;Add&quot; button.</P>
+<P>
+<A NAME="50455192_pgfId-1045457"></A>	3.	Click &quot;Users&quot; in the &quot;Member of&quot; list and then click &quot;Delete&quot;.</P>
+<P>
+<A NAME="50455192_pgfId-1045458"></A>	4.	Click &quot;Administrators&quot; in the &quot;Available Groups&quot; list and then &quot;Add&quot;. This group name is now added to the &quot;Member of&quot; list.</P>
+<P>
+<A NAME="50455192_pgfId-1045459"></A>	5.	Click &quot;Apply&quot;. The &quot;HD_Admin&quot; user is now a member of the &quot;Administrators&quot; group.</P>
+<P>
+<A NAME="50455192_pgfId-1045460"></A>	6.	To remove the &quot;HD_Admin&quot; user from the &quot;Administrators&quot; group again, mark the user name, select this group in the &quot;Member of&quot; list and click &quot;Remove&quot;.</P>
+<H2>
+<A NAME="50455192_pgfId-1045462"></A>&quot;Groups&quot;: <A NAME="50455192_82182"></A>Example 3: Assigning several users at the same time to a different permission group</H2>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455192_pgfId-1045473"></A><EM>Note: </EM> The &quot;Groups&quot; tab is used mainly to assign several users to a new permission group. To assign a single user to a different permission group, go to the &quot;Users&quot; tab and assign the user as described in Example 2.</P>
+<P>
+<A NAME="50455192_pgfId-1045474"></A>&quot;HD_User_1&quot;, &quot;HD_User_2&quot; and &quot;HD_User_3&quot; are members of the &quot;Administrators&quot; group. You are going to remove these users from this group and assign them to the &quot;PowerUsers&quot; group instead.</P>
+<P>
+<A NAME="50455192_pgfId-1045475"></A>	1.	Select the &quot;Groups&quot; tab on the left.</P>
+<P>
+<A NAME="50455192_pgfId-1045476"></A>	2.	Click the &quot;PowerUsers&quot; group in the list of permission groups.</P>
+<P>
+<A NAME="50455192_pgfId-1045477"></A>	3.	Mark &quot;HD_User_1&quot;, &quot;HD_User_2&quot; and &quot;HD_User_3&quot; in the &quot;Available Users&quot; list and then click &quot;Add&quot;.</P>
+<P>
+<A NAME="50455192_pgfId-1045478"></A>	4.	Click &quot;Apply&quot;. All users in the &quot;Members&quot; list then become a member of the &quot;PowerUsers&quot; group, in other words, &quot;HD_User_1&quot;, &quot;HD_User_2&quot; and &quot;HD_User_3&quot;. Since a user can only be a member of one group, these users are automatically removed from the &quot;Administrators&quot; group.</P>
+<H2>
+<A NAME="50455192_pgfId-1045479"></A>Permissions Table for Prinect Shooter</H2>
+<P>
+<A NAME="50455192_pgfId-1045480"></A>Abbreviations:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045481"></A>&quot;Access&quot;: All permissions</LI>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045482"></A>&quot;restr. access (1)&quot;: All permissions, but deletion of image jobs is not possible.</LI>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045483"></A>&quot;restr. access (2)&quot;: All permissions, but the &quot;Select by IP Number&quot; option is dimmed. This means that you cannot select the Prinect Shooter computer by the IP number when you select the server.</LI>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045484"></A>&quot;restr. access (3)&quot;: All permissions that are confined to one's own user account.</LI>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045485"></A>&quot;Access (4)&quot;: All permissions, but passwords of other users can only be changed if the original password is known.</LI>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045486"></A>&quot;readonly&quot;: Read-only permissions</LI>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045487"></A>No entry: No permissions</LI>
+</UL>
+<Table Border="1" CellSpacing="0" CellPadding="3">
+<TR>
+<TH>
+<P CLASS="TabTL">
+<A NAME="50455192_pgfId-1045490"></A>Function</P>
+</TH>
+<TH>
+<P CLASS="TabTL">
+<A NAME="50455192_pgfId-1045492"></A>Administrator</P>
+</TH>
+<TH>
+<P CLASS="TabTL">
+<A NAME="50455192_pgfId-1045494"></A>Poweruser</P>
+</TH>
+<TH>
+<P CLASS="TabTL">
+<A NAME="50455192_pgfId-1045496"></A>User</P>
+</TH>
+<TH>
+<P CLASS="TabTL">
+<A NAME="50455192_pgfId-1045498"></A>Guests</P>
+</TH>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabTL">
+<A NAME="50455192_pgfId-1045500"></A>Jobs</P>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045510"></A>Job list - general</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045512"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045514"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045516"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045518"></A>readonly</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045520"></A>Starting/pausing/stopping jobs</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045522"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045524"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045526"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045528"></A>NO ACCESS</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045530"></A>Delete Jobs</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045532"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045534"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045536"></A>NO ACCESS</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045538"></A>NO ACCESS</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045540"></A>Change the priorities of jobs</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045542"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045544"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045546"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045548"></A>NO ACCESS</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045550"></A>Job Settings</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045552"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045554"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045556"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045558"></A>NO ACCESS</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045560"></A>Job Information</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045562"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045564"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045566"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045568"></A>readonly</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045570"></A>Job details</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045572"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045574"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045576"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045578"></A>readonly</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045580"></A>Job preview /color</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045582"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045584"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045586"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045588"></A>NO ACCESS</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045590"></A>Signatures</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045592"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045594"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045596"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045598"></A>NO ACCESS</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabTL">
+<A NAME="50455192_pgfId-1045600"></A>Devices</P>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045610"></A>Device List</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045612"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045614"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045616"></A>readonly</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045618"></A>readonly</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045620"></A>Engine Managers</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045622"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045624"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045626"></A>NO ACCESS</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045628"></A>NO ACCESS</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabTL">
+<A NAME="50455192_pgfId-1045630"></A>Configuration</P>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045640"></A>Virtual printers - list</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045642"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045644"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045646"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045648"></A>Access</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045650"></A>Virtual printers - create/delete</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045652"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045654"></A>NO ACCESS</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045656"></A>NO ACCESS</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045658"></A>NO ACCESS</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045660"></A>Virtual printers - change</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045662"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045664"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045666"></A>NO ACCESS</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045668"></A>NO ACCESS</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045670"></A>Virtual printers - starting/pausing</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045672"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045674"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045676"></A>NO ACCESS</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045678"></A>NO ACCESS</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045680"></A>Preferences</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045682"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045684"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045686"></A>NO ACCESS</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045688"></A>NO ACCESS</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045690"></A>Drive Monitor</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045692"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045694"></A>readonly</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045696"></A>readonly</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045698"></A>readonly</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045700"></A>Regional settings</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045702"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045704"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045706"></A>NO ACCESS</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045708"></A>NO ACCESS</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045710"></A>Prinect&copy; Services</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045712"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045714"></A>NO ACCESS</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045716"></A>NO ACCESS</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045718"></A>NO ACCESS</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabTL">
+<A NAME="50455192_pgfId-1045720"></A>System</P>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045730"></A>Server</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045732"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045734"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045736"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045738"></A>restr. access (2)</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045740"></A>E-Mail</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045742"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045744"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045746"></A>readonly</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045748"></A>NO ACCESS</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabTL">
+<A NAME="50455192_pgfId-1045750"></A>User Management</P>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+<TD>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045760"></A>User - create/delete/assign groups</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045762"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045764"></A>readonly</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045766"></A>readonly</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045768"></A>readonly</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045770"></A>User Properties</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045772"></A>Access</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045774"></A>restr. access (3)</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045776"></A>restr. access (3)</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045778"></A>restr. access (3)</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045780"></A>User - change password</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045782"></A>access (4)</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045784"></A>restr. access (3)</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045786"></A>restr. access (3)</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045788"></A>restr. access (3)</P>
+</TD>
+</TR>
+<TR>
+<TD>
+<P CLASS="TabCL">
+<A NAME="50455192_pgfId-1045790"></A>User - permissions</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045792"></A>readonly</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045794"></A>readonly</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045796"></A>readonly</P>
+</TD>
+<TD>
+<P CLASS="TabCC">
+<A NAME="50455192_pgfId-1045798"></A>readonly</P>
+</TD>
+</TR>
+</TABLE>
+<P>
+<A NAME="50455192_pgfId-1053116"></A><br clear="all">
+</P>
+<P Class="NavBar"><BR Clear="Left"><NoBr><A HRef="x-54.html"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-56.html"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A>&nbsp;&nbsp;&nbsp;Copyright &#169; 2013 Heidelberger Druckmaschinen AG</NoBr></P><script>(function(){function tell(){try{parent.postMessage({type:'heidelberg-help-page',path:decodeURIComponent(location.pathname),hash:location.hash},'*');}catch(e){}}if(window.addEventListener){window.addEventListener('load',tell,false);window.addEventListener('hashchange',tell,false);}else if(window.attachEvent){window.attachEvent('onload',tell);window.attachEvent('onhashchange',tell);}})();</script></BODY>
+</HTML>

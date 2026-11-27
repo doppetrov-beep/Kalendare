@@ -1,0 +1,45 @@
+<!DOCTYPE HTML FM_PUBLIC "-//W3C//DTD HTML 4.0//EN"><html class="manual-article">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<LINK REL="STYLESHEET" HREF="HDJ.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE>Server</TITLE><meta name="viewport" content="width=device-width, initial-scale=1"><script src="../../../theme.js"></script><link rel="stylesheet" href="../../../site.css"></head>
+<BODY>
+<P Class="NavBar"><NoBr><A HRef="x-52.html" onfocus="click();"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-54.html" onfocus="click();"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A></NoBr></P>
+<H1>
+<A NAME="50455192_pgfId-1045056"></A>Server<A NAME="50455192_marker-1045054"></A><A NAME="50455192_48932"></A></H1>
+<P>
+<A NAME="50455192_pgfId-1045057"></A>Prinect Shooter is based on a client-server architecture. In this process, operations related to job processing are performed by the server component, and the user interfaces as the client applications allow users to access the server component. In the &quot;Administration &gt; System &gt; Server&quot; section you can link the Printmanager user interface to a Prinect Shooter server. Server tasks are processed by programs that are implemented as &quot;Windows Services&quot;. You can start or exit these services manually with &quot;Prinect Shooter Service Control&quot;. The Prinect Shooter services do not have a user interface of their own. This makes it possible on the one hand to run Prinect Shooter without a user interface in the hot folder mode or on the other to use different user interfaces to control the software. These interfaces are the Printmanager or browser user interface (of the local computer or another one in the network). By assigning different permissions, you can also control Prinect Shooter at the same time through different user interfaces.</P>
+<P>
+<A NAME="50455192_pgfId-1045058"></A>The Printmanager can control the Prinect Shooter software only if it is linked to a server on which the Prinect Shooter service is installed and running. For that reason, &quot;Administration System &gt; Server&quot; is always the first view that you see when the Printmanager is launched.</P>
+<P><P><IMG SRC="img/D_Server.gif" Align="Left">
+<A NAME="50455192_pgfId-1052914"></A><br clear="all">
+</P>
+<P>
+<A NAME="50455192_pgfId-1045065"></A>Normally the Printmanager is automatically connected to the server that it was last logged in to. The Printmanager is not automatically connected to a server when it launches the first time after an installation or upgrade installation. In this case, you must select a server and connect it manually.</P>
+<P>
+<A NAME="50455192_pgfId-1045066"></A>Click &quot;Select local server&quot; if you wish to log in to the local server. This lets you establish a connection without having to know the network name or IP address of the local server.</P>
+<H2>
+<A NAME="50455192_pgfId-1045068"></A><A NAME="50455192_93080"></A>Connection to a Different Prinect Shooter Server</H2>
+<P>
+<A NAME="50455192_pgfId-1045069"></A>The &quot;Server Name&quot; list shows the active Prinect Shooter systems that you have in one network. Select the row you want and then click &quot;Select&quot; to select a Prinect Shooter server that you would like to &quot;remote control&quot; instead of the local server. After selection, your local Prinect Shooter Printmanager establishes the connection to the selected server and displays the server's data.</P>
+<P>
+<A NAME="50455192_pgfId-1045070"></A>Click the &quot;Select by IP Number&quot; button if you wish to select a Prinect Shooter server by an IP number or have to because, for example, the server is not in the list or your network doesn't support administration by name.</P>
+<P><P><IMG SRC="img/b_select_IP_Number.gif" Align="Left">
+<A NAME="50455192_pgfId-1052920"></A><br clear="all">
+</P>
+<P>
+<A NAME="50455192_pgfId-1045078"></A>You can type the IP number of the server in the &quot;Select <A NAME="50455192_marker-1045077"></A>IP number&quot; dialog. Confirm the dialog with &quot;OK&quot;. Ask your system administrator for the IP number of the Prinect Shooter server you want if you are not sure of it.</P>
+<P>
+<A NAME="50455192_pgfId-1045079"></A>The &quot;Refresh&quot; button updates the server list and includes Prinect Shooter servers which were started after the Server view was called up.</P>
+<P>
+<A NAME="50455192_pgfId-1045080"></A>After the connection is established, you must enter a registered user name and the corresponding password (see the <A HREF="x-55.html#50455192_Benutzerverwaltung">User Management</A>).</P>
+<H2>
+<A NAME="50455192_pgfId-1045084"></A>Store password for automatic Login</H2>
+<P>
+<A NAME="50455192_pgfId-1045085"></A>You can enable &quot;Store password for automatic Login&quot; if you are sure that there will be no unauthorized access to Prinect Shooter in your work environment. In this case, no user name and password are requested the next time you start the Printmanager if the Printmanager is connected to the same server. The Printmanager then launches using the user name and password and the permissions (see the <A HREF="x-55.html#50455192_Benutzerverwaltung">User Management</A>)&nbsp;of the last user logged in.</P>
+<H2>
+<A NAME="50455192_pgfId-1045089"></A>Logoff</H2>
+<P>
+<A NAME="50455192_pgfId-1045090"></A>Use &quot;Log Off&quot; to disconnect the Printmanager user interface from the selected Prinect Shooter server. You must log off, for example, if you wish to log in with another user name and password (and perhaps different permissions) or if you wish to &quot;switch&quot; the Printmanager to another server. The Printmanager is automatically disconnected from the Prinect Shooter service when you exit the Printmanager. This means that you must connect to a server every time you start the Printmanager user interface and log in accordingly (except if the password was stored).</P>
+<P Class="NavBar"><BR Clear="Left"><NoBr><A HRef="x-52.html"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-54.html"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A>&nbsp;&nbsp;&nbsp;Copyright &#169; 2013 Heidelberger Druckmaschinen AG</NoBr></P><script>(function(){function tell(){try{parent.postMessage({type:'heidelberg-help-page',path:decodeURIComponent(location.pathname),hash:location.hash},'*');}catch(e){}}if(window.addEventListener){window.addEventListener('load',tell,false);window.addEventListener('hashchange',tell,false);}else if(window.attachEvent){window.attachEvent('onload',tell);window.attachEvent('onhashchange',tell);}})();</script></BODY>
+</HTML>

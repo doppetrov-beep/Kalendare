@@ -1,0 +1,99 @@
+<html class="manual-article">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<LINK REL="STYLESHEET" HREF="HDJ.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE>Parameter Editor (1)</TITLE><meta name="viewport" content="width=device-width, initial-scale=1"><script src="../../../theme.js"></script><link rel="stylesheet" href="../../../site.css"></head>
+<BODY>
+<P Class="NavBar"><NoBr><A HRef="x-42.html" onfocus="click();"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-44.html" onfocus="click();"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A></NoBr></P>
+<H1>
+<A NAME="50442905_pgfId-1020071"></A><A NAME="50442905_99829"></A>Parameter Editor (1)</H1>
+<P>
+<A NAME="50442905_pgfId-1020103"></A>In this tab, you can view all the parameters used for operation of the recorder. You can restrict the parameters shown by selecting a dataset and assigning an attribute. Some parameters only appear if the relevant operating mode was set in the &quot;Operating Mode&quot; tab. The parameters are displayed in a table whose columns have the following meaning:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020104"></A>FID: Dataset Identification number</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020105"></A>PID: Parameter Identification number</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020106"></A>Name: Name of the parameter</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020107"></A>Value: Current parameter value set</LI>
+</UL>
+<H4>
+<A NAME="50442905_pgfId-1020108"></A>Dataset Selection</H4>
+<P>
+<A NAME="50442905_pgfId-1020109"></A>One or all data set(s) whose parameters are to be displayed in the table can be selected in this list box.</P>
+<P>
+<A NAME="50442905_pgfId-1020110"></A>The following datasets are available:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020111"></A>All: If this is selected, all the parameters from all five datasets in the table are displayed.</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020112"></A>Application: All parameters which are required for the resolution and geometry for one exposure process. These parameters are valid just for one exposure run.</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020113"></A>Action: All parameters which are required for accompanying actions for an exposure process, such as cutting, punching and material transport are displayed. These parameters, too, are also valid just for one exposure run.</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020114"></A>Material: All parameters describing material properties are listed. They include, for example, the material geometry, material type or resolution-dependent exposure data.</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020115"></A>Static: All the machine-specific parameters are compiled here, such as available resolutions, geometry data or configuration parameters.</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020116"></A>Measure: All the values determined are compiled here. They are values that can be changed (length counter, time) and static values (configuration queries, limit values) that are determined by the machine and made available in this dataset.</LI>
+</UL>
+<H4>
+<A NAME="50442905_pgfId-1020117"></A>Attribute</H4>
+<P>
+<A NAME="50442905_pgfId-1020118"></A>This list box lets you restrict the choice of parameters shown even further. The following parameter attributes are available:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020119"></A>None: If this is selected, all the parameters of the selected dataset are displayed without any restrictions.</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020120"></A>Factory: All parameters which are saved during a &quot;Save Configuration&quot; action are displayed.</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020121"></A>Restore: Only those parameters which are overwritten by new values after a software update are displayed.</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020122"></A>Geometry: This attribute defines whether or not the parameters shown are geometry parameters. Only these are shown.</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020123"></A>Lifetime: If this is selected, all lifetime parameters are displayed.</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020124"></A>Non Volatile: If this is selected, all non-volatile parameters are displayed.</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020125"></A>Restore Never: These values are never restored. They are only temporary values determined during the runtime.</LI>
+</UL>
+<H4>
+<A NAME="50442905_pgfId-1020126"></A>Search for</H4>
+<P>
+<A NAME="50442905_pgfId-1020127"></A>A parameter identification number can be entered in the left box above the PID column. All parameters containing this combination of numbers are listed. A parameter name or part of it can be entered in the right box above the &quot;Name&quot; column. All parameters containing this combination of characters are listed.</P>
+<P>
+<A NAME="50442905_pgfId-1020128"></A>You can search for either a parameter identification number or for a parameter name but not for both at the same time.</P>
+<P>
+<A NAME="50442905_pgfId-1020129"></A>You can sort the parameters shown in the table in ascending or descending order by their PID or their name. To do this, click the respective column header with the mouse. The sorting order can be changed by clicking it once again:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020130"></A>Sort in ascending order</LI>
+<LI CLASS="L1a">
+<A NAME="50442905_pgfId-1020131"></A>Sort in descending order</LI>
+</UL>
+<H4>
+<A NAME="50442905_pgfId-1020186"></A>Edit...</H4>
+<P>
+<A NAME="50442905_pgfId-1020184"></A>The &quot;Edit...&quot; button can be used if you selected a row in the table with the mouse. A dialog then appears where you can edit the selected parameter (see the <A HREF="x-44.html#50442905_76673">Parameter Editor (2)</A> tab). Some parameters can only be edited if the relevant operating mode was set in the <A HREF="x-38.html#50442904_96376">Operating Mode</A>. A double click on a row also opens the dialog box for editing a parameter.</P>
+<H4>
+<A NAME="50442905_pgfId-1020203"></A>Sending...</H4>
+<P>
+<A NAME="50442905_pgfId-1020204"></A>When you click &quot;Sending...&quot;, all the parameter data in the table are loaded from the recorder and a dialog box appears from where you can send the parameters by e-mail.</P>
+<H4>
+<A NAME="50442905_pgfId-1020220"></A>Save on PC</H4>
+<P>
+<A NAME="50442905_pgfId-1020221"></A>When you click &quot;Save&quot;, all the parameter data in the table are loaded from the recorder and saved to a file on the GUI computer.</P>
+<H4>
+<A NAME="50442905_pgfId-1020132"></A>Loading...</H4>
+<P>
+<A NAME="50442905_pgfId-1020133"></A>The &quot;Loading...&quot; button opens a dialog with which a certain parameter dataset can be loaded from the hard disk or diskette and displayed in the table. This function is only enabled in the &quot;Service&quot; or &quot;Research and Development&quot; mode.</P>
+<H4>
+<A NAME="50442905_pgfId-1020147"></A>Apply</H4>
+<P>
+<A NAME="50442905_pgfId-1020148"></A>Click &quot;Apply&quot; to download the dataset loaded beforehand to the recorder and save it permanently.</P>
+<P>
+<A NAME="50442905_pgfId-1020149"></A>In the &quot;Service&quot; or &quot;Research and Development&quot; mode, clicking this button permanently saves the datasets that were loaded beforehand from the hard disk or disk with the &quot;Load&quot; button.</P>
+<P Class="NavBar"><BR Clear="Left"><NoBr><A HRef="x-42.html"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-44.html"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A>&nbsp;&nbsp;&nbsp;Copyright &#169; 2016 Heidelberger Druckmaschinen AG</NoBr></P><script>(function(){function tell(){try{parent.postMessage({type:'heidelberg-help-page',path:decodeURIComponent(location.pathname),hash:location.hash},'*');}catch(e){}}if(window.addEventListener){window.addEventListener('load',tell,false);window.addEventListener('hashchange',tell,false);}else if(window.attachEvent){window.attachEvent('onload',tell);window.attachEvent('onhashchange',tell);}})();</script></BODY>
+</HTML>

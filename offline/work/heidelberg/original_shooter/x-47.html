@@ -1,0 +1,73 @@
+<!DOCTYPE HTML FM_PUBLIC "-//W3C//DTD HTML 4.0//EN"><html class="manual-article">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<LINK REL="STYLESHEET" HREF="HDJ.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE>Drive Monitor</TITLE><meta name="viewport" content="width=device-width, initial-scale=1"><script src="../../../theme.js"></script><link rel="stylesheet" href="../../../site.css"></head>
+<BODY>
+<P Class="NavBar"><NoBr><A HRef="x-46.html" onfocus="click();"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-48.html" onfocus="click();"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A></NoBr></P>
+<H1>
+<A NAME="50455191_pgfId-1035606"></A><A NAME="50455191_83232"></A>Drive Monitor</H1>
+<P>
+<A NAME="50455191_pgfId-1035607"></A>You can configure the drive monitor in &quot;Administration &gt; Configuration &gt; Drive Monitor&quot;.</P>
+<P><P><IMG SRC="img/R_Konfig_Laufwerksmonitor.gif" Align="Left">
+<A NAME="50455191_pgfId-1048535"></A><br clear="all">
+</P>
+<P>
+<A NAME="50455191_pgfId-1035615"></A>The drive monitor monitors the hard <A NAME="50455191_marker-1035614"></A>disk capacity of the local drives of the Prinect Shooter PC.</P>
+<P>
+<A NAME="50455191_pgfId-1035616"></A>If a hard disk in the Prinect Shooter system is &quot;full&quot;, this can bring the Prinect Shooter software to a complete standstill or cause an uncontrollable state. It is therefore important to ensure that space is freed in time on a drive which is too heavily loaded. In particular the drives with spool folders always have to have a certain amount of free memory in reserve.</P>
+<P>
+<A NAME="50455191_pgfId-1035617"></A>Local hard disks or partitions (e.g. disk on which the spool directory is located) are monitored by the drive monitor to make sure this reserve is there. When a defined level (warning) is exceeded, no other options that require hard disk memory are started by Prinect Shooter. Virtual printers, whose spool directories are in a partition which is in an &quot;Alert&quot; status (alert value was exceeded) are switched to the &quot;Pause&quot; status. A message in the status panel of the Prinect Shooter user interface points this out to you.</P>
+<P>
+<A NAME="50455191_pgfId-1035618"></A>When sufficient space is once again available, after jobs have been processed or files which are no longer required have been manually deleted, all of these measures will be automatically canceled. Processes in progress, however, are not stopped, so that an overflow cannot be prevented in all cases.</P>
+<H2>
+<A NAME="50455191_pgfId-1035619"></A>Color of the Monitor Bar Graph</H2>
+<P>
+<A NAME="50455191_pgfId-1035620"></A>The bar graph &quot;Status (full)&quot; can assume the following colors:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035621"></A>Green:</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455191_pgfId-1035622"></A>Everything is ok, the drive has sufficient space free.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035623"></A>Yellow:</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455191_pgfId-1035624"></A>The status of the drive is critical, make more space available! The transition from green to yellow takes place at the alert value -5%.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035625"></A>Red:</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455191_pgfId-1035626"></A>The alert value is exceeded. The virtual printers were paused. The virtual printers can only resume their work when sufficient space has been freed on the drive.</P>
+<H2>
+<A NAME="50455191_pgfId-1035627"></A>Additional Notes</H2>
+<P>
+<A NAME="50455191_pgfId-1035628"></A>Please observe the notes below when working with the drive monitor:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035629"></A>Automatically Stopping some of the Prinect Shooter Software Functions:</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455191_pgfId-1035630"></A>All the virtual printers are stopped, this means no further jobs can be sent to the virtual printers, if the alert value set for one of the drives required by the virtual printer was exceeded (warning function activated). The virtual printers cannot be re-started manually.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035631"></A>Print jobs which are already in progress will continue to be processed.</LI>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035632"></A>The functions, which have been halted, are enabled again, when the set alert value for the monitored drive is no longer exceeded.</LI>
+</UL>
+<H2>
+<A NAME="50455191_pgfId-1035633"></A>Configuring the Drive Monitor</H2>
+<P>
+<A NAME="50455191_pgfId-1035634"></A>To configure the drive monitor, click &quot;Edit&quot;. The configuration view is opened:</P>
+<P><P><IMG SRC="img/R_Konfig_Laufwerksmonitor2.gif" Align="Left">
+<A NAME="50455191_pgfId-1048541"></A><br clear="all">
+</P>
+<P>
+<A NAME="50455191_pgfId-1035641"></A>To activate the monitoring of the single drives on the Prinect Shooter PC, click the respective check box in the &quot;Activate&quot; column. In the <A NAME="50455191_marker-1035642"></A>&quot;Alertvalue&quot; column, you can define at which percentage of the drive capacity monitoring will be activated. A value of 80% is preset.</P>
+<P>
+<A NAME="50455191_pgfId-1035643"></A>By clicking on the &quot;Apply&quot; button, the settings are activated and the configuration view is closed.</P>
+<P Class="NavBar"><BR Clear="Left"><NoBr><A HRef="x-46.html"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-48.html"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A>&nbsp;&nbsp;&nbsp;Copyright &#169; 2013 Heidelberger Druckmaschinen AG</NoBr></P><script>(function(){function tell(){try{parent.postMessage({type:'heidelberg-help-page',path:decodeURIComponent(location.pathname),hash:location.hash},'*');}catch(e){}}if(window.addEventListener){window.addEventListener('load',tell,false);window.addEventListener('hashchange',tell,false);}else if(window.attachEvent){window.attachEvent('onload',tell);window.attachEvent('onhashchange',tell);}})();</script></BODY>
+</HTML>

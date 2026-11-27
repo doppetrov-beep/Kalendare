@@ -1,0 +1,305 @@
+/* Copyright © 2012 Heidelberger Druckmaschinen AG, SunJavaBrowser 1.3, 2001.09.06, rj. */
+body	
+	{
+	color: #000000;
+	font-family: verdana, arial, sans-serif;
+	font-size: 12pt;
+	background-color: #d3dfef;
+	}
+a:link
+	{color: #000099;
+	}
+a:active
+	{color: #0000ff;
+	}
+a:visited
+	{color: #9999cc;
+	}
+cite	
+	{
+	font-style: italics;
+	font-weight : regular;
+	font-size: 12pt;
+	}
+em	
+	{
+	font-style: regular;
+	font-weight : bold;
+	font-size: 12pt;
+	}
+H1	
+	{
+	background-color: #c9d5e5;
+	margin-left: 25pt;
+	margin-top: 20pt;
+	margin-bottom: 20pt;
+	font-weight: bold;
+	font-size: 16pt;
+	clear: both;
+	color: #002a66;
+	}
+H2	
+	{
+	background-color: #c9d5e5;
+	margin-left: 25pt;
+	margin-top: 15pt;
+	margin-bottom: 15pt;
+	font-weight: bold;
+	font-size: 14pt;
+	clear: both;
+	color: #002a66;
+	}
+H3	
+	{
+	background-color: #c9d5e5;
+	margin-left: 25pt;
+	margin-top: 10pt;
+	margin-bottom: 10pt;
+	font-weight: bold;
+	font-size: 12pt;
+	clear: both;
+	color: #002a66;
+	}
+H4	
+	{
+	background-color: #c9d5e5;
+	margin-left: 25pt;
+	margin-top: 5pt;
+	margin-bottom: 5pt;
+	font-weight: bold;
+	font-size: 12pt;
+	clear: both;
+	color: #002a66;
+	}
+H5	
+	{
+	background-color: #d3dfef;
+	margin-left: 25pt;
+	margin-top: 5pt;
+	margin-bottom: 5pt;
+	font-weight: bold;
+	font-size: 12pt;
+	color: #002a66;
+	}
+H6	
+	{
+	background-color: #d3dfef;
+	margin-left: 25pt;
+	margin-bottom: 5pt;	
+	font-weight: normal;
+	font-size: 12pt;
+	clear: both;
+/*	color: #002a66; */
+	text-align: left;
+	}
+/*H6.TabTC
+	{
+	font-weight: bold;
+	font-size: 12pt;
+	clear: both;
+	color: #002a66;
+	text-align: center;
+	margin-bottom: 0pt;
+	}
+H6.TabTL
+	{
+	font-weight: bold;
+	font-size: 12pt;
+	clear: both;
+	color: #002a66;
+	margin-left: 0pt;
+	margin-bottom: 0pt;
+	text-align: left;
+	}
+H6.TabTR
+	{
+	font-weight: bold;
+	font-size: 12pt;
+	clear: both;
+	color: #002a66;
+	margin-left: 0pt;
+	margin-bottom: 0pt;
+	text-align: right;
+}*/
+P
+	{
+	line-height: 20pt;
+	margin-left: 25pt;
+	margin-top: 7pt;
+	margin-bottom: 7pt;
+	font-size: 12pt;
+	}
+P.L1b	
+	{
+	margin-left:140px;
+	margin-top:12pt;
+	margin-bottom:7pt;
+	clear:both;
+	font-size:12pt;
+	}
+P.L2b	
+	{
+	margin-left: 200px;
+	margin-top: 1pt;
+	margin-bottom: 7pt;
+	clear: both;
+	font-size: 12pt;
+	}	
+P.NavBar
+	{
+	font-size: 12pt;
+	margin-left: 0pt;
+	margin-top: 0pt;
+	margin-bottom: -2pt;
+	clear: left;
+	}
+P.SecText
+	{
+	font-size: 12pt;
+	margin-left: 25pt;
+	margin-top: 7pt;
+	margin-bottom: 7pt;
+	color: #999999;
+	}
+P.TabCC
+ 	{
+	margin-left: 0pt;
+	font-size: 12pt;
+	text-align: center;
+	}
+P.TabCL
+ 	{
+	margin-left: 0pt;
+	font-size: 12pt;
+	text-align: left;
+	}
+P.TabCR
+ 	{
+	margin-left: 0pt;
+	font-size: 12pt;
+	text-align: right;
+	}
+P.TOC
+	{
+	margin-bottom: 5pt;
+	margin-right: 30pt;
+	text-align: right;
+	font-size: 12pt;
+	}
+OL 	
+	{
+	line-height: 20pt;
+	margin-left: 0pt; 
+	margin-top: 12pt;
+	margin-bottom: 7pt;
+	}
+UL 	
+	{
+	line-height: 20pt;
+	margin-top: 6pt;
+	margin-bottom: 6pt;
+	margin-left: 40pt;
+/*	list-style-image:url(HDsquare.gif);*/
+	list-style-type: disk;
+	}
+Li.L1a	
+	{
+	margin-left: 35pt; */
+	margin-top: 12pt; */
+	margin-bottom: 7pt;
+	list-style-type: disk;
+	}
+Li.L2a 	
+	{
+	margin-left: 55pt; */
+	margin-top: 12pt; */
+	margin-bottom: 7pt;
+	list-style-type: disk;
+	}
+HR	
+	{
+	color: #6666cc;
+	margin-left: -40pt;
+	}
+img	
+	{
+/*	margin-top: 7pt; */
+/*	margin-bottom: 7pt; */
+	border: 0;
+/*	vertical-align: top; */
+	}
+Table	
+	{
+	margin-left: 25pt;
+	vertical-align: top;
+	}
+TD	
+	{
+	vertical-align: top;
+	}
+TH	
+	{
+	font-weight: bold;
+	font-size: 14pt;
+	color: #000066;
+	margin-left: 0pt;
+	margin-bottom: 0pt;
+	}
+P.TablCL {
+	margin-left: 0.000pt;
+	margin-right: 0.000pt;
+	text-align: left;
+	text-indent: 0.000pt;
+	margin-top: 0.000pt;
+	margin-bottom: 5.000pt;
+	word-spacing: 0.250em;
+	font-family: verdana, arial, sans-serif;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12.0pt;
+	color: #000000;
+	background-color: none;
+	letter-spacing: 0.00em;
+	text-decoration: none;
+}
+LI.TablCL {
+	text-align: left;
+	text-indent: 0.000pt;
+	word-spacing: 0.250em;
+	font-family: verdana, arial, sans-serif;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12.0pt;
+	color: #000000;
+	letter-spacing: 0.00em;
+	text-decoration: none;
+}
+P.Table-Cell-List-noi {
+        margin-left:     14.173pt;
+        margin-right:    0.000pt;
+        text-align:      left;
+        text-indent:     0.0pt;
+        margin-top:      0.000pt;
+        margin-bottom:   5.000pt;
+        word-spacing:    0.250em;
+        font-family:     verdana, arial, sans-serif;
+        font-style:      normal;
+        font-weight:     normal;
+        font-size:       12.0pt;
+        color:           #000000;
+        background-color:none;
+        text-decoration: none;
+        letter-spacing:  0.00em;   
+}
+H6.Table-Cell-List-noi {
+				text-align:      left;
+				margin-left: 		 14.173pt
+				word-spacing: 	 0.250em;
+				font-family: 	   verdana, arial, sans-serif;
+				font-style:  		 normal;
+				font-weight: 	   normal;
+				font-size:  		 12.0pt;
+				color: 					 #000000;
+				letter-spacing:  0.00em;
+				text-decoration: none;	
+}

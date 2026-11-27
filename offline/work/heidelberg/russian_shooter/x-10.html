@@ -1,0 +1,35 @@
+<!doctype html>
+<html class="manual-article">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="STYLESHEET" href="../original_shooter/HDJ.css" charset="ISO-8859-1" type="text/css">
+<title>JDF (формат определения работы)</title><meta name="viewport" content="width=device-width, initial-scale=1"><script src="../../../theme.js"></script><link rel="stylesheet" href="../../../site.css"></head>
+<body>
+<p class="NavBar"><nobr><a href="x-9.html" onfocus="click();"><img src="../original_shooter/HDPrev.gif" border="0" align="Left" alt="Предыдущая тема в последовательности"></a><a href="x-1.html"><img src="../original_shooter/HDHome.gif" border="0" align="Left" alt="Назад, чтобы начать"></a><a href="x-11.html" onfocus="click();"><img src="../original_shooter/HDNext.gif" border="0" align="Left" alt="Следующая тема в последовательности"></a></nobr></p>
+<h1>
+<a name="50455187_pgfId-1044710"></a><a name="50455187_62935"></a>JDF (формат определения работы)</h1>
+<p>
+<a name="50455187_pgfId-1044712"></a>Prinect Shooter готов к подключению <a name="50455187_marker-1044711"></a>Системы рабочих процессов на базе JDF, такие как Prinect Integration Manager Гейдельберга. В конфигурации с Менеджером Интеграции вам нужен Prinect Renderer или Prinect MetaDimension RIP для создания данных скрининга Tiff-B.</p>
+<p></p><p><img src="../original_shooter/x-8.gif" align="Left">
+<a name="50455187_pgfId-1051668"></a><br clear="all">
+</p>
+<p>
+<a name="50455187_pgfId-1044734"></a>Обмен данными между Prinect Integration Manager/Prinect Integration Manager S и Prinect MetaDimension основан на «Формате определения работы (JDF)». По этой причине программное обеспечение Prinect Shooter содержит «портал JDF», на котором настроен этот интерфейс.</p>
+<p>
+<a name="50455187_pgfId-1044735"></a>В то время как обмен данными между диспетчером интеграции Prinect или диспетчером интеграции Prinect S осуществляется исключительно через портал JDF, для обмена данными между Prinect MetaDimension и Prinect Shooter можно настроить, как интерфейс FBDI будет использоваться в Prinect MetaDimension в диспетчере двигателей TIFF-B-Export. Если выход FBDI включен, Prinect MetaDimension создает документ JDF, содержащий все важные данные о работе для каждой работы, которую он отправляет в Prinect Shooter.</p>
+<p></p><p><img src="../original_shooter/common/_IconNote.gif" align="Left">
+<a name="50455187_pgfId-1044746"></a><em>Примечание: </em> Вы можете подключить несколько Prinect Shooters к менеджеру интеграции или Prinect MetaDimension RIP. Таким образом, вы можете управлять несколькими Prinect Shooters с помощью подключенного снимка Гейдельберга с помощью только одной системы Prinect MetaDimension.</p>
+<p>
+<a name="50455187_pgfId-1044747"></a>Если вы хотите подключить фотосеттер Гейдельберга к системе рабочего процесса или RIP другого устройства через Prinect Shooter, этот RIP должен быть в состоянии генерировать данные TIFF-B. Используйте программное обеспечение «Prinect TIFF Toolbox» для проверки битовых карт TIFF-B и, при необходимости, подготовьте их так, чтобы они могли быть выведены с помощью Prinect Shooter, если это вообще возможно.</p>
+<p>
+<a name="50455187_pgfId-1044748"></a>Prinect Shooter отправляет данные о состоянии изображения и любых ошибках устройства и т. д. в подключенную систему рабочего процесса. (Какая информация об устройстве отправляется, и можете ли вы отправить ее вообще, зависит от вашего подключенного устройства вывода).<a name="50455187_marker-1044749"></a>Для этого используется формат сообщений о работе (JMF). Напротив, менеджер интеграции Prinect или Prinect MetaDimension может, например, запустить перепечатку одного разделения в Prinect Shooter.</p>
+<p>
+<a name="50455187_pgfId-1044750"></a>Кроме того, Prinect MetaDimension (но не Prinect Integration Manager/Prepress Manager S) может отправлять информацию о контексте работы одиночных разъединений в Prinect Shooter через веб-сайт. <a name="50455187_marker-1044751"></a>Протокол FBDI (см. <a href="x-15.html#50455187_24961">Сортированный и несортированный выход</a>).</p>
+<p></p><p><img src="../original_shooter/common/_IconNote.gif" align="Left">
+<a name="50455187_pgfId-1044766"></a><em>Примечание: </em> Вы можете следить за процессом визуализации в строке прогресса в списке заданий Prinect MetaDimension, если в Tiff-B Prinect MetaDimension включен «Надзорный выход FBDI». <a name="50455187_marker-1044765"></a>Менеджер двигателя. Другими словами, статус работы «сделан» только в том случае, если визуализация была успешно завершена. В случае неконтролируемого вывода FBDI или вывода без протокола FBDI в списке заданий Prinect MetaDimension статус «сделано», только если были созданы данные Tiff-B. Визуализация больше не может быть проверена в Prinect MetaDimension. Для этого необходимо запустить один из пользовательских интерфейсов Prinect Shooter (Printmanager или пользовательский интерфейс браузера).</p>
+<p>
+<a name="50455187_pgfId-1044767"></a>Формат FBDI и формат JMF являются компонентами спецификации JDF. Благодаря поддержке JDF Prinect Shooter вписывается в общий рабочий процесс на основе JDF, который реализован в системе Heidelberg Prinect System.</p>
+<p>
+<a name="50455187_pgfId-1044769"></a>Вы можете связать Prinect Shooter с сервером Prinect MDS, если Prinect Shooter запускается в системной среде Prinect с "<a name="50455187_marker-1044768"></a>Магистерская база данных" (MDS) (см. также <a href="x-50.html#50455191_61671">Услуги Prinect</a>). В этом случае Prinect Shooter отправляет информацию об устройстве в Магазин данных, чтобы эта информация была доступна из центрального источника в среде системы Prinect. Prinect Shooter также использует совместное управление пользователями Магазина данных (см. <a href="x-55.html#50455192_16690">Структура разрешений Prinect (управляется в Магистерском хранилище данных)</a>).</p>
+<p class="NavBar"><br clear="Left"><nobr><a href="x-9.html"><img src="../original_shooter/HDPrev.gif" border="0" align="Left" alt="Предыдущая тема в последовательности"></a><a href="x-1.html"><img src="../original_shooter/HDHome.gif" border="0" align="Left" alt="Назад, чтобы начать"></a><a href="x-11.html"><img src="../original_shooter/HDNext.gif" border="0" align="Left" alt="Следующая тема в последовательности"></a>   Copyright © 2013 Heidelberger Druckmaschinen AG</nobr></p><script>(function(){function tell(){try{parent.postMessage({type:'heidelberg-help-page',path:decodeURIComponent(location.pathname),hash:location.hash},'*');}catch(e){}}if(window.addEventListener){window.addEventListener('load',tell,false);window.addEventListener('hashchange',tell,false);}else if(window.attachEvent){window.attachEvent('onload',tell);window.attachEvent('onhashchange',tell);}})();</script></body>
+</html>

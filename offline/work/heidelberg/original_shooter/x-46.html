@@ -1,0 +1,161 @@
+<!DOCTYPE HTML FM_PUBLIC "-//W3C//DTD HTML 4.0//EN"><html class="manual-article">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<LINK REL="STYLESHEET" HREF="HDJ.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE>Preferences</TITLE><meta name="viewport" content="width=device-width, initial-scale=1"><script src="../../../theme.js"></script><link rel="stylesheet" href="../../../site.css"></head>
+<BODY>
+<P Class="NavBar"><NoBr><A HRef="x-45.html" onfocus="click();"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-47.html" onfocus="click();"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A></NoBr></P>
+<H1>
+<A NAME="50455191_pgfId-1035475"></A>Preferences</H1>
+<P><P><IMG SRC="img/b_preferences.gif" Align="Left">
+<A NAME="50455191_pgfId-1048392"></A><br clear="all">
+</P>
+<P>
+<A NAME="50455191_pgfId-1035482"></A>You can set or view the following parameters in &quot;Preferences&quot;:</P>
+<H2>
+<A NAME="50455191_pgfId-1035483"></A>Options</H2>
+<P>
+<A NAME="50455191_pgfId-1035484"></A>You will find the following parameters in &quot;Options&quot;:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035485"></A><A HREF="x-46.html#50455191_66462">&quot;Pause jobs after restarting the server&quot;</A></LI>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035486"></A><A HREF="x-46.html#50455191_40158">MCL usage: give preference to other jobs if the amount of plate material for the next job is insufficient</A></LI>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035487"></A><A HREF="x-46.html#50455191_68448">&quot;Serial, sorted output via FBDI workflow&quot;</A></LI>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035488"></A><A HREF="x-46.html#50455191_53742">Create IPR</A></LI>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035489"></A><A HREF="x-46.html#50455191_65948">Depot Directory</A></LI>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035490"></A><A HREF="x-46.html#50455191_80405">License Server</A></LI>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035491"></A><A HREF="x-46.html#50455191_42828">Directory Settings</A></LI>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1046776"></A><A HREF="x-46.html#50455191_96958">&quot;Pause Jobs before Reprint&quot;</A></LI>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1046781"></A><A HREF="x-46.html#50455191_48517">&quot;Show only icons and tooltips&quot;</A></LI>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1046788"></A><A HREF="x-46.html#50455191_95716">Network</A></LI>
+</UL>
+<H2>
+<A NAME="50455191_pgfId-1035492"></A><A NAME="50455191_66462"></A>&quot;Pause jobs after restarting the server&quot;</H2>
+<P>
+<A NAME="50455191_pgfId-1035493"></A>If this option is set, all jobs that are still to be processed are set to &quot;paused&quot; when you trigger a computer reboot. These options apply to all the virtual printers.</P>
+<H2>
+<A NAME="50455191_pgfId-1045942"></A><A NAME="50455191_40158"></A>MCL usage: give preference to other jobs if the amount of plate material for the next job is insufficient</H2>
+<P>
+<A NAME="50455191_pgfId-1046064"></A>For the Prinect Shooter with Suprasetter MCL (MultiCassette Loader) a special mode for defining the processing oder has been introduced. In this mode, the plates loaded in the different trays of the MCL are used up as far as possible without an operator being on site. This mode is activated with the <EM>&quot;MCL usage: give preference to other jobs if the amount of the plate material for the next job is insufficient&quot; option</EM>. Herby the optimal utilization of the loaded plates can be achieved.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1046065"></A>Optimized usage of available plates in the Suprasetter MCL.</LI>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1046066"></A>Jobs will be processed in normal order as long as enough plates are available.</LI>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1046067"></A>Preference is given to other jobs if the amount of plate material for the next job is insufficient.</LI>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1046068"></A>The plate amount must be set accurately in the MCL user interface.</LI>
+</UL>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455191_pgfId-1046073"></A><EM>Note: </EM> To use this function, at least the SCM version 2.30.001 must be installed.<BR>
+</P>
+<P>
+<A NAME="50455191_pgfId-1046077"></A>Explanation:</P>
+<P>
+<A NAME="50455191_pgfId-1046078"></A>In standard mode Option deactivated), the individual exposure jobs are simply processed sequentially and the imagesetter stops and requires additional plates if one of the trays is empty. By this means it may occur that jobs for other plates which are located later in the Shooter queue are also no more exposed, although enough plates are available in other trays of the MCL.</P>
+<P>
+<A NAME="50455191_pgfId-1046079"></A>In the new mode, these jobs are preferred and therefore the loaded plates are exploited optimally. The jobs are exposed in the planned order as long as enough plates of the required type are available to expose the complete next job. If not enough plates are available for the next job, this job remains in the &quot;waiting&quot; state, and jobs requiring other plate types are preferred according to the planned order. The number of the plates available in the individual trays must be set up manually by the SCM operator, and it must be updated if plates are refuelled. The calculations for the automatic mode require a correct setting of the plate numbers in the trays.</P>
+<H2>
+<A NAME="50455191_pgfId-1035495"></A><A NAME="50455191_68448"></A>&quot;Serial, sorted output via FBDI workflow&quot;</H2>
+<P>
+<A NAME="50455191_pgfId-1035496"></A>FBDI jobs are output one after the other in their correct order if you check this option and if FBDI output is enabled in the Prinect MetaDimension Tiff-B Engine Manager.</P>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455191_pgfId-1035507"></A><EM>Note: </EM> This option can only be used if Prinect Shooter operates with  Prinect MetaDimension. The FBDI protocol is not available if Prinect Shooter operates with Prinect Integration Manager and the Prinect HighRes Renderer.</P>
+<P>
+<A NAME="50455191_pgfId-1035508"></A>A processed job cannot be interrupted by other jobs, unless you assign &quot;urgent&quot; as a priority (see the <A HREF="x-30.html#50455189_43887">Reorder with the &quot;Urgent&quot; Button</A>). This means that the job is fully processed before another job can be output. This ensures that the plates of a job are output together in their correct order. For more details about a sorted output, see  <A HREF="x-15.html#50455187_24961">Sorted and Unsorted Output</A>. By default, this option is disabled.</P>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455191_pgfId-1035525"></A><EM>Note: </EM> This option is a principal workflow setting and should be set once directly after Prinect Shooter first starts.</P>
+<H2>
+<A NAME="50455191_pgfId-1035545"></A><A NAME="50455191_marker-1035543"></A><A NAME="50455191_53742"></A>Create IPR</H2>
+<P>
+<A NAME="50455191_pgfId-1035546"></A>When Tiff-B screening data are output with Prinect Shooter, it is generally necessary to customize certain parameters in the jobs (punch and material settings, etc.) to the properties of the output device connected to Prinect Shooter. There are different ways to create an <A NAME="50455191_marker-1035547"></A>IPR profile depending on the RIP and output device used:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035548"></A>You can create Tiff-B data without any device-specific settings and use a &quot;general&quot; IPR device profile in the external RIP. This profile makes available all the options that can occur at the output devices supported by Prinect Shooter. You define the device-specific settings when you configure the virtual printers in Prinect Shooter or in the Engine Manager.</LI>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1035549"></A>You can create a device profile (IPR file) at the Prinect Shooter and import it to the RIP. This means that, when TIFF-B files are created, the parameters of the connected output device are available (resolutions, materials, etc.) and, as a result, the TIFF-B data are customized for the most part to the output device. You will learn below how to create a device profile at the Prinect Shooter and export it.</LI>
+</UL>
+<P>
+<A NAME="50455191_pgfId-1035550"></A>The RIP settings have priority over the settings in Prinect Shooter if you define device-specific settings both in the RIP and in a Prinect Shooter virtual printer or in the Engine Manager. This only applies to settings that explicitly were assigned values.</P>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455191_pgfId-1035561"></A><EM>Note: </EM> It is not absolutely necessary that the Prinect Shooter user interface is running on the Prinect Shooter PC to export an IPR device profile. You can also call up the Prinect Shooter browser user interface at the RIP computer, for example, and save the device profile file there. You can find more information about this in the Online Help of the browser user interface</P>
+<P>
+<A NAME="50455191_pgfId-1035562"></A>	1.	Click &quot;Create IPR &gt; Save&quot;. The &quot;Save IPR file as&quot; dialog displays:</P>
+<P><P><IMG SRC="img/b_save_IPR.gif" Align="Left">
+<A NAME="50455191_pgfId-1048494"></A><br clear="all">
+</P>
+<P>
+<A NAME="50455191_pgfId-1035569"></A>	2.	In &quot;Save in&quot;, select the folder where you wish to save the profile file. You can also select a shared folder (e.g. on a Prinect server) in the network neighborhood. If necessary, you can create a new folder.</P>
+<P>
+<A NAME="50455191_pgfId-1035570"></A>	3.	Give it a name and click &quot;Save&quot;. You can find details about how to integrate the device profile file into the RIP workflow in the RIP software documentation.</P>
+<H2>
+<A NAME="50455191_pgfId-1046271"></A><A NAME="50455191_65948"></A>Depot Directory</H2>
+<P>
+<A NAME="50455191_pgfId-1046295"></A>Here you can define the depot directory where depot jobs are stored (see <A HREF="x-37.html#50455189_43430">Storing Jobs</A>). If the <EM>&quot;Always ask&quot; option</EM> is activated, every time a job is stored, a dialog is shown where you can determine the depot directory. If this option is deactivated, you can click the <EM>&quot;Browse&quot; button</EM> and select a folder in the file system which is used as the default depot directory.</P>
+<H2>
+<A NAME="50455191_pgfId-1046226"></A><A NAME="50455191_marker-1046225"></A><A NAME="50455191_80405"></A>License Server</H2>
+<P>
+<A NAME="50455191_pgfId-1046227"></A>&quot;License Server&quot; shows the computer name of the License Server that makes the licenses for Prinect Shooter available. Normally, the License Server is defined during installation of the Prinect Shooter software. If the License Server is to be located on a different computer or if the computer name of the License Server has changed, you can change the computer name of the License Server in the Windows Start menu with &quot;Start &gt; Programs &gt; Prinect Shooter &gt; Modify License Server&quot;. You should change the computer name before you disable the old License Server. After you modify the License Server, exit the Prinect Shooter services with &quot;Service Control&quot;. Afterwards, make sure that the new License Server is running and can be reached in the network and that the required licenses are assigned to the Prinect Shooter computer (in the License Manager). After that, restart the Prinect Shooter services.</P>
+<H2>
+<A NAME="50455191_pgfId-1046228"></A><A NAME="50455191_42828"></A>Directory Settings</H2>
+<P>
+<A NAME="50455191_pgfId-1046229"></A>This section shows the paths of the temporary directory, the configuration spool directory and the hot folder root directory.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1046230"></A>Temporary folder</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455191_pgfId-1046231"></A>Prinect Shooter uses the temporary folder to buffer data that are created during job processing.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1046233"></A><A NAME="50455191_10865"></A>Configuration spool directory</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455191_pgfId-1046234"></A>All the job data created temporarily during processing are buffered in the configuration spool directory. This buffer action is known as &quot;spooling&quot;. The spool directory contains the data of all the jobs in the job list. This includes the data of completed jobs that are not yet removed from the job list. Because the Tiff-B files can be very large, the spool directory should be located on a drive of the Prinect Shooter PC that has enough available memory. You can check the available memory of each of the drives on the Prinect Shooter PC in the drive monitor (see the  <A HREF="x-47.html#50455191_83232">Drive Monitor</A>).</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455191_pgfId-1046238"></A>Hot Folder Default Root Directory</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455191_pgfId-1046239"></A>This is the default directory for hot folders. This means that hot folders are created as subfolders of this root directory. By defining the hot folder default root directory, you set that this hot folder path will be used by default for the virtual printer when you create a new virtual printer. You can define a local directory or a shared directory in the network neighborhood as the <A NAME="50455191_marker-1046240"></A>hot folder default root directory. Because hot folders are used to transfer TIFF-B files, you must make sure that the drive on which the hot folders are located has enough available memory.</P>
+<P>
+<A NAME="50455191_pgfId-1046241"></A>These directories are defined during installation of the Prinect Shooter software. If you have to change one of the directories while working with Prinect Shooter, for example, change it to a new drive you installed, you can set this new directory path in the Windows Start menu with &quot;Start &gt; Programs &gt; Heidelberg Prinect Shooter &gt; Modify Folder Selection&quot;.</P>
+<H2>
+<A NAME="50455191_pgfId-1035572"></A><A NAME="50455191_59215"></A>Reprint</H2>
+<P>
+<A NAME="50455191_pgfId-1035573"></A>This is where you define how the system reacts when jobs are to be reprinted.</P>
+<H2>
+<A NAME="50455191_pgfId-1035575"></A><A NAME="50455191_96958"></A>&quot;Pause Jobs before Reprint&quot;</H2>
+<P>
+<A NAME="50455191_pgfId-1035576"></A>If this option is set, all jobs that are still to be processed are set to &quot;paused&quot; when you trigger a reprint. These options apply to all the virtual printers.</P>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455191_pgfId-1035587"></A><EM>Note: </EM> Note that this option influences the reprinting of single separations (see <A HREF="x-36.html#50455189_46456">Reprinting Single Separations</A>).</P>
+<H2>
+<A NAME="50455191_pgfId-1035591"></A>Administration display</H2>
+<P>
+<A NAME="50455191_pgfId-1035592"></A>In this section, you set how text is displayed in &quot;Administration&quot;.</P>
+<H2>
+<A NAME="50455191_pgfId-1035593"></A><A NAME="50455191_48517"></A>&quot;Show only icons and tooltips&quot;</H2>
+<P>
+<A NAME="50455191_pgfId-1035594"></A>The wording on the vertical tabs on the left in the &quot;Administration&quot; group of the Prinect Shooter Printmanager is hidden if you check this option and then click &quot;Apply&quot;. The name of a tab displays as a <A NAME="50455191_marker-1035595"></A>tooltip when you leave the mouse pointer for a moment on that tab.</P>
+<P><P><IMG SRC="img/b_no_tab_text.gif" Align="Left">
+<A NAME="50455191_pgfId-1048524"></A><br clear="all">
+</P>
+<P>
+<A NAME="50455191_pgfId-1035602"></A>By hiding the names, you have more room for the parameters of the administration settings. The tab names display again when you uncheck this option and confirm it with &quot;Apply&quot;.</P>
+<H2>
+<A NAME="50455191_pgfId-1035603"></A><A NAME="50455191_95716"></A>Network</H2>
+<P>
+<A NAME="50455191_pgfId-1035604"></A>If you have more than one network card in your Prinect Shooter PC (e.g. because the Prinect Shooter PC is integrated into more than one network neighborhood), you must select the network adapter that is connected to the network where you wish to share the virtual printers of this Prinect Shooter PC.</P>
+<P Class="NavBar"><BR Clear="Left"><NoBr><A HRef="x-45.html"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-47.html"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A>&nbsp;&nbsp;&nbsp;Copyright &#169; 2013 Heidelberger Druckmaschinen AG</NoBr></P><script>(function(){function tell(){try{parent.postMessage({type:'heidelberg-help-page',path:decodeURIComponent(location.pathname),hash:location.hash},'*');}catch(e){}}if(window.addEventListener){window.addEventListener('load',tell,false);window.addEventListener('hashchange',tell,false);}else if(window.attachEvent){window.attachEvent('onload',tell);window.attachEvent('onhashchange',tell);}})();</script></BODY>
+</HTML>

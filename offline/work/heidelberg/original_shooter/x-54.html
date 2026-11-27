@@ -1,0 +1,84 @@
+<!DOCTYPE HTML FM_PUBLIC "-//W3C//DTD HTML 4.0//EN"><html class="manual-article">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<LINK REL="STYLESHEET" HREF="HDJ.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE>E-Mail</TITLE><meta name="viewport" content="width=device-width, initial-scale=1"><script src="../../../theme.js"></script><link rel="stylesheet" href="../../../site.css"></head>
+<BODY>
+<P Class="NavBar"><NoBr><A HRef="x-53.html" onfocus="click();"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-55.html" onfocus="click();"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A></NoBr></P>
+<H1>
+<A NAME="50455192_pgfId-1045093"></A><A NAME="50455192_49992"></A>E-<A NAME="50455192_marker-1046472"></A>Mail</H1>
+<P>
+<A NAME="50455192_pgfId-1045094"></A>If your Prinect Shooter PC has an e-mail connection, you can configure Prinect Shooter so that an e-mail is sent to up to four recipients if an error occurs during job processing. This e-mail contains a short text describing the error.</P>
+<P>
+<A NAME="50455192_pgfId-1045095"></A>This feature enables you to react quickly to errors, even if there is no-one monitoring Prinect Shooter.</P>
+<P><P><IMG SRC="img/b_E-Mail.gif" Align="Left">
+<A NAME="50455192_pgfId-1052931"></A><br clear="all">
+</P>
+<H2>
+<A NAME="50455192_pgfId-1045102"></A>Setting the sender's address</H2>
+<P>
+<A NAME="50455192_pgfId-1045959"></A>In the &quot;Email sender address&quot; section you assign the access data of an e-mail user to the e-mail function. This is where you must enter user data that allow e-mail access in the local system environment.</P>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455192_pgfId-1045970"></A><EM>Note: </EM> Ask your system administrator for the correct way to enter details about the e-mail addresses.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045116"></A>&quot;<A NAME="50455192_marker-1045115"></A>E-mail Address&quot;:</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455192_pgfId-1045117"></A>Enter a valid e-mail address in this box. Prinect Shooter uses this address as the sender's address. This information is necessary for the e-mail function.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045119"></A>&quot;<A NAME="50455192_marker-1045118"></A>SMTP Host&quot;:</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455192_pgfId-1045120"></A>Enter the SMTP host through which you can send e-mails. This information is necessary for the e-mail function, because e-mails are distributed via the SMTP host. If you are not sure, ask your system administrator for assistance.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045122"></A>&quot;<A NAME="50455192_marker-1045121"></A>POP3 Host&quot;:</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455192_pgfId-1045123"></A>You must fill out POP3 host, user name and password only if the service requires &quot;POP3 before SMTP&quot; to send e-mails. In this case, authentication of the e-mail sender is requested by the POP3 server. To enable this option, enter the POP3 host related to the sender's e-mail address. If you are not sure, ask your system administrator for assistance.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045125"></A>&quot;<A NAME="50455192_marker-1045124"></A>User name&quot;:</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455192_pgfId-1045126"></A>Enter the user name for the e-mail address. This information is not necessary for every e-mail account.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045128"></A>&quot;<A NAME="50455192_marker-1045127"></A>Password&quot;:</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455192_pgfId-1045129"></A>Enter the POP3 password associated with the user name. This information is not necessary for every e-mail account.</P>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455192_pgfId-1045140"></A><EM>Note: </EM> Extended SMTP (eSMTP) with password protection in the SMTP protocol is not supported by Prinect Shooter .</P>
+<H2>
+<A NAME="50455192_pgfId-1045141"></A>Setting the Notification Recipients</H2>
+<P>
+<A NAME="50455192_pgfId-1045143"></A>In &quot;<A NAME="50455192_marker-1045142"></A>Notification Recipient&quot;, you can enter the e-mail addresses of up to four recipients. As recipients you can, for example, enter DTP users who print via Prinect Shooter.</P>
+<H2>
+<A NAME="50455192_pgfId-1045144"></A>Assigning Notification Events</H2>
+<P>
+<A NAME="50455192_pgfId-1045146"></A>In the &quot;<A NAME="50455192_marker-1045145"></A>Notification type&quot; section you can assign different event messages to the four possible e-mail recipients. The following event types are possible:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045147"></A>&quot;Devices&quot;:</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455192_pgfId-1045148"></A>These errors are reported by the relevant output device to Prinect Shooter during output and are passed on as an e-mail.</P>
+<P CLASS="List-1-noi">
+<A NAME="50455192_pgfId-1045149"></A>Example: If the supply cassette of an imagesetter is empty, a device error message is generated.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045150"></A>&quot;Job abort&quot;:</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455192_pgfId-1045151"></A>An error message is generated if job processing is aborted because of an error in Prinect Shooter.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455192_pgfId-1045152"></A>&quot;Drive monitor warning&quot;:</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455192_pgfId-1045153"></A>If the Alert value set for a drive monitored by the drive monitor was overshot, Prinect Shooter stops the processing of further jobs. This event can be passed on as an e-mail.</P>
+<P Class="NavBar"><BR Clear="Left"><NoBr><A HRef="x-53.html"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-55.html"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A>&nbsp;&nbsp;&nbsp;Copyright &#169; 2013 Heidelberger Druckmaschinen AG</NoBr></P><script>(function(){function tell(){try{parent.postMessage({type:'heidelberg-help-page',path:decodeURIComponent(location.pathname),hash:location.hash},'*');}catch(e){}}if(window.addEventListener){window.addEventListener('load',tell,false);window.addEventListener('hashchange',tell,false);}else if(window.attachEvent){window.attachEvent('onload',tell);window.attachEvent('onhashchange',tell);}})();</script></BODY>
+</HTML>

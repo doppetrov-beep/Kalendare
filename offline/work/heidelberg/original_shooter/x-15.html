@@ -1,0 +1,118 @@
+<!DOCTYPE HTML FM_PUBLIC "-//W3C//DTD HTML 4.0//EN"><html class="manual-article">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<LINK REL="STYLESHEET" HREF="HDJ.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE>Sorted and Unsorted Output</TITLE><meta name="viewport" content="width=device-width, initial-scale=1"><script src="../../../theme.js"></script><link rel="stylesheet" href="../../../site.css"></head>
+<BODY>
+<P Class="NavBar"><NoBr><A HRef="x-14.html" onfocus="click();"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-16.html" onfocus="click();"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A></NoBr></P>
+<H1>
+<A NAME="50455187_pgfId-1044901"></A><A NAME="50455187_24961"></A>Sorted and Unsorted Output</H1>
+<P>
+<A NAME="50455187_pgfId-1044902"></A>You can choose between two output workflows, between a sorted output and an unsorted one.</P>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455187_pgfId-1044913"></A><EM>Note: </EM> The choice of a sorted or unsorted output influences your entire output workflow and you should configure it once directly after launching the Prinect Shooter.</P>
+<H2>
+<A NAME="50455187_pgfId-1044915"></A><A NAME="50455187_59331"></A>Sorted Output</H2>
+<P>
+<A NAME="50455187_pgfId-1044916"></A>In a sorted output, the job context is kept, i.e. the whole job is always output. This means that all the plates that are part of a job are always processed by Prinect Shooter one after the other in their correct order. In the Prinect Shooter Printmanager, sorted jobs are marked by a blue folder icon, indicating that the plates belong to one job. However, this variant has as its condition that a job cannot be interrupted. For example, the sorted output of a very large job must be completely finished before you can output another job, even just a single plate of it.</P>
+<H2>
+<A NAME="50455187_pgfId-1044917"></A>Configuration</H2>
+<P><P><IMG SRC="common/_IconPrerequesite.gif" Align="Left">
+<A NAME="50455187_pgfId-1044928"></A><EM>Prerequisite: </EM> The following requirements must be met for a sorted output of your jobs:<BR>
+</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455187_pgfId-1044929"></A>The Tiff-B jobs must be output by Prinect MetaDimension with the FBDI protocol enabled.</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455187_pgfId-1044930"></A>When you configure the Tiff-B Export Engine Manager, you can define in Prinect MetaDimension whether the generated TIFF-B files will be sent to Prinect Shooter with or without a FBDI protocol. To view or configure this setting, open the Tiff-B Export Engine Manager on the Prinect MetaDimension PC and open the output device you want in &quot;Devices&quot;. In &quot;FBDI Protocol&quot; in the &quot;Data Output&quot; tab, you can choose between the following options:</P>
+<UL>
+<UL>
+<LI CLASS="L2a">
+<A NAME="50455187_pgfId-1044931"></A>No FBDI output</LI>
+<LI CLASS="L2a">
+<A NAME="50455187_pgfId-1044932"></A>Supervised FBDI output or</LI>
+<LI CLASS="L2a">
+<A NAME="50455187_pgfId-1044933"></A>Non-supervised FBDI output</LI>
+</UL>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455187_pgfId-1044934"></A>For a sorted output, enable either &quot;Supervised FBDI output&quot; or &quot;Non-supervised FBDI output&quot; (you can find more details about these options in the Online Help of the TIFF-B Export Engine Manager).</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455187_pgfId-1044935"></A>You must have enabled the &quot;Serial, sorted output via FBDI workflow&quot; option in Prinect Shooter.</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455187_pgfId-1044936"></A>You can enable this option in the &quot;Administration &gt; Configuration&quot; tab (see also the <A HREF="x-46.html#50455191_68448">&quot;Serial, sorted output via FBDI workflow&quot;</A>).</P>
+<P>
+<A NAME="50455187_pgfId-1044940"></A>When these two requirements are met, jobs are sorted in their correct order when output.</P>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455187_pgfId-1044952"></A><EM>Note: </EM> If you want to output single separations (&quot;<A NAME="50455187_marker-1044951"></A>signatures&quot;) again, the sorted output has a slightly different workflow to the unsorted output (see the <A HREF="x-36.html#50455189_46456">Reprinting Single Separations</A>).</P>
+<H2>
+<A NAME="50455187_pgfId-1044956"></A>Reorder sorted output</H2>
+<P>
+<A NAME="50455187_pgfId-1044957"></A>In a sorted output, you can only rearrange the order of whole jobs. This lets you modify the output order (See <A HREF="x-30.html#50455189_29991">Reordering Jobs</A>). You cannot change the order of single separations or &quot;plates&quot;.</P>
+<H2>
+<A NAME="50455187_pgfId-1044961"></A>Unsorted Output</H2>
+<P>
+<A NAME="50455187_pgfId-1044962"></A>In an unsorted output, the single separations in a job are processed separately as &quot;component jobs&quot;. You can interrupt the output of an entire job or you can use the &quot;Reorder&quot; function (see the <A HREF="x-30.html#50455189_29991">Reordering Jobs</A>)&nbsp;to change the processing order of single plates in a job (the &quot;component jobs&quot;). This workflow is more flexible than the sorted output, but you must make sure that after imaging the imaged plates are assigned to the correct jobs.</P>
+<H2>
+<A NAME="50455187_pgfId-1044966"></A>Configuration</H2>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455187_pgfId-1044977"></A><EM>Note: </EM> The jobs are not sorted when output if one of the following requirements is met:<BR>
+</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455187_pgfId-1044978"></A>The Tiff-B jobs are output by Prinect MetaDimension without a FBDI protocol.</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455187_pgfId-1044979"></A>In the TIFF-B Export Engine Manager, select the output device you want in &quot;Devices&quot; and enable &quot;No FBDI output&quot; in &quot;FBDI Protocol&quot; in the &quot;Data Output&quot; tab.</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455187_pgfId-1044980"></A>The &quot;Serial, sorted output via FBDI workflow&quot; option must be disabled in Prinect Shooter (default).</LI>
+</UL>
+<P CLASS="List-1-noi">
+<A NAME="50455187_pgfId-1044981"></A>You will find this option in the &quot;Administration &gt; Configuration&quot; tab.</P>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455187_pgfId-1044992"></A><EM>Note: </EM> The jobs are unsorted when output even if <EM>only one</EM> of these requirements is met. Your output is not sorted, for example, if the &quot;Serial, sorted output via FBDI workflow&quot; option is enabled but the TIFF-B jobs come from Prinect MetaDimension without an FBDI protocol.</P>
+<P>
+<A NAME="50455187_pgfId-1044993"></A>An unsorted output has two variants:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455187_pgfId-1044994"></A>Output with an FBDI protocol (enabled in the Prinect MetaDimension Tiff-B Engine Manager) and</LI>
+<LI CLASS="L1a">
+<A NAME="50455187_pgfId-1044995"></A>Output without an FBDI Protocol.</LI>
+</UL>
+<H2>
+<A NAME="50455187_pgfId-1044996"></A>Unsorted output with FBDI protocol</H2>
+<P>
+<A NAME="50455187_pgfId-1044997"></A>During an unsorted output with an FBDI protocol, the FBDI data provide Prinect Shooter with information about the job context of the single signatures that will be output. In the job list of the Printmanager, unsorted jobs with an FBDI protocol are marked by a yellow folder icon, indicating that the plates belong to one job. When you click the folder icon, the folder expands, and you can see the single component jobs (&quot;plates&quot;). The &quot;Signatures&quot; tab displays only the signature of the component job when you open such a job. Accordingly, you can output separations again only for a component job (see the <A HREF="x-36.html#50455189_46456">Reprinting Single Separations</A>).</P>
+<P><P><IMG SRC="common/_IconNote.gif" Align="Left">
+<A NAME="50455187_pgfId-1045011"></A><EM>Note: </EM> If you wish to work with the FBDI protocol in Prinect MetaDimension as a rule, you can simply disable or enable the &quot;Serial, sorted output via FBDI workflow&quot; in Prinect Shooter in &quot;Administration &gt; Configuration &gt; Preferences&quot; (see also the <A HREF="x-46.html#50455191_68448">&quot;Serial, sorted output via FBDI workflow&quot;</A>). This lets you switch between a sorted and unsorted output as needed without having to change the Tiff-B Export Engine Manager settings in Prinect MetaDimension.</P>
+<H2>
+<A NAME="50455187_pgfId-1045015"></A>Unsorted output without FBDI protocol</H2>
+<P>
+<A NAME="50455187_pgfId-1045016"></A>Prinect Shooter has no details about the job context of the single separations if the FBDI protocol is disabled in the Prinect MetaDimension Tiff-B Engine Manager (&quot;No FBDI&quot; option). Only the job name in the job list provides details about the original job to which the color separation concerned was assigned. In this case as well, the color separations are listed separately in the job list. These jobs have &quot;.tif&quot; as their extension there in contrast to jobs that were output unsorted with an FBDI protocol.</P>
+<P>
+<A NAME="50455187_pgfId-1045018"></A><A NAME="50455187_marker-1045017"></A>Unsorted jobs without an FBDI protocol are displayed in the job list as single component jobs (&quot;Tiff-B Jobs&quot;). Displaying an entire job as one folder is not possible because Prinect Shooter without an FBDI protocol is not given any details about the job context of a single component job.</P>
+<H2>
+<A NAME="50455187_pgfId-1045019"></A>Reorder unsorted output</H2>
+<P>
+<A NAME="50455187_pgfId-1045020"></A>During an unsorted output, you can define the output priority for each single separation (component job) by changing the order (see <A HREF="x-30.html#50455189_29991">Reordering Jobs</A>).</P>
+<H2>
+<A NAME="50455187_pgfId-1045025"></A><A NAME="50455187_95455"></A>Assign identification numbers</H2>
+<P>
+<A NAME="50455187_pgfId-1045027"></A>Prinect Shooter assigns a <A NAME="50455187_marker-1045026"></A>job number (JobID) to each print job or component job. There are three different cases:</P>
+<UL>
+<LI CLASS="L1a">
+<A NAME="50455187_pgfId-1045028"></A>The same identification number is assigned to each component job in an unsorted output with an FBDI protocol. The identification number displays in the &quot;ID&quot; column in the job list. This makes it possible to always assign the component jobs to the correct job even if you changed the order of single component jobs (see <A HREF="x-30.html#50455189_29991">Reordering Jobs</A>). The component jobs of the current job count in the identification number of the next job. For example, a job is assigned ID 1 and has eight component jobs. The component jobs also are assigned ID 1. The next job (and any component jobs) is assigned ID 9.</LI>
+<LI CLASS="L1a">
+<A NAME="50455187_pgfId-1045032"></A>A specific, consecutive ID is assigned to each component job in an unsorted output without an FBDI protocol.</LI>
+<LI CLASS="L1a">
+<A NAME="50455187_pgfId-1045033"></A>No component jobs are generated in a sorted output and, for that reason, consecutive IDs are assigned to the jobs.</LI>
+</UL>
+<P><P><IMG SRC="img/b_joblist_complete.gif" Align="Left">
+<A NAME="50455187_pgfId-1051890"></A><br clear="all">
+</P>
+<P Class="NavBar"><BR Clear="Left"><NoBr><A HRef="x-14.html"><Img Src="HDPrev.gif" Border="0" Align="Left" Alt="Previous Topic in the Sequence"></A><A HRef="x-1.html"><Img Src="HDHome.gif" Border="0" Align="Left" Alt="Back to Start"></A><A HRef="x-16.html"><Img Src="HDNext.gif" Border="0" Align="Left" Alt="Next Topic in the Sequence"></A>&nbsp;&nbsp;&nbsp;Copyright &#169; 2013 Heidelberger Druckmaschinen AG</NoBr></P><script>(function(){function tell(){try{parent.postMessage({type:'heidelberg-help-page',path:decodeURIComponent(location.pathname),hash:location.hash},'*');}catch(e){}}if(window.addEventListener){window.addEventListener('load',tell,false);window.addEventListener('hashchange',tell,false);}else if(window.attachEvent){window.attachEvent('onload',tell);window.attachEvent('onhashchange',tell);}})();</script></BODY>
+</HTML>
