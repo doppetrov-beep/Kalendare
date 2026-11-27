@@ -1,4 +1,4 @@
-const version = "kalendare-reader-v4";
+const version = "kalendare-reader-v5";
 importScripts("./assets.js");
 self.addEventListener("install", event => {
   event.waitUntil((async () => {

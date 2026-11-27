@@ -1,25 +1,112 @@
-<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kalendare офлайн</title><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon.png">
-<link rel="stylesheet" href="site.css"><script src="theme.js"></script>
-<body class="kalendare-page"><main class="page-shell">
-<header class="page-hero"><h1>Kalendare офлайн</h1><p id="status" role="status">Загрузите общую копию.</p></header>
-<section class="page-card" style="margin-top:16px">
-<label for="source">Ссылка на общую копию Яндекс Диска</label>
-<input id="source" type="url" style="display:block;width:100%;margin-block:8px">
-<label for="key">Ключ общей копии</label>
-<input id="key" type="password" autocomplete="off" style="display:block;width:100%;margin-block:8px">
-<button id="update">Обновить с Диска</button>
-<label> <span>Открыть файл копии</span> <input id="file" type="file" accept=".json,application/json"></label>
-</section>
-<section class="page-card" style="margin-top:16px">
-<h2>График и заметки</h2><label>Дата <input type="date" id="day"></label>
-<div id="month" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:12px"></div>
-<p id="roster"></p><p id="note" style="white-space:pre-wrap;overflow-wrap:anywhere"></p>
-</section>
-<section class="page-card" style="margin-top:16px">
-<h2>Локальный черновик</h2><label for="draft">Запись на выбранную дату</label>
-<textarea id="draft" rows="4" style="display:block;width:100%;margin-block:8px"></textarea>
-<button id="save">Сохранить на устройстве</button><button id="copy">Копировать для основного приложения</button>
-<p id="draftStatus" role="status"></p></section>
-<nav class="page-chips"><a href="work/">Рабочий журнал и справочники</a></nav>
-</main><script src="reader.js"></script></body></html>
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f6fa">
+  <title>Мои смены — офлайн</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="calendar.css">
+  <style>
+    #note { white-space:pre-wrap; overflow-wrap:anywhere; }
+    .offline-disk { margin-top:16px; }
+    .offline-disk summary { cursor:pointer; font-weight:750; }
+    .offline-disk .cloud-panel { margin:12px 0 0; }
+    .offline-disk input[type="file"] { padding:8px; }
+    .day.unloaded { background:var(--line); color:var(--text); }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="header">
+      <div><p class="eyebrow">Личный планировщик · офлайн</p><h1>Мои смены</h1><p id="sync-status" role="status">Подключи копию в настройках.</p></div>
+      <button class="icon-button" id="settingsOpen" type="button" aria-label="Открыть настройки" title="Настройки">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.08-.98l2.11-1.65a.5.5 0 0 0 .12-.64l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1a7.3 7.3 0 0 0-1.69-.98L14.5 2.42A.49.49 0 0 0 14 2h-4a.49.49 0 0 0-.49.42l-.38 2.65c-.61.24-1.17.57-1.69.98l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46a.5.5 0 0 0 .12.64l2.11 1.65a6.05 6.05 0 0 0 0 1.96l-2.11 1.65a.5.5 0 0 0-.12.64l2 3.46c.12.22.39.31.61.22l2.49-1c.52.41 1.08.74 1.69.98l.38 2.65c.04.24.24.42.49.42h4c.25 0 .45-.18.49-.42l.38-2.65c.61-.24 1.17-.57 1.69-.98l2.49 1c.22.09.49 0 .61-.22l2-3.46a.5.5 0 0 0-.12-.64zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
+      </button>
+    </header>
+
+    <section class="today-card" aria-labelledby="todayHeading">
+      <div class="today-top"><span class="card-label" id="todayHeading">Сегодня</span><span class="dot" aria-hidden="true"></span></div>
+      <div class="today-date" id="todayDate">—</div>
+      <div class="today-bottom">
+        <div class="today-symbol" id="todaySymbol">Д</div>
+        <div><div class="today-shift-title" id="todayShift">—</div><div class="today-subtitle" id="todayPerson">—</div></div>
+      </div>
+      <div class="roster-summary" aria-label="Бригады сегодня">
+        <div class="roster-summary-title">Кто сегодня в день, ночь и на выходном</div>
+        <div class="roster-summary-row"><span class="roster-summary-role">День</span><span class="shift-indicator shift-Д" aria-hidden="true">Д</span><span class="roster-summary-name" id="todayCrewDay">—</span></div>
+        <div class="roster-summary-row"><span class="roster-summary-role">Ночь</span><span class="shift-indicator shift-Н" aria-hidden="true">Н</span><span class="roster-summary-name" id="todayCrewNight">—</span></div>
+        <div class="roster-summary-row"><span class="roster-summary-role">Отдыхает</span><span class="shift-indicator shift-В" aria-hidden="true">В</span><span class="roster-summary-name" id="todayCrewOff">—</span></div>
+      </div>
+    </section>
+
+    <section class="surface calendar-card" aria-labelledby="monthTitle">
+      <div class="month-nav">
+        <h2 class="month-title" id="monthTitle">—</h2>
+        <div class="month-controls">
+          <button class="today-button" id="jumpToday" type="button">Сегодня</button>
+          <button class="arrow" id="prevMonth" type="button" aria-label="Предыдущий месяц">‹</button>
+          <button class="arrow" id="nextMonth" type="button" aria-label="Следующий месяц">›</button>
+        </div>
+      </div>
+      <div class="weekdays" aria-hidden="true">
+        <span class="weekday">Пн</span><span class="weekday">Вт</span><span class="weekday">Ср</span><span class="weekday">Чт</span><span class="weekday">Пт</span><span class="weekday">Сб</span><span class="weekday">Вс</span>
+      </div>
+      <div class="calendar-grid" id="calendar" role="group" aria-label="Дни календаря"></div>
+      <div class="legend" aria-label="Обозначения смен">
+        <span class="legend-item"><span class="legend-square" style="background:var(--yellow)"></span><span id="selectedCrewDay">—</span></span>
+        <span class="legend-item"><span class="legend-square" style="background:var(--night)"></span><span id="selectedCrewNight">—</span></span>
+        <span class="legend-item"><span class="legend-square" style="background:var(--off)"></span><span id="selectedCrewOff">—</span></span>
+      </div>
+      <div class="detail" aria-live="polite">
+        <div><div class="detail-label">Выбранный день</div><div class="detail-date" id="selectedDate">—</div></div>
+        <div class="detail-shift" id="selectedShift">—</div>
+      </div>
+    </section>
+
+    <section class="surface notes-card" aria-labelledby="notesTitle">
+      <div class="notes-head"><h2 id="notesTitle">Заметки по датам</h2></div>
+      <p class="notes-hint" id="note">Выбери день в календаре.</p>
+      <div class="note-editor">
+        <label for="draft">Локальный черновик</label>
+        <textarea id="draft" rows="4"></textarea>
+        <div class="cloud-actions note-footer">
+          <button type="button" class="primary" id="save">Сохранить на устройстве</button>
+          <button type="button" id="copy">Скопировать</button>
+        </div>
+        <p class="note-status" id="draftStatus" role="status"></p>
+      </div>
+    </section>
+    <section class="surface work-tools" aria-label="Рабочий журнал">
+      <a class="work-tools-link" href="./work/">Рабочий журнал · техника и расходники</a>
+    </section>
+  </main>
+  <dialog id="settingsDialog" aria-labelledby="settingsTitle">
+    <div class="settings">
+      <div class="settings-head"><h2 id="settingsTitle">Настройки</h2><button type="button" class="icon-button" id="settingsClose" aria-label="Закрыть настройки">×</button></div>
+      <label class="theme-picker" for="themeMode">Тема
+        <select id="themeMode">
+          <option value="system">Как в системе</option>
+          <option value="light">Светлая</option>
+          <option value="dark">Тёмная</option>
+        </select>
+      </label>
+      <details class="offline-disk">
+        <summary>Яндекс Диск и резервная копия</summary>
+        <form class="cloud-panel" id="diskForm">
+          <label for="source">Ссылка на общую копию<input id="source" type="url" autocomplete="off"></label>
+          <label for="key">Ключ общей копии<input id="key" type="password" autocomplete="off"></label>
+          <div class="cloud-actions"><button type="submit" id="update">Обновить с Диска</button></div>
+          <label for="file">Открыть файл копии<input id="file" type="file" accept=".json,application/json"></label>
+          <p class="note-status" id="diskStatus" role="status"></p>
+        </form>
+      </details>
+    </div>
+  </dialog>
+  <script src="reader.js"></script>
+</body>
+</html>
